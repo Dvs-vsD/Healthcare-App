@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".general.DoctorSignupFragment">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/bg_gray">
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guidelineLeft"
+                app:layout_constraintGuide_begin="@dimen/_16sdp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guidelineRight"
+                app:layout_constraintGuide_end="@dimen/_16sdp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+            <EditText
+                android:id="@+id/etFirstName"
+                style="@style/st_et_style"
+                app:layout_constraintEnd_toEndOf="@id/guidelineRight"
+                app:layout_constraintStart_toStartOf="@id/guidelineLeft"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_16sdp"
+                android:background="@drawable/background_with_radius_12"
+                android:hint="@string/hint_first_name"
+                android:importantForAutofill="no"
+                android:inputType="text"
+                android:padding="@dimen/_12sdp" />
+
+            <EditText
+                android:id="@+id/etLastName"
+                style="@style/st_et_style"
+                app:layout_constraintEnd_toEndOf="@id/guidelineRight"
+                app:layout_constraintStart_toStartOf="@id/guidelineLeft"
+                app:layout_constraintTop_toBottomOf="@+id/etFirstName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_16sdp"
+                android:background="@drawable/background_with_radius_12"
+                android:hint="@string/hint_last_name"
+                android:importantForAutofill="no"
+                android:inputType="text"
+                android:padding="@dimen/_12sdp" />
+
+            <EditText
+                android:id="@+id/etEmail"
+                style="@style/st_et_style"
+                app:layout_constraintEnd_toEndOf="@id/guidelineRight"
+                app:layout_constraintStart_toStartOf="@id/guidelineLeft"
+                app:layout_constraintTop_toBottomOf="@+id/etLastName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_16sdp"
+                android:background="@drawable/background_with_radius_12"
+                android:hint="@string/hint_email"
+                android:importantForAutofill="no"
+                android:inputType="textEmailAddress"
+                android:padding="@dimen/_12sdp" />
+
+            <EditText
+                android:id="@+id/etPassword"
+                style="@style/st_et_style"
+                app:layout_constraintEnd_toEndOf="@id/guidelineRight"
+                app:layout_constraintStart_toStartOf="@id/guidelineLeft"
+                app:layout_constraintTop_toBottomOf="@+id/etEmail"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_16sdp"
+                android:background="@drawable/background_with_radius_12"
+                android:hint="@string/hint_password"
+                android:importantForAutofill="no"
+                android:inputType="textPassword"
+                android:padding="@dimen/_12sdp" />
+
+            <EditText
+                android:id="@+id/etPhnNo"
+                style="@style/st_et_style"
+                app:layout_constraintEnd_toEndOf="@id/guidelineRight"
+                app:layout_constraintStart_toStartOf="@id/guidelineLeft"
+                app:layout_constraintTop_toBottomOf="@+id/etPassword"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_16sdp"
+                android:background="@drawable/background_with_radius_12"
+                android:hint="@string/hint_phone_number"
+                android:importantForAutofill="no"
+                android:inputType="number"
+                android:maxLength="10"
+                android:padding="@dimen/_12sdp" />
+
+
+            <EditText
+                android:id="@+id/etCity"
+                style="@style/st_et_style"
+                app:layout_constraintEnd_toEndOf="@id/guidelineRight"
+                app:layout_constraintStart_toStartOf="@id/guidelineLeft"
+                app:layout_constraintTop_toBottomOf="@+id/etPhnNo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_16sdp"
+                android:background="@drawable/background_with_radius_12"
+                android:hint="@string/hint_city"
+                android:importantForAutofill="no"
+                android:inputType="text"
+                android:padding="@dimen/_12sdp" />
+
+            <TextView
+                android:id="@+id/tvDegrees"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                style="@style/st_tv_small.bold"
+                android:text="@string/degrees"
+                android:layout_marginTop="@dimen/_8sdp"
+                android:layout_marginStart="@dimen/_12sdp"
+                app:layout_constraintStart_toStartOf="@id/guidelineLeft"
+                app:layout_constraintEnd_toEndOf="@id/guidelineRight"
+                app:layout_constraintTop_toBottomOf="@id/etCity"
+                app:layout_constraintBottom_toTopOf="@id/gridLayout"
+                />
+
+            <GridLayout
+                android:id="@+id/gridLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:columnCount="2"
+                android:background="@drawable/background_with_radius_12"
+                android:layout_marginTop="@dimen/_8sdp"
+                android:padding="@dimen/_8sdp"
+                app:layout_constraintStart_toStartOf="@id/guidelineLeft"
+                app:layout_constraintEnd_toEndOf="@id/guidelineRight"
+                app:layout_constraintTop_toBottomOf="@id/tvDegrees"
+                >
+
+                <CheckBox
+                    android:id="@+id/cbMBBS"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_gravity="start"
+                    android:text="@string/cb_mbbs"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                    app:buttonTint="@color/blue" />
+
+                <CheckBox
+                    android:id="@+id/cbMD"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_gravity="start"
+                    android:text="@string/cb_md"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                    app:buttonTint="@color/blue" />
+
+                <CheckBox
+                    android:id="@+id/cbBAMS"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_gravity="start"
+                    android:text="@string/cb_bams"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                    app:buttonTint="@color/blue" />
+
+                <CheckBox
+                    android:id="@+id/cbBHMS"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_gravity="start"
+                    android:text="@string/cb_bhms"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                    app:buttonTint="@color/blue" />
+
+                <CheckBox
+                    android:id="@+id/cbPGDCC"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_gravity="start"
+                    android:text="@string/pgdcc"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                    app:buttonTint="@color/blue" />
+
+                <CheckBox
+                    android:id="@+id/cbDM"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_gravity="start"
+                    android:text="@string/cb_dm"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                    app:buttonTint="@color/blue" />
+
+                <CheckBox
+                    android:id="@+id/cbOther"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_gravity="start"
+                    android:text="@string/cb_other"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                    app:buttonTint="@color/blue" />
+
+            </GridLayout>
+
+            <EditText
+                android:id="@+id/etOtherDegree"
+                style="@style/st_et_style"
+                app:layout_constraintEnd_toEndOf="@id/guidelineRight"
+                app:layout_constraintStart_toStartOf="@id/guidelineLeft"
+                app:layout_constraintTop_toBottomOf="@+id/gridLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_16sdp"
+                android:background="@drawable/background_with_radius_12"
+                android:hint="@string/et_degree"
+                android:importantForAutofill="no"
+                android:inputType="text"
+                android:visibility="gone"
+                android:padding="@dimen/_12sdp" />
+
+            <EditText
+                android:id="@+id/etSpecialization"
+                style="@style/st_et_style"
+                app:layout_constraintEnd_toEndOf="@id/guidelineRight"
+                app:layout_constraintStart_toStartOf="@id/guidelineLeft"
+                app:layout_constraintTop_toBottomOf="@+id/etOtherDegree"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_16sdp"
+                android:background="@drawable/background_with_radius_12"
+                android:hint="@string/hint_specialization"
+                android:importantForAutofill="no"
+                android:inputType="text"
+                android:padding="@dimen/_12sdp" />
+
+            <EditText
+                android:id="@+id/etExperience"
+                style="@style/st_et_style"
+                app:layout_constraintEnd_toEndOf="@id/guidelineRight"
+                app:layout_constraintStart_toStartOf="@id/guidelineLeft"
+                app:layout_constraintTop_toBottomOf="@+id/etSpecialization"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_16sdp"
+                android:background="@drawable/background_with_radius_12"
+                android:hint="@string/hint_experience_years"
+                android:importantForAutofill="no"
+                android:inputType="number"
+                android:maxLength="2"
+                android:padding="@dimen/_12sdp" />
+
+
+            <EditText
+                android:id="@+id/etAbout"
+                style="@style/st_et_style"
+                app:layout_constraintEnd_toEndOf="@id/guidelineRight"
+                app:layout_constraintStart_toStartOf="@id/guidelineLeft"
+                app:layout_constraintTop_toBottomOf="@+id/etExperience"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_16sdp"
+                android:background="@drawable/background_with_radius_12"
+                android:hint="@string/hint_about_your_self"
+                android:importantForAutofill="no"
+                android:inputType="textMultiLine"
+                android:maxLines="6"
+                android:padding="@dimen/_12sdp" />
+
+            <Button
+                android:id="@+id/btnSignUp"
+                style="@style/st_btn_style"
+                app:layout_constraintBottom_toTopOf="@id/tvAlreadyHaveAcc"
+                app:layout_constraintEnd_toEndOf="@id/guidelineRight"
+                app:layout_constraintStart_toStartOf="@id/guidelineLeft"
+                app:layout_constraintTop_toBottomOf="@id/etAbout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="@dimen/_12sdp"
+                android:background="@drawable/background_with_radius_12"
+                android:padding="@dimen/_8sdp"
+                android:text="@string/btn_sign_up"
+                android:textColor="@color/white" />
+
+            <TextView
+                android:id="@+id/tvAlreadyHaveAcc"
+                style="@style/st_tv_small"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/tvLogin"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="@id/guidelineLeft"
+                app:layout_constraintTop_toBottomOf="@+id/btnSignUp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/already_have_an_account" />
+
+            <TextView
+                android:id="@+id/tvLogin"
+                style="@style/st_tv_small.bold"
+                app:layout_constraintBaseline_toBaselineOf="@id/tvAlreadyHaveAcc"
+                app:layout_constraintEnd_toEndOf="@id/guidelineRight"
+                app:layout_constraintStart_toEndOf="@id/tvAlreadyHaveAcc"
+                app:layout_constraintTop_toBottomOf="@+id/btnSignUp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:padding="@dimen/_8sdp"
+                android:text="@string/btn_login"
+                android:textColor="@color/blue" />
+
+            <ProgressBar
+                android:id="@+id/progress_circular"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+
+</FrameLayout>

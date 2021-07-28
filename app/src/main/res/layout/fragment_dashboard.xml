@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragmentDashboard"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_gray"
+    tools:context=".patient.dashboard.DashboardFragment">
+
+    <!--    <androidx.drawerlayout.widget.DrawerLayout-->
+    <!--        android:id="@+id/drawerLayout"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="match_parent">-->
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:focusable="true"
+            android:focusableInTouchMode="true">
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guidelineLeft"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_begin="@dimen/_16sdp" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guidelineRight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_end="@dimen/_16sdp" />
+
+            <!--                <androidx.appcompat.widget.Toolbar-->
+            <!--                    android:id="@+id/toolbar"-->
+            <!--                    android:layout_width="0dp"-->
+            <!--                    android:layout_height="wrap_content"-->
+            <!--                    app:layout_constraintEnd_toEndOf="@id/guidelineRight"-->
+            <!--                    app:layout_constraintStart_toStartOf="parent"-->
+            <!--                    app:layout_constraintTop_toTopOf="parent">-->
+
+            <!--                    <com.mikhaellopez.circularimageview.CircularImageView-->
+            <!--                        android:id="@+id/ivProfile"-->
+            <!--                        android:layout_width="@dimen/_24sdp"-->
+            <!--                        android:layout_height="@dimen/_24sdp"-->
+            <!--                        app:civ_border="false"-->
+            <!--                        android:layout_gravity="end|center_vertical"-->
+            <!--                        android:src="@drawable/default_user" />-->
+
+            <!--                </androidx.appcompat.widget.Toolbar>-->
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layoutSearch"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/background_with_radius_24"
+                android:padding="@dimen/_16sdp"
+                app:layout_constraintEnd_toStartOf="@id/guidelineRight"
+                app:layout_constraintStart_toEndOf="@id/guidelineLeft"
+                app:layout_constraintTop_toBottomOf="@+id/toolbar">
+
+                <TextView
+                    android:id="@+id/tvText"
+                    style="@style/st_tv_normal.bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tv_let_s_find_your_doctor"
+                    android:textSize="@dimen/_24ssp"
+                    app:layout_constraintHorizontal_bias="0"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/ivTeeth"
+                    android:layout_width="@dimen/_40sdp"
+                    android:layout_height="@dimen/_40sdp"
+                    android:layout_marginVertical="@dimen/_6sdp"
+                    android:background="@drawable/circle_background"
+                    android:backgroundTint="@color/white"
+                    android:contentDescription="@string/contentDescription"
+                    android:padding="@dimen/_12sdp"
+                    android:src="@drawable/tooth"
+                    app:layout_constraintBottom_toTopOf="@id/tvSearch"
+                    app:layout_constraintEnd_toStartOf="@id/ivHeart"
+                    app:layout_constraintHorizontal_chainStyle="spread_inside"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tvText"
+                    app:tint="@color/yellow" />
+
+                <ImageView
+                    android:id="@+id/ivHeart"
+                    android:layout_width="@dimen/_40sdp"
+                    android:layout_height="@dimen/_40sdp"
+                    android:layout_marginVertical="@dimen/_6sdp"
+                    android:background="@drawable/circle_background"
+                    android:backgroundTint="@color/white"
+                    android:contentDescription="@string/contentDescription"
+                    android:padding="@dimen/_12sdp"
+                    android:src="@drawable/ic_baseline_favorite_24"
+                    app:layout_constraintEnd_toStartOf="@id/ivEye"
+                    app:layout_constraintStart_toEndOf="@id/ivTeeth"
+                    app:layout_constraintTop_toBottomOf="@id/tvText"
+                    app:tint="@color/pink" />
+
+                <ImageView
+                    android:id="@+id/ivEye"
+                    android:layout_width="@dimen/_40sdp"
+                    android:layout_height="@dimen/_40sdp"
+                    android:layout_marginVertical="@dimen/_6sdp"
+                    android:background="@drawable/circle_background"
+                    android:backgroundTint="@color/white"
+                    android:contentDescription="@string/contentDescription"
+                    android:padding="@dimen/_12sdp"
+                    android:src="@drawable/ic_baseline_remove_red_eye_24"
+                    app:layout_constraintEnd_toStartOf="@id/ivInjection"
+                    app:layout_constraintStart_toEndOf="@id/ivHeart"
+                    app:layout_constraintTop_toBottomOf="@id/tvText"
+                    app:tint="@color/pink" />
+
+                <ImageView
+                    android:id="@+id/ivInjection"
+                    android:layout_width="@dimen/_40sdp"
+                    android:layout_height="@dimen/_40sdp"
+                    android:layout_marginVertical="@dimen/_6sdp"
+                    android:background="@drawable/circle_background"
+                    android:backgroundTint="@color/white"
+                    android:contentDescription="@string/contentDescription"
+                    android:padding="@dimen/_12sdp"
+                    android:rotationY="180"
+                    android:src="@drawable/injection"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/ivEye"
+                    app:layout_constraintTop_toBottomOf="@id/tvText"
+                    app:tint="@color/blue" />
+
+                <TextView
+                    android:id="@+id/tvSearch"
+                    style="@style/st_tv_normal"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_16sdp"
+                    android:background="@drawable/background_with_radius_12"
+                    android:drawablePadding="@dimen/_12sdp"
+                    android:hint="@string/et_hint_search_doctor"
+                    android:padding="@dimen/_8sdp"
+                    app:backgroundTint="@color/white"
+                    app:drawableStartCompat="@drawable/ic_baseline_search_24"
+                    app:drawableTint="@color/clr_tv_light_gray"
+                    app:layout_constraintCircleRadius="@dimen/_16sdp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/ivTeeth" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <LinearLayout
+                android:id="@+id/llCalender"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_8sdp"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toStartOf="@id/guidelineRight"
+                app:layout_constraintStart_toEndOf="@id/guidelineLeft"
+                app:layout_constraintTop_toBottomOf="@id/layoutSearch" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_8sdp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintEnd_toEndOf="@id/guidelineRight"
+                app:layout_constraintStart_toStartOf="@id/guidelineLeft"
+                app:layout_constraintTop_toBottomOf="@id/llCalender"
+                tools:listitem="@layout/row_of_today_apt" />
+
+            <TextView
+                android:id="@+id/tvNoData"
+                style="@style/st_tv_small.bold_gray"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_16sdp"
+                android:text="@string/tv_no_appointments"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="@id/recyclerView"
+                app:layout_constraintStart_toStartOf="@id/recyclerView"
+                app:layout_constraintTop_toTopOf="@id/recyclerView" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <!--        <com.google.android.material.navigation.NavigationView-->
+    <!--            android:id="@+id/navigationView"-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="match_parent"-->
+    <!--            android:layout_gravity="start"-->
+    <!--            app:headerLayout="@layout/header_layout"-->
+    <!--            app:menu="@menu/navigation_menu_main" />-->
+
+    <!--    </androidx.drawerlayout.widget.DrawerLayout>-->
+
+</FrameLayout>

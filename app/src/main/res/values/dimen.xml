@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="tv_s_20">@dimen/_20ssp</dimen>
+    <dimen name="tv_s_18">@dimen/_18ssp</dimen>
+    <dimen name="tv_s_16">@dimen/_16ssp</dimen>
+    <dimen name="tv_s_14">@dimen/_14ssp</dimen>
+    <dimen name="tv_s_12">@dimen/_12ssp</dimen>
+    <dimen name="tv_s_10">@dimen/_10ssp</dimen>
+    <dimen name="tv_s_8">@dimen/_8ssp</dimen>
+
+</resources>

@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_gray"
+    android:focusableInTouchMode="true"
+    >
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="@dimen/_16sdp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineRight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="@dimen/_16sdp" />
+
+    <com.mikhaellopez.circularimageview.CircularImageView
+        android:id="@+id/ivProfile"
+        android:layout_width="@dimen/_36sdp"
+        android:layout_height="@dimen/_36sdp"
+        android:src="@drawable/default_user"
+        android:layout_marginEnd="@dimen/_8sdp"
+        app:layout_constraintBottom_toBottomOf="@id/tvQuestion"
+        app:layout_constraintEnd_toStartOf="@id/tvUserName"
+        app:layout_constraintStart_toStartOf="@id/guidelineLeft"
+        app:layout_constraintTop_toTopOf="@id/tvUserName" />
+
+    <TextView
+        android:id="@+id/tvUserName"
+        style="@style/st_tv_normal.bold"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/_8sdp"
+        android:text="Hello Jhon,"
+        app:layout_constraintEnd_toStartOf="@id/ivNotification"
+        app:layout_constraintStart_toEndOf="@id/ivProfile"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvQuestion"
+        style="@style/st_tv_small.light_gray"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/tv_how_re_you_today"
+        app:layout_constraintStart_toStartOf="@id/tvUserName"
+        app:layout_constraintTop_toBottomOf="@id/tvUserName"
+        app:layout_constraintEnd_toStartOf="@id/ivNotification"/>
+
+    <ImageView
+        android:id="@+id/ivNotification"
+        android:layout_width="@dimen/_24sdp"
+        android:layout_height="@dimen/_24sdp"
+        android:src="@drawable/ic_baseline_notifications_none_24"
+        app:tint="@color/blue"
+        android:background="@drawable/circle_background"
+        android:backgroundTint="@color/white"
+        app:layout_constraintEnd_toEndOf="@id/guidelineRight"
+        app:layout_constraintTop_toTopOf="@id/tvUserName"
+        app:layout_constraintBottom_toBottomOf="@id/tvQuestion"
+        app:layout_constraintStart_toEndOf="@id/tvUserName"
+        />
+
+    <EditText
+        android:id="@+id/etSearch"
+        style="@style/st_et_style"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_16sdp"
+        android:background="@drawable/background_with_radius_12"
+        android:drawableStart="@drawable/ic_baseline_search_24"
+        android:drawablePadding="@dimen/_12sdp"
+        android:hint="@string/et_hint_search_doctor"
+        android:importantForAutofill="no"
+        android:inputType="text"
+        android:padding="@dimen/_8sdp"
+        app:backgroundTint="@color/white"
+        app:drawableTint="@color/clr_tv_light_gray"
+        app:layout_constraintCircleRadius="@dimen/_16sdp"
+        app:layout_constraintEnd_toEndOf="@id/guidelineRight"
+        app:layout_constraintStart_toStartOf="@id/guidelineLeft"
+        app:layout_constraintTop_toBottomOf="@+id/ivProfile" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clConsultCount"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@id/guidelineLeft"
+        app:layout_constraintEnd_toEndOf="@id/guidelineRight"
+        app:layout_constraintTop_toBottomOf="@id/etSearch"
+        android:background="@drawable/background_with_radius_24"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:padding="@dimen/_16sdp"
+        >
+
+        <TextView
+            android:id="@+id/tvCurrentMonthYear"
+            style="@style/st_tv_normal.bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tv_consults_for_today"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/tvRemainingConsults"
+            app:layout_constraintHorizontal_bias="0"/>
+
+        <TextView
+            android:id="@+id/tvRemainingConsults"
+            style="@style/st_tv_small.bold_gray"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="9 of 12 completed"
+            android:layout_marginVertical="@dimen/_4sdp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvCurrentMonthYear"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/rvConsults"
+            app:layout_constraintHorizontal_bias="0"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvConsults"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/tvRemainingConsults"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

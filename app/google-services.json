@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "598047447572",
+    "project_id": "consultation-point-108",
+    "storage_bucket": "consultation-point-108.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:598047447572:android:650119463af2d8950a6501",
+        "android_client_info": {
+          "package_name": "com.app.consultationpoint"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "598047447572-30bb0j3klud5v079au11m1ehbgg1qqq7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDoZHBeqGYFezq_HLP275bPnkKJ79l9Fsg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "598047447572-30bb0j3klud5v079au11m1ehbgg1qqq7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

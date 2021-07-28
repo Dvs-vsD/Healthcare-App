@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tabs>
+    <tab
+        id="@+id/botNavHome"
+        title="@string/bn_home"
+        icon="@drawable/ic_baseline_home_24"
+        />
+
+    <tab
+        id="@+id/botNavDoctor"
+        title="@string/bn_doctor"
+        icon="@drawable/doctor"
+        />
+
+    <tab
+        id="@+id/botNavChat"
+        title="@string/bn_chat"
+        icon="@drawable/ic_baseline_chat_24"
+        />
+
+    <tab
+        id="@+id/botNavApt"
+        title="@string/bn_appointments"
+        icon="@drawable/appointment"
+        />
+</tabs>
