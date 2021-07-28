@@ -2,10 +2,11 @@ package com.app.consultationpoint.general
 
 import androidx.lifecycle.LiveData
 import com.app.consultationpoint.firebase.FirebaseSource
+import com.app.consultationpoint.general.model.UserModel
 
 class LoginRegisterRepository(private val firebaseSource: FirebaseSource) {
-    fun patientSignUp(fName: String, lName: String, email: String, pass: String) {
-        firebaseSource.signUp(fName, lName, email, pass)
+    fun patientSignUp(model: UserModel) {
+        firebaseSource.patientSignUp(model)
     }
 
     fun getRegistrationStatus(): LiveData<String> {

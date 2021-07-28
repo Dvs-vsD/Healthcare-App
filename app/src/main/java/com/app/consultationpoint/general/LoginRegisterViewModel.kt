@@ -2,11 +2,12 @@ package com.app.consultationpoint.general
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import com.app.consultationpoint.general.model.UserModel
 
 class LoginRegisterViewModel(private val repository: LoginRegisterRepository) : ViewModel() {
 
-    fun patientSignUp(fName: String, lName: String, email: String, pass: String) {
-        repository.patientSignUp(fName, lName, email, pass)
+    fun patientSignUp(model: UserModel) {
+        repository.patientSignUp(model)
     }
 
     fun getRegistrationStatus(): LiveData<String> {

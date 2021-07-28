@@ -21,7 +21,7 @@ class FirebaseSource {
     private var status: MutableLiveData<String> = MutableLiveData("")
     private val mRealm: Realm = Realm.getDefaultInstance()
 
-    init {
+    fun init() {
 
         Timber.d("called firebase")
         val list: ArrayList<DoctorModel> = ArrayList()
@@ -74,25 +74,20 @@ class FirebaseSource {
             }
     }
 
-    fun signUp(fName: String, lName: String, email: String, pass: String) {
-        firebaseAuth.createUserWithEmailAndPassword(email, pass).addOnSuccessListener {
+    fun patientSignUp(model: UserModel) {
+        firebaseAuth.createUserWithEmailAndPassword(model.email?:"", model.password?:"").addOnSuccessListener {
             val userId = firebaseAuth.currentUser?.uid
-
-//            val model = UserModel(userId ?: "", email, fName, lName)
-            val model = UserModel()
             model.user_id = userId ?: ""
-            model.email = email
-            model.first_name = fName
-            model.last_name = lName
 
-            database.collection("User")
+            database.collection("Users")
                 .document(userId ?: "${System.currentTimeMillis()}").set(model)
             status.value = "success"
 
             ConsultationApp.shPref.edit().putString(Const.USER_ID, userId).apply()
-            ConsultationApp.shPref.edit().putString(Const.FIRST_NAME, fName).apply()
-            ConsultationApp.shPref.edit().putString(Const.LAST_NAME, lName).apply()
-            ConsultationApp.shPref.edit().putString(Const.USER_EMAIL, email).apply()
+            ConsultationApp.shPref.edit().putString(Const.FIRST_NAME, model.first_name).apply()
+            ConsultationApp.shPref.edit().putString(Const.LAST_NAME, model.last_name).apply()
+            ConsultationApp.shPref.edit().putString(Const.USER_EMAIL, model.email).apply()
+            ConsultationApp.shPref.edit().putBoolean(Const.PREF_IS_LOGIN, true).apply()
         }
             .addOnFailureListener {
                 status.value = it.message
@@ -119,6 +114,7 @@ class FirebaseSource {
     fun logOut() {
         firebaseAuth.signOut()
         status.value = ""
+        ConsultationApp.shPref.edit().putBoolean(Const.PREF_IS_LOGIN, false).apply()
     }
 
     fun addDoctorList(list: ArrayList<DoctorModel>) {
@@ -142,7 +138,7 @@ class FirebaseSource {
             ConsultationApp.shPref.edit().putString(Const.FIRST_NAME, model.first_name).apply()
             ConsultationApp.shPref.edit().putString(Const.LAST_NAME, model.last_name).apply()
             ConsultationApp.shPref.edit().putString(Const.USER_PROFILE, model.profile).apply()
-            ConsultationApp.shPref.edit().putString(Const.PHN_NO, model.phone_no).apply()
+            ConsultationApp.shPref.edit().putString(Const.PHN_NO, model.mobile).apply()
             ConsultationApp.shPref.edit().putString(Const.ADDRESS, model.address).apply()
 
             state = "success"

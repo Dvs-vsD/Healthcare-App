@@ -11,7 +11,6 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import com.app.consultationpoint.databinding.FragmentDoctorSignupBinding
 import com.app.consultationpoint.general.model.UserModel
-import com.app.consultationpoint.utils.Utils
 import kotlinx.android.synthetic.main.fragment_doctor_signup.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -19,6 +18,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
+
 /**
  * A simple [Fragment] subclass.
  * Use the [DoctorSignupFragment.newInstance] factory method to
@@ -62,15 +62,15 @@ class DoctorSignupFragment : Fragment() {
 
         binding.etFirstName.addTextChangedListener { fName ->
 
-            enableButton()
+//            enableButton()
         }
         binding.etLastName.addTextChangedListener { lName ->
             userModel.last_name = lName?.trim().toString()
-            enableButton()
+//            enableButton()
         }
         binding.etEmail.addTextChangedListener { email ->
             userModel.email = email?.trim().toString()
-            enableButton()
+//            enableButton()
         }
         binding.etPassword.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -81,24 +81,31 @@ class DoctorSignupFragment : Fragment() {
                 val password = pass?.trim().toString()
                 if (password.length > 7) {
                     userModel.password = password
-                    enableButton()
+//                    enableButton()
                 } else {
                     userModel.password = ""
                     binding.etPassword.error = "Please Enter minimum 8 characters"
                     binding.etPassword.requestFocus()
-                    enableButton()
+//                    enableButton()
                 }
             }
         })
+
+        binding.cbOther.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked)
+                binding.etOtherDegree.visibility = View.VISIBLE
+            else
+                binding.etOtherDegree.visibility = View.GONE
+        }
+
         binding.etPhnNo.addTextChangedListener { phnNo ->
-            userModel.phone_no = phnNo?.trim().toString()
-            enableButton()
+            userModel.mobile = phnNo?.trim().toString()
+//            enableButton()
         }
 
         binding.btnSignUp.setOnClickListener {
             checkDetails()
-            activity?.let { it1 -> Utils.showProgressDialog(it1, "We are creating your account") }
-            // sign up
+//            activity?.let { it1 -> Utils.showProgressDialog(it1, "We are creating your account") }
         }
     }
 
@@ -107,16 +114,31 @@ class DoctorSignupFragment : Fragment() {
         userModel.last_name = etLastName.text.trim().toString()
         userModel.email = etEmail.text.trim().toString()
         userModel.password = etPassword.text.trim().toString()
-        userModel.phone_no = etPhnNo.text.trim().toString()
+        userModel.mobile = etPhnNo.text.trim().toString()
         userModel.city = etCity.text.trim().toString()
 
-        var index = 0
         if (cbMBBS.isChecked) {
-            userModel.degrees[index] = "MBBS"
-            index++
+            userModel.degrees.add("MBBS")
         }
         if (cbBAMS.isChecked) {
-            userModel.degrees[index] = "BAMS"
+            userModel.degrees.add("BAMS")
+        }
+        if (cbPGDCC.isChecked) {
+            userModel.degrees.add("PGDCC")
+        }
+        if (cbMD.isChecked) {
+            userModel.degrees.add("MD")
+        }
+        if (cbBHMS.isChecked) {
+            userModel.degrees.add("BHMS")
+        }
+        if (cbDM.isChecked) {
+            userModel.degrees.add("DM")
+        }
+        if (cbOther.isChecked) {
+            val otherDegree = binding.etOtherDegree.text.trim().toString()
+            if (otherDegree.isNotEmpty())
+                userModel.degrees.add(otherDegree)
         }
     }
 

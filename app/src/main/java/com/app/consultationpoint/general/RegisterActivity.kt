@@ -2,13 +2,13 @@ package com.app.consultationpoint.general
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentTransaction
+import com.app.consultationpoint.ConsultationApp
 import com.app.consultationpoint.R
 import com.app.consultationpoint.databinding.ActivityRegisterBinding
 import com.app.consultationpoint.patient.bottomNavigation.BottomNavigationActivity
-import com.app.consultationpoint.utils.Utils
+import com.app.consultationpoint.utils.Const
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class RegisterActivity : AppCompatActivity() {
@@ -21,18 +21,18 @@ class RegisterActivity : AppCompatActivity() {
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        if (viewModel.isLogin()) {
+        if (ConsultationApp.shPref.getBoolean(Const.PREF_IS_LOGIN, false)) {
             startActivity()
         }
 
-        viewModel.getRegistrationStatus().observe(this, {
-            Utils.dismissProgressDialog()
-            if (it == "success") {
-                startActivity()
-            } else if (it.isNotEmpty()) {
-                Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
-            }
-        })
+//        viewModel.getRegistrationStatus().observe(this, {
+//            Utils.dismissProgressDialog()
+//            if (it == "success") {
+//                startActivity()
+//            } else if (it.isNotEmpty()) {
+//                Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+//            }
+//        })
 
         inThat()
     }

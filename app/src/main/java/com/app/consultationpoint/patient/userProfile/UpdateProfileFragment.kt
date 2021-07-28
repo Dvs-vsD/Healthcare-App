@@ -3,7 +3,6 @@ package com.app.consultationpoint.patient.userProfile
 import android.Manifest
 import android.app.Activity
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -91,7 +90,7 @@ class UpdateProfileFragment : Fragment() {
                 model.first_name = firstName
                 model.last_name = lastName
                 model.address = address
-                model.phone_no = phnNo
+                model.mobile = phnNo
                 model.profile = profile
 
                 val status = viewModel.updateProfile(model)
