@@ -53,6 +53,8 @@ class DoctorListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel.init()
+
         Timber.d(viewModel.getDoctorList().value.toString())
         adapterDoctor = DoctorAdapter(viewModel.getDoctorList(), activity)
 

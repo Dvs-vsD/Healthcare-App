@@ -5,8 +5,8 @@ import com.app.consultationpoint.firebase.FirebaseSource
 import com.app.consultationpoint.general.model.UserModel
 
 class LoginRegisterRepository(private val firebaseSource: FirebaseSource) {
-    fun patientSignUp(model: UserModel) {
-        firebaseSource.patientSignUp(model)
+    fun signUp(model: UserModel) {
+        firebaseSource.signUp(model)
     }
 
     fun getRegistrationStatus(): LiveData<String> {

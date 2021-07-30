@@ -23,19 +23,6 @@
         android:orientation="vertical"
         app:layout_constraintGuide_end="@dimen/_16sdp" />
 
-    <!--    <ImageView-->
-    <!--        android:id="@+id/ic_consult"-->
-    <!--        android:layout_width="@dimen/_70sdp"-->
-    <!--        android:layout_height="@dimen/_70sdp"-->
-    <!--        android:src="@drawable/ic_consult"-->
-    <!--        app:layout_constraintTop_toTopOf="parent"-->
-    <!--        app:layout_constraintStart_toStartOf="parent"-->
-    <!--        app:layout_constraintEnd_toEndOf="parent"-->
-    <!--        android:layout_marginTop="@dimen/_16sdp"-->
-    <!--        app:layout_constraintBottom_toTopOf="@id/tvCreateAcc"-->
-    <!--        android:contentDescription="@string/contentDescription"-->
-    <!--        />-->
-
     <TextView
         android:id="@+id/tvCreateAcc"
         style="@style/st_tv_large.bold"
@@ -43,7 +30,7 @@
         android:layout_height="wrap_content"
         android:background="@color/blue"
         android:gravity="center"
-        android:paddingTop="@dimen/_8sdp"
+        android:paddingTop="@dimen/_16sdp"
         android:text="@string/tv_create_an_account"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
@@ -84,7 +71,7 @@
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="@id/guidelineRight"
         app:layout_constraintStart_toStartOf="@id/guidelineLeft"
-        app:layout_constraintBottom_toTopOf="@+id/frameLayout"
+        app:layout_constraintBottom_toTopOf="@+id/etFirstName"
         app:layout_constraintTop_toBottomOf="@id/tvQuesPntOrDoc">
 
         <RadioButton
@@ -106,13 +93,119 @@
 
     </RadioGroup>
 
-    <FrameLayout
-        android:id="@+id/frameLayout"
+    <EditText
+        android:id="@+id/etFirstName"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
+        style="@style/st_et_style"
+        app:layout_constraintStart_toStartOf="@id/guidelineLeft"
+        app:layout_constraintEnd_toEndOf="@id/guidelineRight"
+        app:layout_constraintTop_toBottomOf="@id/rgPntOrDoc"
+        android:hint="@string/hint_first_name"
+        android:layout_marginTop="@dimen/_16sdp"
+        android:background="@drawable/background_with_radius_12"
+        android:padding="@dimen/_12sdp"
+        android:importantForAutofill="no"
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/etLastName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        style="@style/st_et_style"
+        app:layout_constraintStart_toStartOf="@id/guidelineLeft"
+        app:layout_constraintEnd_toEndOf="@id/guidelineRight"
+        app:layout_constraintTop_toBottomOf="@+id/etFirstName"
+        android:hint="@string/hint_last_name"
+        android:layout_marginTop="@dimen/_16sdp"
+        android:background="@drawable/background_with_radius_12"
+        android:padding="@dimen/_12sdp"
+        android:importantForAutofill="no"
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/etEmail"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        style="@style/st_et_style"
+        app:layout_constraintStart_toStartOf="@id/guidelineLeft"
+        app:layout_constraintEnd_toEndOf="@id/guidelineRight"
+        app:layout_constraintTop_toBottomOf="@+id/etLastName"
+        android:hint="@string/hint_email"
+        android:layout_marginTop="@dimen/_16sdp"
+        android:background="@drawable/background_with_radius_12"
+        android:padding="@dimen/_12sdp"
+        android:importantForAutofill="no"
+        android:inputType="textEmailAddress" />
+
+    <EditText
+        android:id="@+id/etPassword"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        style="@style/st_et_style"
+        app:layout_constraintStart_toStartOf="@id/guidelineLeft"
+        app:layout_constraintEnd_toEndOf="@id/guidelineRight"
+        app:layout_constraintTop_toBottomOf="@+id/etEmail"
+        android:hint="@string/hint_password"
+        android:layout_marginTop="@dimen/_16sdp"
+        android:background="@drawable/background_with_radius_12"
+        android:padding="@dimen/_12sdp"
+        android:importantForAutofill="no"
+        android:inputType="textPassword" />
+
+    <Button
+        android:id="@+id/btnSignUp"
+        android:layout_width="0dp"
+        style="@style/st_btn_style"
+        android:layout_height="wrap_content"
+        android:text="@string/btn_sign_up"
+        app:layout_constraintStart_toStartOf="@id/guidelineLeft"
+        app:layout_constraintEnd_toEndOf="@id/guidelineRight"
+        app:layout_constraintTop_toBottomOf="@id/etPassword"
+        app:layout_constraintBottom_toTopOf="@id/tvAlreadyHaveAcc"
+        android:background="@drawable/background_with_radius_12"
+        android:textColor="@color/white"
+        android:padding="@dimen/_8sdp"
+        android:layout_marginVertical="@dimen/_12sdp"
+        />
+
+    <TextView
+        android:id="@+id/tvAlreadyHaveAcc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/st_tv_small"
+        app:layout_constraintTop_toBottomOf="@+id/btnSignUp"
+        app:layout_constraintStart_toStartOf="@id/guidelineLeft"
+        app:layout_constraintEnd_toStartOf="@id/tvLogin"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        android:text="@string/already_have_an_account"
+        />
+
+    <TextView
+        android:id="@+id/tvLogin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/st_tv_small.bold"
+        android:layout_marginStart="@dimen/_8sdp"
+        app:layout_constraintTop_toBottomOf="@+id/btnSignUp"
+        app:layout_constraintStart_toEndOf="@id/tvAlreadyHaveAcc"
+        app:layout_constraintEnd_toEndOf="@id/guidelineRight"
+        app:layout_constraintBaseline_toBaselineOf="@id/tvAlreadyHaveAcc"
+        android:text="@string/btn_login"
+        android:padding="@dimen/_8sdp"
+        android:textColor="@color/blue"
+        />
+
+    <ProgressBar
+        android:id="@+id/progress_circular"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/rgPntOrDoc" />
+        app:layout_constraintEnd_toEndOf="parent"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -20,7 +20,7 @@ import java.util.*
 class ChooseTimeActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityChooseTimeBinding
-    private var doc_id: String? = ""
+    private var doctor_id: Long? = 0
     private var selectedTime: String? = ""
     private var selectedDate: String? = ""
     private val viewModel by viewModel<BookAptViewModel>()
@@ -36,7 +36,7 @@ class ChooseTimeActivity : AppCompatActivity() {
     @SuppressLint("SimpleDateFormat")
     private fun inThis() {
 
-        doc_id = intent.getStringExtra("doc_id")
+        doctor_id = intent.getLongExtra("doctor_id", 0)
 
         binding.ivBack.setOnClickListener { onBackPressed() }
 
@@ -44,14 +44,14 @@ class ChooseTimeActivity : AppCompatActivity() {
         val today = calender.timeInMillis
         binding.calenderView.minDate = today
 
-        selectedDate = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(calender.time)
+        selectedDate = SimpleDateFormat("yyyy-MM-dd").format(calender.time)
 
         binding.calenderView.setOnDateChangeListener { _, year, month, dayOfMonth ->
             calender.set(Calendar.YEAR, year)
             calender.set(Calendar.MONTH, month)
             calender.set(Calendar.DAY_OF_MONTH, dayOfMonth)
 
-            selectedDate = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(calender.time)
+            selectedDate = SimpleDateFormat("yyyy-MM-dd").format(calender.time)
             Timber.d(selectedDate)
         }
 
@@ -65,14 +65,15 @@ class ChooseTimeActivity : AppCompatActivity() {
                     Timber.d("date %s", selectedDate)
                     Timber.d("time %s", selectedTime)
                     val model = AppointmentModel()
-                    model.doc_id = doc_id ?: ""
-                    model.patient_id = Utils.getUserId()
-                    model.schedual_date = selectedDate?.toDate()
+                    model.doctor_id = doctor_id ?: 0
+                    model.patient_id = Utils.getUserId().toLong()
+                    model.created_by = Utils.getUserId().toLong()
+                    model.schedual_date = selectedDate.toString()
                     model.schedual_time = selectedTime ?: ""
-                    model.appointmentTitle = title
-                    model.appointmentDesc = desc
+                    model.title = title
+                    model.note = desc
 
-                    Timber.d("date %s", model.schedual_date.toString())
+                    Timber.d("date %s", model.schedual_date)
 
                     viewModel.bookAppointment(model)
 

@@ -2,6 +2,7 @@ package com.app.consultationpoint.patient.dashboard
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import com.app.consultationpoint.general.model.UserModel
 import com.app.consultationpoint.patient.appointment.model.AppointmentModel
 import com.app.consultationpoint.patient.doctor.model.DoctorModel
 import java.util.*
@@ -20,15 +21,19 @@ class DashboardViewModel(private val repository: DashboardRepository): ViewModel
         return repository.isLogin()
     }
 
-    fun getTodayApt(today: Date, tomorrow: Date) {
-        repository.fetchTodayApt(today, tomorrow)
+    fun init() {
+        repository.init()
+    }
+
+    fun getTodayApt(today: String) {
+        repository.fetchTodayApt(today)
     }
 
     fun getTodayAptList(): LiveData<ArrayList<AppointmentModel>> {
         return repository.getTodayAptList()
     }
 
-    fun getDoctorDetails(docId: String): DoctorModel {
+    fun getDoctorDetails(docId: Long): UserModel {
         return repository.getDoctorDetails(docId)
     }
 }

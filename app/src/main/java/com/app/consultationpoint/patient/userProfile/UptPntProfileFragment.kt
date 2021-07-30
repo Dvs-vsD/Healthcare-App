@@ -18,7 +18,9 @@ import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import kotlinx.android.synthetic.main.fragment_update_profile.*
+import okhttp3.internal.Util
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
@@ -50,8 +52,12 @@ class UpdateProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        Timber.d("userId %s", Utils.getUserId())
+
         binding.etFirstName.setText(Utils.getFirstName())
         binding.etLastName.setText(Utils.getLastName())
+        binding.etAddress.setText(Utils.getUserAdr())
+        binding.etPhnNo.setText(Utils.getUserPhnNo())
 
         binding.tvChangeProfile.setOnClickListener {
             Dexter.withContext(activity)
@@ -85,7 +91,6 @@ class UpdateProfileFragment : Fragment() {
             val phnNo = etPhnNo.text.trim().toString()
             if (firstName.isNotEmpty() && lastName.isNotEmpty()) {
                 val model = UserModel()
-                model.user_id = Utils.getUserId()
                 model.email = Utils.getUserEmail()
                 model.first_name = firstName
                 model.last_name = lastName

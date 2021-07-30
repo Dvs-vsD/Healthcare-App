@@ -116,30 +116,30 @@ class DoctorSignupFragment : Fragment() {
         userModel.password = etPassword.text.trim().toString()
         userModel.mobile = etPhnNo.text.trim().toString()
         userModel.city = etCity.text.trim().toString()
-
-        if (cbMBBS.isChecked) {
-            userModel.degrees.add("MBBS")
-        }
-        if (cbBAMS.isChecked) {
-            userModel.degrees.add("BAMS")
-        }
-        if (cbPGDCC.isChecked) {
-            userModel.degrees.add("PGDCC")
-        }
-        if (cbMD.isChecked) {
-            userModel.degrees.add("MD")
-        }
-        if (cbBHMS.isChecked) {
-            userModel.degrees.add("BHMS")
-        }
-        if (cbDM.isChecked) {
-            userModel.degrees.add("DM")
-        }
-        if (cbOther.isChecked) {
-            val otherDegree = binding.etOtherDegree.text.trim().toString()
-            if (otherDegree.isNotEmpty())
-                userModel.degrees.add(otherDegree)
-        }
+//
+//        if (cbMBBS.isChecked) {
+//            userModel.degrees.add("MBBS")
+//        }
+//        if (cbBAMS.isChecked) {
+//            userModel.degrees.add("BAMS")
+//        }
+//        if (cbPGDCC.isChecked) {
+//            userModel.degrees.add("PGDCC")
+//        }
+//        if (cbMD.isChecked) {
+//            userModel.degrees.add("MD")
+//        }
+//        if (cbBHMS.isChecked) {
+//            userModel.degrees.add("BHMS")
+//        }
+//        if (cbDM.isChecked) {
+//            userModel.degrees.add("DM")
+//        }
+//        if (cbOther.isChecked) {
+//            val otherDegree = binding.etOtherDegree.text.trim().toString()
+//            if (otherDegree.isNotEmpty())
+//                userModel.degrees.add(otherDegree)
+//        }
     }
 
     companion object {

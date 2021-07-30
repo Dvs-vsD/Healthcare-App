@@ -26,7 +26,6 @@ class MyAppointmentsFragment : BaseFragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
 
-            viewModel.initRepo()
             viewModel.getMonthlyAptList().observe(this, {
                 if (adapter != null) {
                     adapter?.notifyDataSetChanged()
@@ -45,6 +44,8 @@ class MyAppointmentsFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        viewModel.initRepo()
 
         adapter = MonthlyAptAdapter(viewModel.getMonthlyAptList(), this@MyAppointmentsFragment)
         binding.recyclerView.setHasFixedSize(true)

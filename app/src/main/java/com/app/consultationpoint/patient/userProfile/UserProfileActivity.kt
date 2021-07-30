@@ -13,6 +13,7 @@ import com.app.consultationpoint.utils.Utils
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.activity_user_profile.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 import androidx.core.net.toUri as toUri
 
 class UserProfileActivity : AppCompatActivity() {
@@ -75,8 +76,10 @@ class UserProfileActivity : AppCompatActivity() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        getProfileDetails()
-    }
+
+//    override fun onResume() {
+//        super.onResume()
+//        Timber.d("resumed")
+//        getProfileDetails()
+//    }
 }

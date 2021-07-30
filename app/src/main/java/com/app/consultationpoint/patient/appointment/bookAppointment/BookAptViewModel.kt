@@ -1,6 +1,7 @@
 package com.app.consultationpoint.patient.appointment.bookAppointment
 
 import androidx.lifecycle.ViewModel
+import com.app.consultationpoint.general.model.UserModel
 import com.app.consultationpoint.patient.appointment.bookAppointment.BookAptRepository
 import com.app.consultationpoint.patient.appointment.model.AppointmentModel
 import com.app.consultationpoint.patient.doctor.model.DoctorModel
@@ -11,7 +12,7 @@ class BookAptViewModel(private val repository: BookAptRepository) : ViewModel() 
         repository.bookAppointment(model)
     }
 
-    fun getDoctorDetails(doc_id: String): DoctorModel {
+    fun getDoctorDetails(doc_id: Long): UserModel {
         return repository.getDoctorDetails(doc_id)
     }
 }

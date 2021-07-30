@@ -12,6 +12,7 @@ import com.app.consultationpoint.R
 import com.app.consultationpoint.databinding.FragmentCalenderBinding
 import com.app.consultationpoint.patient.dashboard.DashboardViewModel
 import com.app.consultationpoint.utils.Utils
+import com.app.consultationpoint.utils.Utils.formatTo
 import com.michalsvec.singlerowcalendar.calendar.CalendarChangesObserver
 import com.michalsvec.singlerowcalendar.calendar.CalendarViewManager
 import com.michalsvec.singlerowcalendar.calendar.SingleRowCalendarAdapter
@@ -31,8 +32,8 @@ class CalenderFragment : Fragment() {
     private lateinit var binding: FragmentCalenderBinding
     private val calender = Calendar.getInstance()
     private var currentMonth = 0
-    private lateinit var today: Date
-    private lateinit var tomorrow: Date
+//    private lateinit var today: Date
+//    private lateinit var tomorrow: Date
     private var currentDtPos: Int = 0
     private val viewModel by viewModel<DashboardViewModel>()
 
@@ -58,6 +59,8 @@ class CalenderFragment : Fragment() {
         calender.time = Date()
         currentMonth = calender[Calendar.MONTH]
         currentDtPos = calender[Calendar.DATE] - 1
+
+        viewModel.init()
 
         setCalender()
     }
@@ -102,22 +105,19 @@ class CalenderFragment : Fragment() {
             override fun whenSelectionChanged(isSelected: Boolean, position: Int, date: Date) {
                 super.whenSelectionChanged(isSelected, position, date)
 
-                today = Utils.todayDate(date)
-                tomorrow = Utils.tomorrowDate(date)
+//                today = Utils.todayDate(date)
+//                tomorrow = Utils.tomorrowDate(date)
 
-                viewModel.getTodayApt(today, tomorrow)
+                viewModel.getTodayApt(date.formatTo("yyyy-MM-dd"))
 
-                Timber.e("old date %s", today.toString())
-                Timber.e("new date %s", tomorrow.toString())
+//                Timber.e("old date %s", today.toString())
+//                Timber.e("new date %s", tomorrow.toString())
             }
         }
 
         binding.singleRowCalendar.calendarSelectionManager = object : CalendarSelectionManager {
             override fun canBeItemSelected(position: Int, date: Date): Boolean {
-                return if (position < currentDtPos)
-                    false
-                else
-                    true
+                return position >= currentDtPos
             }
         }
 

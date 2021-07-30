@@ -28,7 +28,7 @@ val viewModelModule = module {
 val repositoryModule = module {
     single { LoginRegisterRepository(get()) }
     single { DashboardRepository(get()) }
-    single { DoctorRepository() }
+    single { DoctorRepository(get()) }
     single { UserRepository(get()) }
     single { BookAptRepository(get()) }
     single { MyAptRepository(get()) }

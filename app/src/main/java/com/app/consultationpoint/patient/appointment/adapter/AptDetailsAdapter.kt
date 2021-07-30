@@ -6,11 +6,13 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.app.consultationpoint.databinding.RowOfAppointmentDetailBinding
+import com.app.consultationpoint.general.model.UserModel
 import com.app.consultationpoint.patient.appointment.model.AppointmentModel
 import com.app.consultationpoint.patient.appointment.myAppointments.MyAppointmentsFragment
 import com.app.consultationpoint.patient.appointment.myAppointments.MyAptViewModel
 import com.app.consultationpoint.patient.doctor.model.DoctorModel
 import com.app.consultationpoint.utils.Utils.formatTo
+import com.app.consultationpoint.utils.Utils.toDate
 
 class AptDetailsAdapter(
     private val aptList: ArrayList<AppointmentModel>?,
@@ -24,12 +26,12 @@ class AptDetailsAdapter(
 
         @SuppressLint("SetTextI18n")
         fun bind(item: AppointmentModel) {
-            binding.tvDate.text = item.schedual_date?.formatTo("dd")
-            binding.tvMonth.text = item.schedual_date?.formatTo("MMMM")
-            val docDetails: DoctorModel = viewModel.getDoctorDetails(item.doc_id)
+            binding.tvDate.text = item.schedual_date.substring(8)
+            binding.tvMonth.text = item.schedual_date.toDate("yyyy-MM-dd")?.formatTo("MMMM")
+            val docDetails: UserModel = viewModel.getDoctorDetails(item.doctor_id)
             binding.tvDocName.text = "${docDetails.first_name} ${docDetails.last_name}"
             binding.tvSpecAdr.text = "${docDetails.specialization}, ${docDetails.city}"
-            binding.tvTitleTime.text = "For ${item.appointmentTitle} at ${item.schedual_time}"
+            binding.tvTitleTime.text = "For ${item.title} at ${item.schedual_time}"
         }
     }
 

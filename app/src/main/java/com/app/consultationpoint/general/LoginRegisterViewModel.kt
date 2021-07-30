@@ -6,8 +6,8 @@ import com.app.consultationpoint.general.model.UserModel
 
 class LoginRegisterViewModel(private val repository: LoginRegisterRepository) : ViewModel() {
 
-    fun patientSignUp(model: UserModel) {
-        repository.patientSignUp(model)
+    fun signUp(model: UserModel) {
+        repository.signUp(model)
     }
 
     fun getRegistrationStatus(): LiveData<String> {

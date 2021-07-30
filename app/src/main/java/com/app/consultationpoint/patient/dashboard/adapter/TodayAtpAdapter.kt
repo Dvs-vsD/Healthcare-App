@@ -13,6 +13,7 @@ import com.app.consultationpoint.patient.appointment.myAppointments.MyAptViewMod
 import com.app.consultationpoint.patient.dashboard.DashboardFragment
 import com.app.consultationpoint.patient.dashboard.DashboardViewModel
 import com.app.consultationpoint.utils.Utils.formatTo
+import com.app.consultationpoint.utils.Utils.toDate
 import com.bumptech.glide.Glide
 
 class TodayAtpAdapter(
@@ -26,14 +27,14 @@ class TodayAtpAdapter(
         RecyclerView.ViewHolder(binding.root) {
         @SuppressLint("SetTextI18n")
         fun bind(item: AppointmentModel) {
-            val doctorDetails = viewModel.getDoctorDetails(item.doc_id)
+            val doctorDetails = viewModel.getDoctorDetails(item.doctor_id)
             binding.tvDocName.text = doctorDetails.first_name + " " + doctorDetails.last_name
             binding.tvSpecAdr.text = doctorDetails.specialization + ", " + doctorDetails.city
-            if (doctorDetails.profile != "") {
+            if (doctorDetails.profile != "" && doctorDetails.profile != "null") {
                 Glide.with(context).load(doctorDetails.profile).into(binding.ivProfile)
             }
             binding.tvAvailableText.text =
-                "Appointment For " + item.appointmentTitle + "\n" + "on " + item.schedual_date?.formatTo(
+                "Appointment For " + item.title + "\n" + "on " + item.schedual_date.toDate("yyyy-MM-dd")?.formatTo(
                     "dd/MM/yyyy"
                 ) + " at " + item.schedual_time
         }

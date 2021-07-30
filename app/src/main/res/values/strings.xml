@@ -44,7 +44,7 @@
     <string name="hint_address">Address</string>
     <string name="btn_update">Update</string>
     <string name="btn_edit_profile">Edit Profile</string>
-    <string name="hint_phone_number">Phone Number*</string>
+    <string name="hint_phone_number">Phone Number</string>
     <string name="place_holder_address">Address not yet inserted</string>
     <string name="place_holder_phone_number">Phone number not yet inserted</string>
     <string name="tv_no_appointments">No appointments for this day !!!</string>
@@ -63,4 +63,5 @@
     <string name="cb_dm">DM</string>
     <string name="cb_other">Other</string>
     <string name="et_degree">Degree</string>
+    <string name="tv_tag_line">Healthcare made simple</string>
 </resources>
