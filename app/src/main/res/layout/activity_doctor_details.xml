@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_gray"
-    tools:context=".patient.appointment.bookAppointment.DoctorDetailsActivity">
+    tools:context=".patient.doctor.DoctorDetailsActivity">
 
 
     <androidx.constraintlayout.widget.Guideline
@@ -55,7 +55,6 @@
         app:layout_constraintEnd_toStartOf="@id/guidelineRight"
         app:layout_constraintStart_toEndOf="@id/guidelineLeft"
         app:layout_constraintTop_toBottomOf="@+id/tvHeading">
-
 
         <TextView
             android:id="@+id/tvDocName"
@@ -191,9 +190,33 @@
             android:textColor="@color/white"
             app:backgroundTint="@color/blue"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/cvChat"
             app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginEnd="@dimen/_12sdp"
             app:layout_constraintTop_toBottomOf="@id/cvServedPatients" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cvChat"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_margin="@dimen/_1sdp"
+            app:layout_constraintStart_toEndOf="@id/btnBookAppt"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/btnBookAppt"
+            app:layout_constraintBottom_toBottomOf="@id/btnBookAppt"
+            app:cardCornerRadius="@dimen/_12sdp"
+            >
+
+            <ImageView
+                android:layout_width="@dimen/_15sdp"
+                android:layout_height="@dimen/_15sdp"
+                android:layout_margin="@dimen/_12sdp"
+                android:src="@drawable/chat"
+                android:contentDescription="@string/contentDescription"
+                app:tint="@color/green"
+                />
+
+        </androidx.cardview.widget.CardView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -223,8 +246,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             style="@style/st_tv_small.bold_gray"
-            android:text="Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-             Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,"
+            android:text="@string/tv_dummy_text"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_about_doctor_text"

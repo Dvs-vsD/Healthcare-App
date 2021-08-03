@@ -5,12 +5,16 @@ import androidx.lifecycle.MutableLiveData
 import com.app.consultationpoint.ConsultationApp
 import com.app.consultationpoint.general.model.UserModel
 import com.app.consultationpoint.patient.appointment.model.AppointmentModel
+import com.app.consultationpoint.patient.chat.message.model.MessageModel
+import com.app.consultationpoint.patient.chat.room.model.ParticipantModel
+import com.app.consultationpoint.patient.chat.room.model.RoomModel
 import com.app.consultationpoint.patient.doctor.model.DoctorModel
 import com.app.consultationpoint.utils.Const
 import com.app.consultationpoint.utils.Utils
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import io.realm.Realm
+import io.realm.RealmList
 import timber.log.Timber
 
 class FirebaseSource {
@@ -96,6 +100,7 @@ class FirebaseSource {
                 database.collection("Users")
                     .document(System.currentTimeMillis().toString()).set(model)
                 status.value = "success"
+                status.value = ""
 
                 ConsultationApp.shPref.edit().putString(Const.USER_ID, model.id.toString()).apply()
                 ConsultationApp.shPref.edit().putString(Const.FIRST_NAME, model.first_name).apply()
@@ -115,6 +120,7 @@ class FirebaseSource {
     fun login(email: String, password: String) {
         firebaseAuth.signInWithEmailAndPassword(email, password).addOnSuccessListener {
             status.value = "success"
+            status.value = ""
 
             database.collection("Users").get().addOnSuccessListener {
                 for (snapshot in it.documents) {
@@ -200,5 +206,118 @@ class FirebaseSource {
         model.city = result?.city ?: ""
 
         return model
+    }
+
+    // chat functionality
+
+    fun fetchChatRooms() {
+        database.collection("Rooms").get().addOnSuccessListener {
+            val roomList = ArrayList<RoomModel>()
+            for (results in it.documents) {
+                val participantList: ArrayList<Map<String, String>> =
+                    results.get("list_participants") as ArrayList<Map<String, String>>
+
+                Timber.d(participantList.toString())
+
+                for (check in participantList) {
+                    if (check["user_id"].toString() == Utils.getUserId()) {
+                        val room = RoomModel()
+                        room.room_id = results.get("room_id").toString().toLong()
+                        room.room_type = results.get("room_type").toString().toInt()
+                        room.created_by_id = results.get("created_by_id").toString().toLong()
+                        room.photo = results.get("photo").toString()
+                        room.name = results.get("name").toString()
+
+                        val participants: RealmList<ParticipantModel> = RealmList()
+                        for (participant in participantList) {
+                            val mParticipant = ParticipantModel()
+                            mParticipant.paticipant_id =
+                                participant["paticipant_id"].toString().toLong()
+                            mParticipant.room_id = participant["room_id"].toString().toLong()
+                            mParticipant.user_id = participant["user_id"].toString().toLong()
+                            mParticipant.added_by_id =
+                                participant["added_by_id"].toString().toLong()
+                            mParticipant.updated_at = participant["updated_at"].toString().toLong()
+                            mParticipant.is_deleted =
+                                participant["is_deleted"].toString().toBoolean()
+
+                            participants.add(mParticipant)
+                            Timber.d(mParticipant.user_id.toString())
+                        }
+                        Timber.d("first %s", participants[0]?.user_id.toString())
+                        Timber.d("second %s", participants[1]?.user_id.toString())
+
+
+                        room.list_participants = participants
+
+                        if (results.get("last_message") != null) {
+                            val lastMsg = MessageModel()
+                            val lMsgMap: Map<String, String> =
+                                results.get("last_message") as Map<String, String>
+                            lastMsg.message_id = lMsgMap["message_id"].toString().toLong()
+                            lastMsg.room_id = lMsgMap["room_id"].toString().toLong()
+                            lastMsg.sender_id = lMsgMap["sender_id"].toString().toLong()
+                            lastMsg.content = lMsgMap["content"].toString()
+                            lastMsg.content_url = lMsgMap["content_url"].toString()
+                            lastMsg.content_type = lMsgMap["content_type"].toString().toInt()
+                            lastMsg.status = lMsgMap["status"].toString().toInt()
+                            lastMsg.created_at = lMsgMap["created_at"].toString().toLong()
+                            lastMsg.updated_at = lMsgMap["updated_at"].toString().toLong()
+                            lastMsg.is_deleted = lMsgMap["_deleted"].toString().toBoolean()
+
+//                            val msgStsList: RealmList<MessageModel> = RealmList()
+//                            val mgStList: ArrayList<Map<String, String>> = lMsgMap.get("list_message_status") as ArrayList<Map<String, String>>
+//                            lastMsg.list_message_status =
+
+                            room.last_message = lastMsg
+                        }
+
+                        room.updated_at = results.get("updated_at").toString().toLong()
+                        room.created_at = results.get("created_at").toString().toLong()
+                        room.is_req_accept_block =
+                            results.get("_req_accept_block").toString().toInt()
+                        room.is_deleted = results.get("_deleted").toString().toBoolean()
+
+                        roomList.add(room)
+                    }
+                }
+            }
+
+            mRealm.executeTransaction {
+                mRealm.insertOrUpdate(roomList)
+            }
+        }
+    }
+
+    fun createChatRoom(model: RoomModel, senderId: Long, receiverId: Long) {
+        database.collection("Rooms").get().addOnSuccessListener {
+            for (result in it.documents) {
+                val array: List<Map<String, String>> =
+                    result.get("list_participants") as List<Map<String, String>>
+                for (participant in array) {
+                    if ((participant["user_id"].toString() == receiverId.toString()
+                                && participant["added_by_id"].toString() == senderId.toString())
+                        || (participant["user_id"].toString() == senderId.toString()
+                                && participant["added_by_id"].toString() == receiverId.toString())
+                    ) {
+                        status.value = "Record Already Exist"
+                        status.value = ""
+                        return@addOnSuccessListener
+                    }
+                }
+            }
+
+            database.collection("Rooms").document(model.room_id.toString()).set(model)
+                .addOnSuccessListener {
+                    status.value = "Room Added"
+                    status.value = ""
+                }.addOnFailureListener { error ->
+                    status.value = error.message
+                    status.value = ""
+                }
+        }.addOnFailureListener { e ->
+            status.value = e.message
+            status.value = ""
+        }
     }
 }

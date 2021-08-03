@@ -7,10 +7,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
+import com.app.consultationpoint.BaseFragment
 import com.app.consultationpoint.R
 import com.app.consultationpoint.calender.CalenderFragment
 import com.app.consultationpoint.databinding.FragmentDashboardBinding
+import com.app.consultationpoint.patient.bottomNavigation.BottomNavigationActivity
 import com.app.consultationpoint.patient.dashboard.adapter.TodayAtpAdapter
+import com.app.consultationpoint.patient.doctor.DoctorListFragment
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_bottom_navigation.*
 import kotlinx.android.synthetic.main.header_layout.view.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -18,7 +22,7 @@ import timber.log.Timber
 
 private const val ARG_PARAM1 = "param1"
 
-class DashboardFragment : Fragment() {
+class DashboardFragment : BaseFragment() {
     private var param1: String? = null
     private lateinit var binding: FragmentDashboardBinding
     private val viewModel by viewModel<DashboardViewModel>()
@@ -54,6 +58,10 @@ class DashboardFragment : Fragment() {
     @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.tvSearch.setOnClickListener {
+            mFragmentNavigation.pushFragment(DoctorListFragment.newInstance(1))
+        }
 
         val fragmentCalender = CalenderFragment()
         val transaction: FragmentTransaction = childFragmentManager.beginTransaction()

@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.app.consultationpoint.databinding.RowOfDoctorListBinding
 import com.app.consultationpoint.general.model.UserModel
 import com.app.consultationpoint.patient.appointment.bookAppointment.ChooseTimeActivity
-import com.app.consultationpoint.patient.appointment.bookAppointment.DoctorDetailsActivity
+import com.app.consultationpoint.patient.doctor.DoctorDetailsActivity
 import com.bumptech.glide.Glide
 import timber.log.Timber
 

@@ -13,16 +13,4 @@ class BookAptRepository(private val firebaseSource: FirebaseSource) {
     fun bookAppointment(model: AppointmentModel) {
         firebaseSource.bookAppointment(model)
     }
-
-    fun getDoctorDetails(id: Long): UserModel {
-        val model = UserModel()
-        val result = mRealm.where(UserModel::class.java).equalTo("id", id).findFirst()
-        model.first_name = result?.first_name ?: ""
-        model.last_name = result?.last_name ?: ""
-        model.specialization = result?.specialization ?: ""
-        model.city = result?.city ?: ""
-        model.profile = result?.profile?:""
-
-        return model
-    }
 }

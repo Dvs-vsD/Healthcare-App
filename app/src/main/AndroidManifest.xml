@@ -13,6 +13,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ConsultationPoint">
+        <activity android:name=".patient.chat.ChatScreenActivity"></activity>
         <activity android:name=".general.SplashScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,7 +22,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".patient.userProfile.UserProfileActivity" />
-        <activity android:name=".patient.appointment.bookAppointment.DoctorDetailsActivity" />
+        <activity android:name=".patient.doctor.DoctorDetailsActivity" />
         <activity android:name=".patient.appointment.bookAppointment.ChooseTimeActivity" />
         <activity android:name=".general.LoginActivity" />
         <activity android:name=".general.RegisterActivity" />

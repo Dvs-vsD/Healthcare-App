@@ -11,8 +11,4 @@ class BookAptViewModel(private val repository: BookAptRepository) : ViewModel() 
     fun bookAppointment(model: AppointmentModel) {
         repository.bookAppointment(model)
     }
-
-    fun getDoctorDetails(doc_id: Long): UserModel {
-        return repository.getDoctorDetails(doc_id)
-    }
 }

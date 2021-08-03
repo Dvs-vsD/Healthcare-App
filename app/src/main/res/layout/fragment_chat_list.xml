@@ -3,22 +3,57 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/bg_gray_200"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".patient.chat.ChatListFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+        android:layout_height="match_parent">
 
-        <TextView
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guidelineLeft"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Chat Home Screen fragment"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="@dimen/_16sdp" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guidelineRight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="@dimen/_16sdp" />
+
+        <EditText
+            android:id="@+id/etSearch"
+            style="@style/st_et_style"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/background_with_radius_12"
+            android:drawableStart="@drawable/ic_baseline_search_24"
+            android:drawablePadding="@dimen/_12sdp"
+            android:hint="@string/et_hint_search_doctor"
+            android:importantForAutofill="no"
+            android:inputType="text"
+            android:padding="@dimen/_8sdp"
+            app:backgroundTint="@color/white"
+            app:drawableTint="@color/clr_tv_light_gray"
+            app:layout_constraintCircleRadius="@dimen/_16sdp"
+            app:layout_constraintEnd_toEndOf="@id/guidelineRight"
+            app:layout_constraintStart_toStartOf="@id/guidelineLeft"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/recyclerView"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toStartOf="@id/guidelineLeft"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintTop_toBottomOf="@id/etSearch"
+            app:layout_constraintEnd_toEndOf="@id/guidelineRight"
+            tools:listitem="@layout/row_of_chat_list"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

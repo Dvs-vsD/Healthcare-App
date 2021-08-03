@@ -25,6 +25,13 @@
             android:orientation="vertical"
             app:layout_constraintGuide_end="@dimen/_16sdp" />
 
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/grpToolbar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:constraint_referenced_ids="ivBack,tvDoctorList"
+            />
+
         <ImageView
             android:id="@+id/ivBack"
             android:layout_width="@dimen/_30sdp"
@@ -44,9 +51,11 @@
             android:layout_height="wrap_content"
             android:text="@string/doctor_list"
             android:layout_marginTop="@dimen/_12sdp"
+            android:layout_marginBottom="@dimen/_16sdp"
             android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/etSearch"
             app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
@@ -54,20 +63,21 @@
             style="@style/st_et_style"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_16sdp"
             android:background="@drawable/background_with_radius_12"
             android:drawableStart="@drawable/ic_baseline_search_24"
             android:drawablePadding="@dimen/_12sdp"
             android:hint="@string/et_hint_search_doctor"
             android:importantForAutofill="no"
             android:inputType="text"
+            android:layout_marginTop="0dp"
             android:padding="@dimen/_8sdp"
             app:backgroundTint="@color/white"
             app:drawableTint="@color/clr_tv_light_gray"
             app:layout_constraintCircleRadius="@dimen/_16sdp"
             app:layout_constraintEnd_toEndOf="@id/guidelineRight"
             app:layout_constraintStart_toStartOf="@id/guidelineLeft"
-            app:layout_constraintTop_toBottomOf="@id/tvDoctorList" />
+            app:layout_constraintTop_toBottomOf="@id/tvDoctorList"
+            app:layout_constraintBottom_toTopOf="@id/recyclerView"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"

@@ -107,6 +107,12 @@
         <item name="fontFamily">@font/nunito_regular</item>
     </style>
 
+    <style name="st_tv_extra_small.bold_gray">
+        <item name="android:textColor">@color/clr_tv_extra_light_gray</item>
+        <item name="android:textSize">@dimen/tv_s_8</item>
+        <item name="fontFamily">@font/nunito_bold</item>
+    </style>
+
     <style name="st_btn_style">
         <item name="textAllCaps">false</item>
         <item name="android:textSize">@dimen/tv_s_12</item>

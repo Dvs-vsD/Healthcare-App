@@ -64,4 +64,6 @@
     <string name="cb_other">Other</string>
     <string name="et_degree">Degree</string>
     <string name="tv_tag_line">Healthcare made simple</string>
+    <string name="hint_send_message">Send message...</string>
+    <string name="tv_dummy_text">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s,</string>
 </resources>

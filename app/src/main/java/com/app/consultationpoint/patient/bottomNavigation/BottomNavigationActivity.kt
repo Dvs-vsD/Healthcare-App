@@ -73,7 +73,12 @@ class BottomNavigationActivity(override val numberOfRootFragments: Int = 4) : Ap
                 }
             }
 
-            // defaultTransactionOptions = FragNavTransactionOptions.newBuilder().customAnimations(R.anim.slide_in_from_right, R.anim.slide_out_to_left, R.anim.slide_in_from_left, R.anim.slide_out_to_right).build()
+            defaultTransactionOptions = FragNavTransactionOptions.newBuilder().customAnimations(
+                R.anim.slide_in_from_right,
+                R.anim.slide_out_to_left,
+                R.anim.slide_in_from_left,
+                R.anim.slide_out_to_right
+            ).build()
             fragmentHideStrategy = FragNavController.DETACH_ON_NAVIGATE_HIDE_ON_SWITCH
 
             navigationStrategy = UniqueTabHistoryStrategy(object : FragNavSwitchController {
