@@ -6,10 +6,10 @@ import com.app.consultationpoint.firebase.FirebaseSource
 import com.app.consultationpoint.general.model.UserModel
 import com.app.consultationpoint.patient.appointment.model.AppointmentModel
 import com.app.consultationpoint.patient.appointment.model.MonthlyAppointments
-import com.app.consultationpoint.patient.doctor.model.DoctorModel
+import com.app.consultationpoint.utils.Utils
 import com.app.consultationpoint.utils.Utils.toDate
 import io.realm.Realm
-import io.realm.Sort
+import io.realm.RealmResults
 import timber.log.Timber
 import java.util.*
 import kotlin.collections.ArrayList
@@ -21,13 +21,28 @@ class MyAptRepository(private val firebaseSource: FirebaseSource) {
         MutableLiveData(ArrayList())
     private var mRealm: Realm = Realm.getDefaultInstance()
 
+    fun fetchAptFromFirebase() {
+        firebaseSource.fetchMyBookings()
+    }
+
     fun init() {
 
-        firebaseSource.fetchMyBookings()
+        // Apt list not updating with livedata change listener even if realm data changed!!!
 
         val results =
-            mRealm.where(AppointmentModel::class.java).sort("schedual_date").findAll()
+            mRealm.where(AppointmentModel::class.java)
+                .equalTo("patient_id", Utils.getUserId().toLong()).sort("schedual_date").findAll()
 
+        appointmentList.value = monthlyAppointments(getYearMonth(results))
+
+        results.addChangeListener { change ->
+            appointmentList.value?.clear()
+            Timber.d("Apt in Realm changed")
+            appointmentList.value = monthlyAppointments(getYearMonth(change))
+        }
+    }
+
+    private fun getYearMonth(results: RealmResults<AppointmentModel>): ArrayList<String> {
         val set = HashSet<String>()
 
         for (result in results) {
@@ -38,11 +53,7 @@ class MyAptRepository(private val firebaseSource: FirebaseSource) {
         val sortedList: ArrayList<String> = ArrayList(set)
         sortedList.sort()
 
-        appointmentList.value = monthlyAppointments(sortedList)
-
-//        results.addChangeListener { change ->
-//            appointmentList.value = monthlyAppointments(change)
-//        }
+        return sortedList
     }
 
     private fun monthlyAppointments(sortedList: ArrayList<String>): ArrayList<MonthlyAppointments> {
@@ -54,7 +65,9 @@ class MyAptRepository(private val firebaseSource: FirebaseSource) {
             monthlyModel.month = month.substring(5, month.length)
 
             val mRealmResults =
-                mRealm.where(AppointmentModel::class.java).beginsWith("schedual_date", month)
+                mRealm.where(AppointmentModel::class.java)
+                    .equalTo("patient_id", Utils.getUserId().toLong())
+                    .beginsWith("schedual_date", month)
                     .sort("schedual_date").findAll()
 
             val aptList: ArrayList<AppointmentModel> = ArrayList()

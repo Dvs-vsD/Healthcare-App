@@ -60,7 +60,7 @@ class CalenderFragment : Fragment() {
         currentMonth = calender[Calendar.MONTH]
         currentDtPos = calender[Calendar.DATE] - 1
 
-        viewModel.init()
+//        viewModel.init()
 
         setCalender()
     }

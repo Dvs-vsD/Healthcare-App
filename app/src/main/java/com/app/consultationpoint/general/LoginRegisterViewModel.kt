@@ -17,8 +17,4 @@ class LoginRegisterViewModel(private val repository: LoginRegisterRepository) : 
     fun login(email: String, password: String) {
         repository.login(email, password)
     }
-
-    fun isLogin(): Boolean {
-        return repository.isLogin()
-    }
 }

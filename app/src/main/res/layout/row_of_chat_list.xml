@@ -11,7 +11,7 @@
         android:id="@+id/ivProfile"
         android:layout_width="@dimen/_40sdp"
         android:layout_height="@dimen/_40sdp"
-        android:layout_margin="@dimen/_8sdp"
+        android:layout_marginVertical="@dimen/_8sdp"
         android:src="@drawable/default_user"
         app:civ_border="false"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -25,35 +25,45 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/_8sdp"
         android:text="Dr.Mahesh Malpani"
-        app:layout_constraintBottom_toTopOf="@id/tvSpecAdr"
+        app:layout_constraintBottom_toTopOf="@id/tvLastMsg"
         app:layout_constraintEnd_toStartOf="@id/tvLastMsgTime"
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toEndOf="@id/ivProfile"
         app:layout_constraintTop_toTopOf="@id/ivProfile" />
 
     <TextView
-        android:id="@+id/tvSpecAdr"
+        android:id="@+id/tvLastMsg"
         style="@style/st_tv_small.light_gray"
         android:layout_width="0dp"
+        android:visibility="gone"
         android:layout_height="wrap_content"
-        android:text="Heart Specialist, london"
         app:layout_constraintBottom_toBottomOf="@+id/ivProfile"
-        app:layout_constraintEnd_toStartOf="@id/tvLastMsgTime"
+        app:layout_constraintEnd_toEndOf="@id/tvDocName"
         app:layout_constraintStart_toStartOf="@id/tvDocName"
         app:layout_constraintTop_toBottomOf="@id/tvDocName" />
 
     <TextView
         android:id="@+id/tvLastMsgTime"
-        style="@style/st_tv_extra_small.bold_gray"
+        style="@style/st_tv_small10dp.gray"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/_8sdp"
+        android:layout_marginVertical="@dimen/_8sdp"
+        android:layout_marginStart="@dimen/_8sdp"
         android:text="10:30 AM"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1"
         app:layout_constraintStart_toEndOf="@+id/tvDocName"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0.1dp"
+        android:background="@color/clr_tv_extra_light_gray"
+        app:layout_constraintStart_toEndOf="@id/ivProfile"
+        app:layout_constraintEnd_toEndOf="@id/tvLastMsgTime"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

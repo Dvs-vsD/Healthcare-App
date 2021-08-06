@@ -17,10 +17,6 @@ class DashboardViewModel(private val repository: DashboardRepository): ViewModel
         repository.addDoctorList(list)
     }
 
-    fun isLogin(): Boolean {
-        return repository.isLogin()
-    }
-
     fun init() {
         repository.init()
     }

@@ -1,4 +1,4 @@
-package com.app.consultationpoint.patient.chat.message.model
+package com.app.consultationpoint.patient.chat.chatScreen.model
 
 import io.realm.RealmList
 import io.realm.RealmObject

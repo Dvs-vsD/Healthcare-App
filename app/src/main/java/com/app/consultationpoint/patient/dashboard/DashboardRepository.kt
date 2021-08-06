@@ -6,6 +6,7 @@ import com.app.consultationpoint.firebase.FirebaseSource
 import com.app.consultationpoint.general.model.UserModel
 import com.app.consultationpoint.patient.appointment.model.AppointmentModel
 import com.app.consultationpoint.patient.doctor.model.DoctorModel
+import com.app.consultationpoint.utils.Utils
 import com.app.consultationpoint.utils.Utils.formatTo
 import io.realm.Realm
 import io.realm.RealmResults
@@ -35,7 +36,7 @@ class DashboardRepository(private val firebaseSource: FirebaseSource) {
 
     fun fetchTodayApt(today: String) {
         val mRealmResults =
-            mRealm.where(AppointmentModel::class.java).equalTo("schedual_date", today).findAll()
+            mRealm.where(AppointmentModel::class.java).equalTo("patient_id",Utils.getUserId().toLong()).and().equalTo("schedual_date", today).findAll()
         val list: ArrayList<AppointmentModel> = ArrayList()
         list.addAll(mRealmResults)
         Timber.d("list %s", list.toString())
@@ -53,10 +54,6 @@ class DashboardRepository(private val firebaseSource: FirebaseSource) {
 
     fun addDoctorList(list: ArrayList<DoctorModel>) {
         firebaseSource.addDoctorList(list)
-    }
-
-    fun isLogin(): Boolean {
-        return firebaseSource.isLogin()
     }
 
     fun getDoctorDetails(docId: Long): UserModel {

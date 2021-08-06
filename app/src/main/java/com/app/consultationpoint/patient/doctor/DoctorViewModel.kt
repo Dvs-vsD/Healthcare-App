@@ -26,12 +26,8 @@ class DoctorViewModel(private val repository: DoctorRepository): ViewModel() {
 
     // chat function
 
-    fun checkRoomAvailability(senderId: Long, receiverId: Long): String {
+    fun checkRoomAvailability(senderId: Long, receiverId: Long): Long {
         return repository.checkRoomAvailability(senderId, receiverId)
-    }
-
-    fun fetchChatRooms() {
-        repository.fetchChatRooms()
     }
 
     fun createChatRoom(model: RoomModel,senderId: Long, receiverId: Long) {

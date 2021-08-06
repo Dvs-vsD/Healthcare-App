@@ -1,8 +1,7 @@
 package com.app.consultationpoint.patient.chat.room.model
 
-import com.app.consultationpoint.patient.chat.message.model.MessageModel
+import com.app.consultationpoint.patient.chat.chatScreen.model.MessageModel
 import io.realm.RealmList
-import io.realm.RealmModel
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
 
@@ -14,6 +13,7 @@ open class RoomModel: RealmObject() {
 
     var photo: String = ""
     var name: String = ""
+    var user_ids_participants = RealmList<Long>()
     var list_participants = RealmList<ParticipantModel>()
 
     var last_message: MessageModel? = null

@@ -10,15 +10,10 @@ class LoginRegisterRepository(private val firebaseSource: FirebaseSource) {
     }
 
     fun getRegistrationStatus(): LiveData<String> {
-        return firebaseSource.getRegistrationStatus()
+        return firebaseSource.getStatus()
     }
 
     fun login(email: String, password: String) {
         firebaseSource.login(email, password)
     }
-
-    fun isLogin(): Boolean {
-        return firebaseSource.isLogin()
-    }
-
 }

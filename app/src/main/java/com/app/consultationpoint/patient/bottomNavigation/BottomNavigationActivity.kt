@@ -14,13 +14,14 @@ import com.app.consultationpoint.R
 import com.app.consultationpoint.databinding.ActivityBottomNavigationBinding
 import com.app.consultationpoint.general.LoginActivity
 import com.app.consultationpoint.patient.appointment.myAppointments.MyAppointmentsFragment
-import com.app.consultationpoint.patient.chat.ChatListFragment
+import com.app.consultationpoint.patient.chat.room.ChatListFragment
 import com.app.consultationpoint.patient.dashboard.DashboardFragment
 import com.app.consultationpoint.patient.dashboard.DashboardViewModel
 import com.app.consultationpoint.patient.doctor.DoctorListFragment
 import com.app.consultationpoint.patient.userProfile.UserProfileActivity
 import com.app.consultationpoint.utils.Utils
 import com.google.android.material.navigation.NavigationView
+import com.google.type.TimeZoneOrBuilder
 import com.ncapdevi.fragnav.FragNavController
 import com.ncapdevi.fragnav.FragNavLogger
 import com.ncapdevi.fragnav.FragNavSwitchController
@@ -28,6 +29,7 @@ import com.ncapdevi.fragnav.FragNavTransactionOptions
 import com.ncapdevi.fragnav.tabhistory.UniqueTabHistoryStrategy
 import kotlinx.android.synthetic.main.header_layout.view.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 
 class BottomNavigationActivity(override val numberOfRootFragments: Int = 4) : AppCompatActivity(),
     BaseFragment.FragmentNavigation,
@@ -203,5 +205,10 @@ class BottomNavigationActivity(override val numberOfRootFragments: Int = 4) : Ap
 
     override fun onTabTransaction(fragment: Fragment?, index: Int) {
         supportActionBar?.setDisplayHomeAsUpEnabled(fragNavController.isRootFragment.not())
+    }
+
+    override fun onResume() {
+        Timber.d("Main Activity Resumed")
+        super.onResume()
     }
 }

@@ -48,6 +48,7 @@
     <string name="place_holder_address">Address not yet inserted</string>
     <string name="place_holder_phone_number">Phone number not yet inserted</string>
     <string name="tv_no_appointments">No appointments for this day !!!</string>
+    <string name="tv_no_recent_chat">No recent chat found !!!</string>
     <string name="rb_patient">Patient</string>
     <string name="tv_are_you_a_patient_or_doctor">Are you a Patient or Doctor ?</string>
     <string name="hint_city">City</string>

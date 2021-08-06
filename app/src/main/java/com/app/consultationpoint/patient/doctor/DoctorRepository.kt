@@ -19,7 +19,9 @@ class DoctorRepository(private val firebaseSource: FirebaseSource) {
     fun init() {
         firebaseSource.init()
 
-        mRealmResult = mRealm.where(UserModel::class.java).findAll()
+        val usertype = 1
+
+        mRealmResult = mRealm.where(UserModel::class.java).equalTo("user_type_id",usertype).findAll()
         doctorList.value?.addAll(mRealmResult)
         Timber.d("in repo %s", doctorList.value.toString())
 
@@ -68,7 +70,7 @@ class DoctorRepository(private val firebaseSource: FirebaseSource) {
 
     // chat Functionality
 
-    fun checkRoomAvailability(senderId: Long, receiverId: Long): String {
+    fun checkRoomAvailability(senderId: Long, receiverId: Long): Long {
         val results = mRealm.where(ParticipantModel::class.java).findAll()
         val participantList = ArrayList<ParticipantModel>()
         participantList.addAll(results)
@@ -76,14 +78,10 @@ class DoctorRepository(private val firebaseSource: FirebaseSource) {
         for (participant in participantList) {
             if ((participant.added_by_id == senderId && participant.user_id == receiverId)
                 || (participant.added_by_id == receiverId && participant.user_id == senderId)) {
-                return "Record Already There"
+                return participant.room_id
             }
         }
-        return ""
-    }
-
-    fun fetchChatRooms() {
-        firebaseSource.fetchChatRooms()
+        return 0
     }
 
     fun createChatRoom(model: RoomModel,senderId: Long, receiverId: Long) {
@@ -91,6 +89,6 @@ class DoctorRepository(private val firebaseSource: FirebaseSource) {
     }
 
     fun getStatus(): LiveData<String> {
-        return firebaseSource.getRegistrationStatus()
+        return firebaseSource.getStatus()
     }
 }

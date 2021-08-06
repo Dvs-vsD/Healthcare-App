@@ -7,6 +7,10 @@ import com.app.consultationpoint.patient.appointment.bookAppointment.BookAptRepo
 import com.app.consultationpoint.patient.appointment.bookAppointment.BookAptViewModel
 import com.app.consultationpoint.patient.appointment.myAppointments.MyAptRepository
 import com.app.consultationpoint.patient.appointment.myAppointments.MyAptViewModel
+import com.app.consultationpoint.patient.chat.chatScreen.ChatScreenRepository
+import com.app.consultationpoint.patient.chat.chatScreen.ChatScreenViewModel
+import com.app.consultationpoint.patient.chat.room.RoomRepository
+import com.app.consultationpoint.patient.chat.room.RoomViewModel
 import com.app.consultationpoint.patient.dashboard.DashboardRepository
 import com.app.consultationpoint.patient.dashboard.DashboardViewModel
 import com.app.consultationpoint.patient.doctor.DoctorRepository
@@ -23,6 +27,8 @@ val viewModelModule = module {
     viewModel { UserViewModel(get()) }
     viewModel { BookAptViewModel(get()) }
     viewModel { MyAptViewModel(get()) }
+    viewModel { ChatScreenViewModel(get()) }
+    viewModel { RoomViewModel(get()) }
 }
 
 val repositoryModule = module {
@@ -32,6 +38,8 @@ val repositoryModule = module {
     single { UserRepository(get()) }
     single { BookAptRepository(get()) }
     single { MyAptRepository(get()) }
+    single { ChatScreenRepository(get()) }
+    single { RoomRepository(get()) }
 }
 
 val firebaseModule = module {

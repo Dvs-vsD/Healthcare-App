@@ -11,6 +11,11 @@ class MyAptViewModel(private val repository: MyAptRepository) : ViewModel() {
     fun initRepo() {
         repository.init()
     }
+
+    fun fetchAptFromFirebase() {
+        repository.fetchAptFromFirebase()
+    }
+
     fun getMonthlyAptList(): LiveData<ArrayList<MonthlyAppointments>> {
         return repository.getMonthlyAptList()
     }
