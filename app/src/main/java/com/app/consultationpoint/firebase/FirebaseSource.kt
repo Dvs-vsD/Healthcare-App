@@ -21,37 +21,42 @@ class FirebaseSource {
     private var firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
     private var database: FirebaseFirestore = FirebaseFirestore.getInstance()
     private var status: MutableLiveData<String> = MutableLiveData("")
-    private val mRealm: Realm = Realm.getDefaultInstance()
+//    private val mRealm: Realm = Realm.getDefaultInstance()
 
-    fun init() {
-
+    fun fetchDocFromFB() {
         Timber.d("called firebase init")
         val list: ArrayList<UserModel> = ArrayList()
         database.collection("Users").whereEqualTo("user_type_id", 1).get().addOnSuccessListener {
-            for (snapshot in it.documents) {
-                val model = UserModel()
-                model.id = snapshot.get("id").toString().toLong()
-                model.first_name = snapshot.get("first_name").toString()
-                model.last_name = snapshot.get("last_name").toString()
-                model.profile = snapshot.get("profile").toString()
-                model.specialization = snapshot.get("specialization").toString()
-                model.city = snapshot.get("city").toString()
-                model.experience_yr = snapshot.get("experience_yr").toString()
-                model.about_info = snapshot.get("about_info").toString()
-                model.mobile = snapshot.get("mobile").toString()
-                model.user_type_id = snapshot.get("user_type_id").toString().toInt()
-                model.user_token = snapshot.get("user_token").toString()
-                model.created_at = snapshot.get("created_at").toString().toLong()
-                model.updated_at = snapshot.get("updated_at").toString().toLong()
-                model.email = snapshot.get("email").toString()
-                model.address = snapshot.get("address").toString()
-                model.doc_id = snapshot.get("doc_id").toString().toLong()
+            Realm.getDefaultInstance().use { mRealm ->
+                Timber.d("User Fetching instance")
+                for (snapshot in it.documents) {
+                    val model = UserModel()
+                    model.id = snapshot.get("id").toString().toLong()
+                    model.first_name = snapshot.get("first_name").toString()
+                    model.last_name = snapshot.get("last_name").toString()
+                    model.profile = snapshot.get("profile").toString()
+                    model.specialization = snapshot.get("specialization").toString()
+                    model.city = snapshot.get("city").toString()
+                    model.experience_yr = snapshot.get("experience_yr").toString()
+                    model.about_info = snapshot.get("about_info").toString()
+                    model.mobile = snapshot.get("mobile").toString()
+                    model.user_type_id = snapshot.get("user_type_id").toString().toInt()
+                    model.user_token = snapshot.get("user_token").toString()
+                    model.created_at = snapshot.get("created_at").toString().toLong()
+                    model.updated_at = snapshot.get("updated_at").toString().toLong()
+                    model.email = snapshot.get("email").toString()
+                    model.address = snapshot.get("address").toString()
+                    model.doc_id = snapshot.get("doc_id").toString().toLong()
 
-                list.add(model)
-            }
+                    list.add(model)
+                }
 
-            mRealm.executeTransaction {
-                mRealm.insertOrUpdate(list)
+                mRealm.executeTransaction {
+                    mRealm.insertOrUpdate(list)
+                    status.value = "Doctor List Updated"
+                    status.value = ""
+                }
+                Timber.d("Open Instance at %s", System.currentTimeMillis().toString())
             }
         }
     }
@@ -60,26 +65,30 @@ class FirebaseSource {
         val bookingList: ArrayList<AppointmentModel> = ArrayList()
         database.collection("Appointments").whereEqualTo("patient_id", Utils.getUserId().toLong())
             .get().addOnSuccessListener {
-                for (snapshot in it) {
-                    val model = AppointmentModel()
-                    model.appointment_id = snapshot.get("appointment_id").toString().toLong()
-                    model.doctor_id = snapshot.get("doctor_id").toString().toLong()
-                    model.patient_id = snapshot.get("patient_id").toString().toLong()
+                Realm.getDefaultInstance().use { mRealm ->
+                    Timber.d("MyBookings Fetching instance")
+                    for (snapshot in it) {
+                        val model = AppointmentModel()
+                        model.appointment_id = snapshot.get("appointment_id").toString().toLong()
+                        model.doctor_id = snapshot.get("doctor_id").toString().toLong()
+                        model.patient_id = snapshot.get("patient_id").toString().toLong()
 
-                    model.schedual_date = snapshot.get("schedual_date").toString()
+                        model.schedual_date = snapshot.get("schedual_date").toString()
 
-                    model.schedual_time = snapshot.get("schedual_time").toString()
-                    model.title = snapshot.get("title").toString()
-                    model.note = snapshot.get("note").toString()
-                    model.created_at = snapshot.get("created_at").toString().toLong()
-                    model.created_by = snapshot.get("created_by").toString().toLong()
-                    model.updated_at = snapshot.get("updated_at").toString().toLong()
+                        model.schedual_time = snapshot.get("schedual_time").toString()
+                        model.title = snapshot.get("title").toString()
+                        model.note = snapshot.get("note").toString()
+                        model.created_at = snapshot.get("created_at").toString().toLong()
+                        model.created_by = snapshot.get("created_by").toString().toLong()
+                        model.updated_at = snapshot.get("updated_at").toString().toLong()
 
-                    bookingList.add(model)
-                }
+                        bookingList.add(model)
+                    }
 
-                mRealm.executeTransaction {
-                    mRealm.insertOrUpdate(bookingList)
+                    mRealm.executeTransaction {
+                        mRealm.insertOrUpdate(bookingList)
+                    }
+                    Timber.d("Open Instance at %s", System.currentTimeMillis().toString())
                 }
             }
     }
@@ -120,12 +129,15 @@ class FirebaseSource {
         firebaseAuth.signInWithEmailAndPassword(email, password).addOnSuccessListener {
 
             database.collection("Users").get().addOnSuccessListener {
+
                 for (snapshot in it.documents) {
                     val mail = snapshot.get("email").toString()
                     if (email == mail) {
 
+                        val userId = snapshot.get("id").toString()
+
                         ConsultationApp.shPref.edit().putString(
-                            Const.USER_ID, snapshot.get("id").toString()
+                            Const.USER_ID, userId
                         ).apply()
 
                         ConsultationApp.shPref.edit().putString(
@@ -143,6 +155,7 @@ class FirebaseSource {
                         ConsultationApp.shPref.edit().putBoolean(Const.PREF_IS_LOGIN, true).apply()
                     }
                 }
+
                 status.value = "success"
                 status.value = ""
             }
@@ -156,13 +169,7 @@ class FirebaseSource {
     fun logOut() {
         firebaseAuth.signOut()
         status.value = ""
-        ConsultationApp.shPref.edit().putBoolean(Const.PREF_IS_LOGIN, false).apply()
-    }
-
-    fun addDoctorList(list: ArrayList<DoctorModel>) {
-        for (index in 0 until list.size) {
-            database.collection("Doctor").document(index.toString()).set(list[index])
-        }
+        ConsultationApp.shPref.edit().clear().apply()
     }
 
     fun bookAppointment(model: AppointmentModel) {
@@ -192,13 +199,19 @@ class FirebaseSource {
     }
 
     fun getDoctorDetails(docId: Long): UserModel {
-        val model = UserModel()
-        val result = mRealm.where(UserModel::class.java).equalTo("id", docId).findFirst()
-        model.first_name = result?.first_name ?: ""
-        model.last_name = result?.last_name ?: ""
-        model.profile = result?.profile ?: ""
-        model.specialization = result?.specialization ?: ""
-        model.city = result?.city ?: ""
+        var model: UserModel
+
+        Realm.getDefaultInstance().use { mRealm ->
+            Timber.d("Doctor Details Fetching instance")
+            val result = mRealm.where(UserModel::class.java).equalTo("id", docId).findFirst()
+//            model.first_name = result?.first_name ?: ""
+//            model.last_name = result?.last_name ?: ""
+//            model.profile = result?.profile ?: ""
+//            model.specialization = result?.specialization ?: ""
+//            model.city = result?.city ?: ""
+            model = mRealm.copyFromRealm(result) as UserModel
+            Timber.d("Open Instance att %s", System.currentTimeMillis().toString())
+        }
 
         return model
     }
@@ -211,91 +224,99 @@ class FirebaseSource {
             .whereArrayContains("user_ids_participants", userId)
             .addSnapshotListener { snapshot, e ->
 
-                val roomList = ArrayList<RoomModel>()
+                Realm.getDefaultInstance().use { mRealm ->
+                    Timber.d("Chat Room Fetching instance")
+                    val roomList = ArrayList<RoomModel>()
 
-                if (e != null) {
-                    Timber.d("Failed to Fetch Rooms")
-                    return@addSnapshotListener
-                }
+                    if (e != null) {
+                        Timber.d("Failed to Fetch Rooms")
+                        return@addSnapshotListener
+                    }
 
-                if (snapshot != null) {
-                    for (results in snapshot.documentChanges) {
+                    if (snapshot != null) {
+                        for (results in snapshot.documentChanges) {
 
-                        val room = RoomModel()
-                        room.room_id = results.document.data["room_id"].toString().toLong()
-                        room.room_type = results.document.data["room_type"].toString().toInt()
-                        room.created_by_id = results.document.data["created_by_id"].toString().toLong()
-                        room.photo = results.document.data["photo"].toString()
-                        room.name = results.document.data["name"].toString()
+                            val room = RoomModel()
+                            room.room_id = results.document.data["room_id"].toString().toLong()
+                            room.room_type = results.document.data["room_type"].toString().toInt()
+                            room.created_by_id =
+                                results.document.data["created_by_id"].toString().toLong()
+                            room.photo = results.document.data["photo"].toString()
+                            room.name = results.document.data["name"].toString()
 
-                        val participantArray: RealmList<Long> = RealmList()
-                        val memberList: ArrayList<Map<String, String>> =
-                            results.document.data["user_ids_participants"] as ArrayList<Map<String, String>>
+                            val participantArray: RealmList<Long> = RealmList()
+                            val memberList: ArrayList<Map<String, String>> =
+                                results.document.data["user_ids_participants"] as ArrayList<Map<String, String>>
 
-                        for (index in 0 until memberList.size) {
-                            participantArray.add(memberList[index].toString().toLong())
-                        }
+                            for (index in 0 until memberList.size) {
+                                participantArray.add(memberList[index].toString().toLong())
+                            }
 
-                        room.user_ids_participants = participantArray
+                            room.user_ids_participants = participantArray
 
-                        val participants: RealmList<ParticipantModel> = RealmList()
-                        val participantList: ArrayList<Map<String, String>> =
-                            results.document.data["list_participants"] as ArrayList<Map<String, String>>
-                        for (participant in participantList) {
-                            val mParticipant = ParticipantModel()
-                            mParticipant.paticipant_id =
-                                participant["paticipant_id"].toString().toLong()
-                            mParticipant.room_id = participant["room_id"].toString().toLong()
-                            mParticipant.user_id = participant["user_id"].toString().toLong()
-                            mParticipant.added_by_id =
-                                participant["added_by_id"].toString().toLong()
-                            mParticipant.updated_at =
-                                participant["updated_at"].toString().toLong()
-                            mParticipant.is_deleted =
-                                participant["is_deleted"].toString().toBoolean()
+                            val participants: RealmList<ParticipantModel> = RealmList()
+                            val participantList: ArrayList<Map<String, String>> =
+                                results.document.data["list_participants"] as ArrayList<Map<String, String>>
+                            for (participant in participantList) {
+                                val mParticipant = ParticipantModel()
+                                mParticipant.paticipant_id =
+                                    participant["paticipant_id"].toString().toLong()
+                                mParticipant.room_id = participant["room_id"].toString().toLong()
+                                mParticipant.user_id = participant["user_id"].toString().toLong()
+                                mParticipant.added_by_id =
+                                    participant["added_by_id"].toString().toLong()
+                                mParticipant.updated_at =
+                                    participant["updated_at"].toString().toLong()
+                                mParticipant.is_deleted =
+                                    participant["is_deleted"].toString().toBoolean()
 
-                            participants.add(mParticipant)
-                        }
+                                participants.add(mParticipant)
+                            }
 
-                        room.list_participants = participants
+                            room.list_participants = participants
 
-                        if (results.document.data["last_message"] != null) {
-                            val lastMsg = MessageModel()
-                            val lMsgMap: Map<String, String> =
-                                results.document.data["last_message"] as Map<String, String>
-                            lastMsg.message_id = lMsgMap["message_id"].toString().toLong()
-                            lastMsg.room_id = lMsgMap["room_id"].toString().toLong()
-                            lastMsg.sender_id = lMsgMap["sender_id"].toString().toLong()
-                            lastMsg.content = lMsgMap["content"].toString()
-                            lastMsg.content_url = lMsgMap["content_url"].toString()
-                            lastMsg.content_type = lMsgMap["content_type"].toString().toInt()
-                            lastMsg.status = lMsgMap["status"].toString().toInt()
-                            lastMsg.created_at = lMsgMap["created_at"].toString().toLong()
-                            lastMsg.updated_at = lMsgMap["updated_at"].toString().toLong()
-                            lastMsg.is_deleted = lMsgMap["_deleted"].toString().toBoolean()
+                            if (results.document.data["last_message"] != null) {
+                                val lastMsg = MessageModel()
+                                val lMsgMap: Map<String, String> =
+                                    results.document.data["last_message"] as Map<String, String>
+                                lastMsg.message_id = lMsgMap["message_id"].toString().toLong()
+                                lastMsg.room_id = lMsgMap["room_id"].toString().toLong()
+                                lastMsg.sender_id = lMsgMap["sender_id"].toString().toLong()
+                                lastMsg.content = lMsgMap["content"].toString()
+                                lastMsg.content_url = lMsgMap["content_url"].toString()
+                                lastMsg.content_type = lMsgMap["content_type"].toString().toInt()
+                                lastMsg.status = lMsgMap["status"].toString().toInt()
+                                lastMsg.created_at = lMsgMap["created_at"].toString().toLong()
+                                lastMsg.updated_at = lMsgMap["updated_at"].toString().toLong()
+                                lastMsg.is_deleted = lMsgMap["_deleted"].toString().toBoolean()
 
 //                            val msgStsList: RealmList<MessageModel> = RealmList()
 //                            val mgStList: ArrayList<Map<String, String>> = lMsgMap.get("list_message_status") as ArrayList<Map<String, String>>
 //                            lastMsg.list_message_status =
 
-                            room.last_message = lastMsg
+                                room.last_message = lastMsg
+                            }
+
+                            room.updated_at =
+                                results.document.data["updated_at"].toString().toLong()
+                            room.created_at =
+                                results.document.data["created_at"].toString().toLong()
+                            room.is_req_accept_block =
+                                results.document.data["_req_accept_block"].toString().toInt()
+                            room.is_deleted =
+                                results.document.data["_deleted"].toString().toBoolean()
+
+                            roomList.add(room)
                         }
-
-                        room.updated_at = results.document.data["updated_at"].toString().toLong()
-                        room.created_at = results.document.data["created_at"].toString().toLong()
-                        room.is_req_accept_block =
-                            results.document.data["_req_accept_block"].toString().toInt()
-                        room.is_deleted = results.document.data["_deleted"].toString().toBoolean()
-
-                        roomList.add(room)
                     }
-                }
-                mRealm.executeTransaction {
-                    mRealm.insertOrUpdate(roomList)
-                    Timber.d("room added to realm %s", roomList.toString())
+                    mRealm.executeTransaction {
+                        mRealm.insertOrUpdate(roomList)
+                        Timber.d("room added to realm %s", roomList.toString())
+                    }
+                    Timber.d("Open Instance at %s", System.currentTimeMillis().toString())
                 }
                 val end = System.currentTimeMillis()
-                Timber.d("Time Taken %s", (end-start).toString())
+                Timber.d("Time Taken %s", (end - start).toString())
             }
     }
 
@@ -341,38 +362,49 @@ class FirebaseSource {
     }
 
     fun fetchMessages(roomId: Long) {
-        database.collection("Messages").whereEqualTo("room_id", roomId).addSnapshotListener { snapshot, e ->
-            if (e != null) {
-                Timber.d("Listener Failed %s", e.toString())
-                return@addSnapshotListener
-            }
+        database.collection("Messages").whereEqualTo("room_id", roomId)
+            .addSnapshotListener { snapshot, e ->
+                Realm.getDefaultInstance().use { mRealm ->
+                    Timber.d("Message Fetching instance")
+                    if (e != null) {
+                        Timber.d("Listener Failed %s", e.toString())
+                        return@addSnapshotListener
+                    }
 
-            if (snapshot != null) {
-                val msgList = ArrayList<MessageModel>()
-                for (docSnap in snapshot.documentChanges) {
-                    val msgModel = MessageModel()
-                    msgModel.message_id = docSnap.document.data["message_id"].toString().toLong()
-                    msgModel.room_id = docSnap.document.data["room_id"].toString().toLong()
-                    msgModel.sender_id = docSnap.document.data["sender_id"].toString().toLong()
-                    msgModel.content = docSnap.document.data["content"].toString()
-                    msgModel.content_url = docSnap.document.data["content_url"].toString()
-                    msgModel.content_type = docSnap.document.data["content_type"].toString().toInt()
-                    msgModel.status = docSnap.document.data["status"].toString().toInt()
-                    msgModel.created_at = docSnap.document.data["created_at"].toString().toLong()
-                    msgModel.updated_at = docSnap.document.data["updated_at"].toString().toLong()
-                    msgModel.is_deleted = docSnap.document.data["_deleted"].toString().toBoolean()
+                    if (snapshot != null) {
+                        val msgList = ArrayList<MessageModel>()
+                        for (docSnap in snapshot.documentChanges) {
+                            val msgModel = MessageModel()
+                            msgModel.message_id =
+                                docSnap.document.data["message_id"].toString().toLong()
+                            msgModel.room_id = docSnap.document.data["room_id"].toString().toLong()
+                            msgModel.sender_id =
+                                docSnap.document.data["sender_id"].toString().toLong()
+                            msgModel.content = docSnap.document.data["content"].toString()
+                            msgModel.content_url = docSnap.document.data["content_url"].toString()
+                            msgModel.content_type =
+                                docSnap.document.data["content_type"].toString().toInt()
+                            msgModel.status = docSnap.document.data["status"].toString().toInt()
+                            msgModel.created_at =
+                                docSnap.document.data["created_at"].toString().toLong()
+                            msgModel.updated_at =
+                                docSnap.document.data["updated_at"].toString().toLong()
+                            msgModel.is_deleted =
+                                docSnap.document.data["_deleted"].toString().toBoolean()
 
-                    // msg status list is remaining
+                            // msg status list is remaining
 
-                    Timber.d(docSnap.document.data["content"].toString())
+                            Timber.d(docSnap.document.data["content"].toString())
 
-                    msgList.add(msgModel)
+                            msgList.add(msgModel)
+                        }
+
+                        mRealm.executeTransaction {
+                            mRealm.insertOrUpdate(msgList)
+                        }
+                    }
+                    Timber.d("Open Instance at %s", System.currentTimeMillis().toString())
                 }
-
-                mRealm.executeTransaction {
-                    mRealm.insertOrUpdate(msgList)
-                }
             }
-        }
     }
 }

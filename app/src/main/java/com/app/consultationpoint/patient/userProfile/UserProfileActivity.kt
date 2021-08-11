@@ -2,10 +2,14 @@ package com.app.consultationpoint.patient.userProfile
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.Typeface
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.app.consultationpoint.R
 import com.app.consultationpoint.databinding.ActivityUserProfileBinding
 import com.app.consultationpoint.general.LoginActivity
@@ -14,6 +18,7 @@ import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.activity_user_profile.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
+import java.io.File
 import androidx.core.net.toUri as toUri
 
 class UserProfileActivity : AppCompatActivity() {
@@ -58,9 +63,7 @@ class UserProfileActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     private fun getProfileDetails() {
         if (Utils.getUserProfile() != "") {
-//            val profileUri = Utils.getUserProfile().toUri()
-            val profileUri = Uri.parse(Utils.getUserProfile())
-            binding.ivProfile.setImageURI(profileUri)
+//            binding.ivProfile.setImageBitmap(Utils.getImageBitMap(this, Utils.getUserProfile()))
         }
         binding.tvUserName.text = Utils.getFirstName() + " " + Utils.getLastName()
         binding.tvUserEmail.text = Utils.getUserEmail()

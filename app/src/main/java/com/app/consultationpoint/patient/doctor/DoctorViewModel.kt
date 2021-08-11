@@ -8,8 +8,11 @@ import com.app.consultationpoint.patient.chat.room.model.RoomModel
 
 class DoctorViewModel(private val repository: DoctorRepository): ViewModel() {
 
-    fun init() {
-        repository.init()
+    fun fetchDocFromFB() {
+        repository.fetchDocFromFB()
+    }
+    fun fetchDocFromRDB() {
+        repository.fetchDocFromRDB()
     }
 
     fun getDoctorList() : LiveData<ArrayList<UserModel>>{

@@ -16,32 +16,47 @@ import kotlin.collections.ArrayList
 
 class DashboardRepository(private val firebaseSource: FirebaseSource) {
 
-    private var mRealm: Realm = Realm.getDefaultInstance()
+//    private var mRealm: Realm = Realm.getDefaultInstance()
 
-    private lateinit var mRealmResults: RealmResults<AppointmentModel>
+//    private lateinit var mRealmResults: RealmResults<AppointmentModel>
     private var todayAptList: MutableLiveData<ArrayList<AppointmentModel>> =
         MutableLiveData(ArrayList())
 
-    fun init() {
-        firebaseSource.fetchMyBookings()
-
-        val today = Date().formatTo("yyyy-MM-dd")
-
-        mRealmResults =
-            mRealm.where(AppointmentModel::class.java).equalTo("schedual_date", today)
-                .findAll()
-
-        todayAptList.value?.addAll(mRealmResults)
-    }
+//    fun init() {
+//        firebaseSource.fetchMyBookings()
+//
+//        Realm.getDefaultInstance().use { mRealm ->
+//            Timber.d("initial day Apt Fetching instance")
+//            val today = Date().formatTo("yyyy-MM-dd")
+//
+//            mRealmResults =
+//                mRealm.where(AppointmentModel::class.java).equalTo("schedual_date", today)
+//                    .findAll()
+//            val aptList: ArrayList<AppointmentModel> = mRealm.copyFromRealm(mRealmResults) as ArrayList<AppointmentModel>
+//            todayAptList.value = aptList
+//            Timber.d("Open Instance at %s", System.currentTimeMillis().toString())
+//        }
+//    }
 
     fun fetchTodayApt(today: String) {
-        val mRealmResults =
-            mRealm.where(AppointmentModel::class.java).equalTo("patient_id",Utils.getUserId().toLong()).and().equalTo("schedual_date", today).findAll()
-        val list: ArrayList<AppointmentModel> = ArrayList()
-        list.addAll(mRealmResults)
-        Timber.d("list %s", list.toString())
-        todayAptList.value?.clear()
-        todayAptList.value = list
+        Realm.getDefaultInstance().use { mRealm ->
+            Timber.d("Function Today's apt Fetching instance")
+            val mRealmResults =
+                mRealm.where(AppointmentModel::class.java)
+                    .equalTo("patient_id", Utils.getUserId().toLong()).and()
+                    .equalTo("schedual_date", today).findAll()
+            val list: ArrayList<AppointmentModel> = mRealm.copyFromRealm(mRealmResults) as ArrayList<AppointmentModel>
+            Timber.d("list %s", list.toString())
+            todayAptList.value?.clear()
+            todayAptList.value = list
+
+            mRealmResults.addChangeListener { change ->
+                todayAptList.value?.clear()
+                val newList: ArrayList<AppointmentModel> = mRealm.copyFromRealm(change) as ArrayList<AppointmentModel>
+                todayAptList.value = newList
+            }
+            Timber.d("Open Instance at %s", System.currentTimeMillis().toString())
+        }
     }
 
     fun getTodayAptList(): LiveData<ArrayList<AppointmentModel>> {
@@ -50,10 +65,6 @@ class DashboardRepository(private val firebaseSource: FirebaseSource) {
 
     fun logout() {
         firebaseSource.logOut()
-    }
-
-    fun addDoctorList(list: ArrayList<DoctorModel>) {
-        firebaseSource.addDoctorList(list)
     }
 
     fun getDoctorDetails(docId: Long): UserModel {

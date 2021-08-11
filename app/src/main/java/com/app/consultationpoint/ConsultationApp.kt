@@ -3,6 +3,7 @@ package com.app.consultationpoint
 import android.app.Application
 import android.content.SharedPreferences
 import com.app.consultationpoint.utils.Const
+import com.app.consultationpoint.utils.Utils
 import io.realm.Realm
 import io.realm.RealmConfiguration
 import org.koin.android.ext.koin.androidContext
@@ -26,18 +27,24 @@ class ConsultationApp : Application() {
             Timber.plant(Timber.DebugTree())
         }
 
-        Realm.init(this)
-
-        val config = RealmConfiguration.Builder()
-            .allowQueriesOnUiThread(true)
-            .allowWritesOnUiThread(true)
-            .deleteRealmIfMigrationNeeded()
-            .build()
-
-        Realm.setDefaultConfiguration(config)
-
         shPref = this.getSharedPreferences(
             Const.SHARED_PREF_APP_NAME, MODE_PRIVATE
         )
+
+        Realm.init(this)
+
+        Timber.d("user id %s", Utils.getUserId())
+
+        if (Utils.getUserId().isNotEmpty()) {
+
+            val config = RealmConfiguration.Builder()
+                .name(Utils.getUserId() + "db.realm")
+                .allowQueriesOnUiThread(true)
+                .allowWritesOnUiThread(true)
+                .deleteRealmIfMigrationNeeded()
+                .build()
+
+            Realm.setDefaultConfiguration(config)
+        }
     }
 }

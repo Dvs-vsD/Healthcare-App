@@ -105,13 +105,7 @@ class CalenderFragment : Fragment() {
             override fun whenSelectionChanged(isSelected: Boolean, position: Int, date: Date) {
                 super.whenSelectionChanged(isSelected, position, date)
 
-//                today = Utils.todayDate(date)
-//                tomorrow = Utils.tomorrowDate(date)
-
                 viewModel.getTodayApt(date.formatTo("yyyy-MM-dd"))
-
-//                Timber.e("old date %s", today.toString())
-//                Timber.e("new date %s", tomorrow.toString())
             }
         }
 

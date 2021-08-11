@@ -2,7 +2,6 @@ package com.app.consultationpoint.patient.appointment.myAppointments
 
 import android.os.Bundle
 import android.os.Handler
-import android.os.Looper
 import android.view.*
 import com.app.consultationpoint.BaseFragment
 import com.app.consultationpoint.databinding.FragmentMyAppointmentsBinding
@@ -11,6 +10,7 @@ import com.app.consultationpoint.patient.doctor.DoctorListFragment
 import kotlinx.android.synthetic.main.activity_bottom_navigation.*
 import kotlinx.android.synthetic.main.fragment_dashboard.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
@@ -28,9 +28,15 @@ class MyAppointmentsFragment : BaseFragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
 
-            viewModel.getMonthlyAptList().observe(this, {
+            viewModel.getMonthlyAptList().observe(this, { list ->
                 if (adapter != null) {
+                    Timber.d("Apt list notified")
                     adapter?.notifyDataSetChanged()
+                    if (list.isNotEmpty()) {
+                        binding.tvNoData.visibility = View.GONE
+                    } else {
+                        binding.tvNoData.visibility = View.VISIBLE
+                    }
                 }
             })
         }
@@ -59,19 +65,25 @@ class MyAppointmentsFragment : BaseFragment() {
             binding.tvNoData.visibility = View.VISIBLE
         } else {
             binding.tvNoData.visibility = View.GONE
-            binding.recyclerView.setHasFixedSize(true)
-            binding.recyclerView.adapter = adapter
         }
+
+        binding.recyclerView.setHasFixedSize(true)
+        binding.recyclerView.adapter = adapter
 
         binding.pullToRefresh.setOnRefreshListener {
             viewModel.fetchAptFromFirebase()
-//            viewModel.initRepo()
+            viewModel.initRepo()
             Handler().postDelayed({ binding.pullToRefresh.isRefreshing = false }, 3000)
         }
 
         binding.fab.setOnClickListener {
             mFragmentNavigation.pushFragment(DoctorListFragment.newInstance(0))
         }
+    }
+
+    override fun onResume() {
+        viewModel.initRepo()
+        super.onResume()
     }
 
     companion object {

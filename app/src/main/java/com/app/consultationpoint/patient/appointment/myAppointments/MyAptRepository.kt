@@ -70,20 +70,7 @@ class MyAptRepository(private val firebaseSource: FirebaseSource) {
                     .beginsWith("schedual_date", month)
                     .sort("schedual_date").findAll()
 
-            val aptList: ArrayList<AppointmentModel> = ArrayList()
-            for (data in mRealmResults) {
-                val model = AppointmentModel()
-                model.doctor_id = data.doctor_id
-                model.appointment_id = data.appointment_id
-                model.patient_id = data.patient_id
-                model.schedual_date = data.schedual_date
-                model.schedual_time = data.schedual_time
-                model.title = data.title
-                model.note = data.note
-
-                aptList.add(model)
-            }
-
+            val aptList: ArrayList<AppointmentModel> = mRealm.copyFromRealm(mRealmResults) as ArrayList<AppointmentModel>
             monthlyModel.appointment = aptList
             list.add(monthlyModel)
         }

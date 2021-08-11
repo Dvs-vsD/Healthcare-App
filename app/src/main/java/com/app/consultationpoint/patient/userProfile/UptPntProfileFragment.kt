@@ -121,9 +121,10 @@ class UpdateProfileFragment : Fragment() {
 
     private fun capturePhoto() {
         val picImage = Intent(
-            Intent.ACTION_PICK,
+            Intent.ACTION_OPEN_DOCUMENT,
             android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI
         )
+        picImage.type = "image/*"
         startActivityForResult(picImage, 0)
     }
 

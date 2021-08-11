@@ -36,7 +36,7 @@ class ChatScreenActivity : AppCompatActivity() {
 
         viewModel.getMessages().observe(this, {
             if (it != null && it.isNotEmpty()) {
-                chatAdapter?.notifyDataSetChanged()
+                chatAdapter?.notifyItemInserted(it.size)
             }
         })
 

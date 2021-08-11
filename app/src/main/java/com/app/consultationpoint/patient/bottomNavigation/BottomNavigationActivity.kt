@@ -21,12 +21,13 @@ import com.app.consultationpoint.patient.doctor.DoctorListFragment
 import com.app.consultationpoint.patient.userProfile.UserProfileActivity
 import com.app.consultationpoint.utils.Utils
 import com.google.android.material.navigation.NavigationView
-import com.google.type.TimeZoneOrBuilder
 import com.ncapdevi.fragnav.FragNavController
 import com.ncapdevi.fragnav.FragNavLogger
 import com.ncapdevi.fragnav.FragNavSwitchController
 import com.ncapdevi.fragnav.FragNavTransactionOptions
 import com.ncapdevi.fragnav.tabhistory.UniqueTabHistoryStrategy
+import io.realm.Realm
+import io.realm.RealmConfiguration
 import kotlinx.android.synthetic.main.header_layout.view.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
@@ -47,6 +48,18 @@ class BottomNavigationActivity(override val numberOfRootFragments: Int = 4) : Ap
         binding = ActivityBottomNavigationBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        if (intent.getBooleanExtra("newUser", false)) {
+            val config = RealmConfiguration.Builder()
+                .name(Utils.getUserId() + "db.realm")
+                .allowQueriesOnUiThread(true)
+                .allowWritesOnUiThread(true)
+                .deleteRealmIfMigrationNeeded()
+                .build()
+
+            Realm.setDefaultConfiguration(config)
+            Timber.d("db created and default deleted")
+        }
+
         val toggle = ActionBarDrawerToggle(
             this,
             binding.drawerLayout,
@@ -60,6 +73,8 @@ class BottomNavigationActivity(override val numberOfRootFragments: Int = 4) : Ap
         binding.navigationView.setNavigationItemSelectedListener(this)
 
         binding.navigationView.getHeaderView(0).tvUserName.text = "Hello, ${Utils.getFirstName()}"
+//        binding.navigationView.getHeaderView(0).ivProfile.setImageBitmap(Utils.getImageBitMap(this, Utils.getUserProfile()))
+//        binding.ivProfile.setImageBitmap(Utils.getImageBitMap(this, Utils.getUserProfile()))
 
         binding.ivProfile.setOnClickListener {
             startActivity(Intent(this, UserProfileActivity::class.java))

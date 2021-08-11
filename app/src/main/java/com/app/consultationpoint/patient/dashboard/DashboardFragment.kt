@@ -40,7 +40,7 @@ class DashboardFragment : BaseFragment() {
             } else {
                 binding.tvNoData.visibility = View.GONE
             }
-            if (adapterTodayApt != null) {
+            if (adapterTodayApt != null && it.isNotEmpty()) {
                 Timber.d("notified")
                 adapterTodayApt?.notifyDataSetChanged()
             }
@@ -68,7 +68,10 @@ class DashboardFragment : BaseFragment() {
         transaction.replace(R.id.llCalender, fragmentCalender)
         transaction.commit()
 
+//        viewModel.init()
+
         adapterTodayApt = TodayAtpAdapter(viewModel.getTodayAptList(), this@DashboardFragment)
+        binding.recyclerView.itemAnimator = null
         binding.recyclerView.adapter = adapterTodayApt
     }
 

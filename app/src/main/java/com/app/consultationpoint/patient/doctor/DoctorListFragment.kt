@@ -28,8 +28,17 @@ class DoctorListFragment : BaseFragment() {
             param1 = it.getString(ARG_PARAM1)
         }
 
+        viewModel.getStatus().observe(this, {
+            if (it == "Doctor List Updated" && adapterDoctor != null) {
+                Timber.d("Adapter notified by the init doctor list realm")
+                viewModel.getDoctorList()
+            }
+        })
+
         viewModel.getDoctorList().observe(this, {
             if (adapterDoctor != null) {
+                Timber.d("doctor list changed")
+//                adapterDoctor?.notifyItemRangeInserted(0,it.size)
                 adapterDoctor?.notifyDataSetChanged()
             }
         })
@@ -51,16 +60,14 @@ class DoctorListFragment : BaseFragment() {
         else
             binding.grpToolbar.visibility = View.VISIBLE
 
-        viewModel.init()
-
-        Timber.d(viewModel.getDoctorList().value.toString())
+        viewModel.fetchDocFromFB()
+        viewModel.fetchDocFromRDB()
         adapterDoctor = DoctorAdapter(viewModel.getDoctorList(), activity)
 
-        binding.recyclerView.apply {
-            this.layoutManager = GridLayoutManager(activity, 2)
-            this.setHasFixedSize(true)
-            this.adapter = adapterDoctor
-        }
+        binding.recyclerView.layoutManager = GridLayoutManager(activity, 2)
+        binding.recyclerView.setHasFixedSize(true)
+        binding.recyclerView.itemAnimator = null
+        binding.recyclerView.adapter = adapterDoctor
 
         binding.etSearch.addTextChangedListener { text ->
             if (text?.trim().toString().isNotEmpty()) {

@@ -4,6 +4,9 @@ import android.annotation.SuppressLint
 import android.app.Dialog
 import android.app.ProgressDialog
 import android.content.Context
+import android.graphics.Bitmap
+import android.net.Uri
+import android.provider.MediaStore
 import com.app.consultationpoint.ConsultationApp
 import java.text.SimpleDateFormat
 import java.util.*
@@ -91,6 +94,11 @@ object Utils {
     }
     fun getUserAdr(): String {
         return ConsultationApp.shPref.getString(Const.ADDRESS,"")?:""
+    }
+
+    fun getImageBitMap(context: Context, image: String): Bitmap {
+        val imgUri: Uri = Uri.parse(image)
+        return MediaStore.Images.Media.getBitmap(context.contentResolver,imgUri)
     }
 
 }

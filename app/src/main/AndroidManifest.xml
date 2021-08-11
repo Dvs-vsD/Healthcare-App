@@ -13,7 +13,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ConsultationPoint">
-        <activity android:name=".patient.chat.chatScreen.ChatScreenActivity"></activity>
+        <activity android:name=".patient.chat.chatScreen.ChatScreenActivity" />
         <activity android:name=".general.SplashScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,6 +29,17 @@
         <activity
             android:name=".patient.bottomNavigation.BottomNavigationActivity"
             android:windowSoftInputMode="adjustPan" />
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.app.consultationpoint"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_provider_path" />
+        </provider>
+
     </application>
 
 </manifest>

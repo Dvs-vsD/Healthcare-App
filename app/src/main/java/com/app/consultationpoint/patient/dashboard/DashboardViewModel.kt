@@ -1,4 +1,4 @@
-package com.app.consultationpoint.patient.dashboard
+    package com.app.consultationpoint.patient.dashboard
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
@@ -11,14 +11,6 @@ import kotlin.collections.ArrayList
 class DashboardViewModel(private val repository: DashboardRepository): ViewModel() {
     fun logout() {
         repository.logout()
-    }
-
-    fun addDoctorList(list: ArrayList<DoctorModel>) {
-        repository.addDoctorList(list)
-    }
-
-    fun init() {
-        repository.init()
     }
 
     fun getTodayApt(today: String) {

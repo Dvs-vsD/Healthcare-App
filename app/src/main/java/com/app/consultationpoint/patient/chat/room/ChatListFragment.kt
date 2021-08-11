@@ -35,6 +35,7 @@ class ChatListFragment : BaseFragment() {
         viewModel.getRoomList().observe(this, {
             if (it != null && it.isNotEmpty() && adapter != null) {
                 adapter?.notifyDataSetChanged()
+                binding.tvNoData.visibility = View.GONE
                 Timber.d("Room adapter notified %s", it)
             }
         })
