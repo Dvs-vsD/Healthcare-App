@@ -78,68 +78,79 @@
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <ImageView
-                    android:id="@+id/ivTeeth"
-                    android:layout_width="@dimen/_40sdp"
-                    android:layout_height="@dimen/_40sdp"
-                    android:layout_marginVertical="@dimen/_6sdp"
-                    android:background="@drawable/circle_background"
-                    android:backgroundTint="@color/white"
-                    android:contentDescription="@string/contentDescription"
-                    android:padding="@dimen/_12sdp"
-                    android:src="@drawable/tooth"
-                    app:layout_constraintBottom_toTopOf="@id/tvSearch"
-                    app:layout_constraintEnd_toStartOf="@id/ivHeart"
-                    app:layout_constraintHorizontal_chainStyle="spread_inside"
+<!--                <ImageView-->
+<!--                    android:id="@+id/ivTeeth"-->
+<!--                    android:layout_width="@dimen/_40sdp"-->
+<!--                    android:layout_height="@dimen/_40sdp"-->
+<!--                    android:layout_marginVertical="@dimen/_6sdp"-->
+<!--                    android:background="@drawable/circle_background"-->
+<!--                    android:backgroundTint="@color/white"-->
+<!--                    android:contentDescription="@string/contentDescription"-->
+<!--                    android:padding="@dimen/_12sdp"-->
+<!--                    android:src="@drawable/tooth"-->
+<!--                    app:layout_constraintBottom_toTopOf="@id/tvSearch"-->
+<!--                    app:layout_constraintEnd_toStartOf="@id/ivHeart"-->
+<!--                    app:layout_constraintHorizontal_chainStyle="spread_inside"-->
+<!--                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                    app:layout_constraintTop_toBottomOf="@id/tvText"-->
+<!--                    app:tint="@color/yellow" />-->
+
+<!--                <ImageView-->
+<!--                    android:id="@+id/ivHeart"-->
+<!--                    android:layout_width="@dimen/_40sdp"-->
+<!--                    android:layout_height="@dimen/_40sdp"-->
+<!--                    android:layout_marginVertical="@dimen/_6sdp"-->
+<!--                    android:background="@drawable/circle_background"-->
+<!--                    android:backgroundTint="@color/white"-->
+<!--                    android:contentDescription="@string/contentDescription"-->
+<!--                    android:padding="@dimen/_12sdp"-->
+<!--                    android:src="@drawable/ic_baseline_favorite_24"-->
+<!--                    app:layout_constraintEnd_toStartOf="@id/ivEye"-->
+<!--                    app:layout_constraintStart_toEndOf="@id/ivTeeth"-->
+<!--                    app:layout_constraintTop_toBottomOf="@id/tvText"-->
+<!--                    app:tint="@color/pink" />-->
+
+<!--                <ImageView-->
+<!--                    android:id="@+id/ivEye"-->
+<!--                    android:layout_width="@dimen/_40sdp"-->
+<!--                    android:layout_height="@dimen/_40sdp"-->
+<!--                    android:layout_marginVertical="@dimen/_6sdp"-->
+<!--                    android:background="@drawable/circle_background"-->
+<!--                    android:backgroundTint="@color/white"-->
+<!--                    android:contentDescription="@string/contentDescription"-->
+<!--                    android:padding="@dimen/_12sdp"-->
+<!--                    android:src="@drawable/ic_baseline_remove_red_eye_24"-->
+<!--                    app:layout_constraintEnd_toStartOf="@id/ivInjection"-->
+<!--                    app:layout_constraintStart_toEndOf="@id/ivHeart"-->
+<!--                    app:layout_constraintTop_toBottomOf="@id/tvText"-->
+<!--                    app:tint="@color/pink" />-->
+
+<!--                <ImageView-->
+<!--                    android:id="@+id/ivInjection"-->
+<!--                    android:layout_width="@dimen/_40sdp"-->
+<!--                    android:layout_height="@dimen/_40sdp"-->
+<!--                    android:layout_marginVertical="@dimen/_6sdp"-->
+<!--                    android:background="@drawable/circle_background"-->
+<!--                    android:backgroundTint="@color/white"-->
+<!--                    android:contentDescription="@string/contentDescription"-->
+<!--                    android:padding="@dimen/_12sdp"-->
+<!--                    android:rotationY="180"-->
+<!--                    android:src="@drawable/injection"-->
+<!--                    app:layout_constraintEnd_toEndOf="parent"-->
+<!--                    app:layout_constraintStart_toEndOf="@id/ivEye"-->
+<!--                    app:layout_constraintTop_toBottomOf="@id/tvText"-->
+<!--                    app:tint="@color/blue" />-->
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvHorizontal"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_16sdp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tvText"
-                    app:tint="@color/yellow" />
-
-                <ImageView
-                    android:id="@+id/ivHeart"
-                    android:layout_width="@dimen/_40sdp"
-                    android:layout_height="@dimen/_40sdp"
-                    android:layout_marginVertical="@dimen/_6sdp"
-                    android:background="@drawable/circle_background"
-                    android:backgroundTint="@color/white"
-                    android:contentDescription="@string/contentDescription"
-                    android:padding="@dimen/_12sdp"
-                    android:src="@drawable/ic_baseline_favorite_24"
-                    app:layout_constraintEnd_toStartOf="@id/ivEye"
-                    app:layout_constraintStart_toEndOf="@id/ivTeeth"
-                    app:layout_constraintTop_toBottomOf="@id/tvText"
-                    app:tint="@color/pink" />
-
-                <ImageView
-                    android:id="@+id/ivEye"
-                    android:layout_width="@dimen/_40sdp"
-                    android:layout_height="@dimen/_40sdp"
-                    android:layout_marginVertical="@dimen/_6sdp"
-                    android:background="@drawable/circle_background"
-                    android:backgroundTint="@color/white"
-                    android:contentDescription="@string/contentDescription"
-                    android:padding="@dimen/_12sdp"
-                    android:src="@drawable/ic_baseline_remove_red_eye_24"
-                    app:layout_constraintEnd_toStartOf="@id/ivInjection"
-                    app:layout_constraintStart_toEndOf="@id/ivHeart"
-                    app:layout_constraintTop_toBottomOf="@id/tvText"
-                    app:tint="@color/pink" />
-
-                <ImageView
-                    android:id="@+id/ivInjection"
-                    android:layout_width="@dimen/_40sdp"
-                    android:layout_height="@dimen/_40sdp"
-                    android:layout_marginVertical="@dimen/_6sdp"
-                    android:background="@drawable/circle_background"
-                    android:backgroundTint="@color/white"
-                    android:contentDescription="@string/contentDescription"
-                    android:padding="@dimen/_12sdp"
-                    android:rotationY="180"
-                    android:src="@drawable/injection"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/ivEye"
                     app:layout_constraintTop_toBottomOf="@id/tvText"
-                    app:tint="@color/blue" />
+                    app:layout_constraintBottom_toTopOf="@id/tvSearch"
+                    />
 
                 <TextView
                     android:id="@+id/tvSearch"
@@ -157,7 +168,7 @@
                     app:layout_constraintCircleRadius="@dimen/_16sdp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/ivTeeth" />
+                    app:layout_constraintTop_toBottomOf="@+id/rvHorizontal" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

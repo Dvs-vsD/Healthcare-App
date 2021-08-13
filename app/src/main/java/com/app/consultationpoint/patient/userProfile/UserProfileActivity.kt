@@ -42,12 +42,6 @@ class UserProfileActivity : AppCompatActivity() {
 
         binding.btnEditProfile.setOnClickListener {
             val uptProfileFrag = UpdateProfileFragment()
-            val bundle = Bundle()
-            if (tvAddress.text != getString(R.string.place_holder_address))
-                bundle.putString("address", tvAddress.text.toString())
-            if (tvPhnNo.text != getString(R.string.place_holder_phone_number))
-                bundle.putString("address", tvPhnNo.text.toString())
-            uptProfileFrag.arguments = bundle
             val transaction = supportFragmentManager.beginTransaction()
             transaction.replace(R.id.clProfile, uptProfileFrag).addToBackStack("Fragment").commit()
         }

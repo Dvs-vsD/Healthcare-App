@@ -28,7 +28,7 @@ class DoctorAdapter(
             }
             Timber.d(item.first_name + " " + item.doc_id)
             binding.tvDocName.text = "${item.first_name} ${item.last_name}"
-            binding.tvSpecAdr.text = "${item.specialization}, ${item.city}"
+//            binding.tvSpecAdr.text = "${item.specialization}, ${item.city}"
             binding.btnTakeAppointment.setOnClickListener {
                 val intent = Intent(activity, ChooseTimeActivity::class.java)
                 intent.putExtra("doctor_id", item.doc_id)

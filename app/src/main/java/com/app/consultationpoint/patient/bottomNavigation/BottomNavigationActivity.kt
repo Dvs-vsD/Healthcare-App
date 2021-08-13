@@ -41,6 +41,7 @@ class BottomNavigationActivity(override val numberOfRootFragments: Int = 4) : Ap
     private val fragNavController: FragNavController =
         FragNavController(supportFragmentManager, R.id.container)
     private val viewModel by viewModel<DashboardViewModel>()
+    private lateinit var toggle: ActionBarDrawerToggle
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,7 +61,7 @@ class BottomNavigationActivity(override val numberOfRootFragments: Int = 4) : Ap
             Timber.d("db created and default deleted")
         }
 
-        val toggle = ActionBarDrawerToggle(
+        toggle = ActionBarDrawerToggle(
             this,
             binding.drawerLayout,
             binding.toolbar,
@@ -79,6 +80,8 @@ class BottomNavigationActivity(override val numberOfRootFragments: Int = 4) : Ap
         binding.ivProfile.setOnClickListener {
             startActivity(Intent(this, UserProfileActivity::class.java))
         }
+
+        binding.ivBack.setOnClickListener { onBackPressed() }
 
         fragNavController.apply {
             transactionListener = this@BottomNavigationActivity
@@ -113,23 +116,43 @@ class BottomNavigationActivity(override val numberOfRootFragments: Int = 4) : Ap
         }
         fragNavController.rootFragmentListener = this
 
-//        fragNavController.initialize(0, savedInstanceState)
-        //   fragNavController.initialize(0)
+        binding.bottomNav.setOnTabSelectListener({ itemId -> bottomBarSelection(itemId) }, initial)
+    }
 
-        binding.bottomNav.setOnTabSelectListener({ itemId ->
-            when (itemId) {
-                R.id.botNavHome -> fragNavController.switchTab(0)
-                R.id.botNavDoctor -> fragNavController.switchTab(1)
-                R.id.botNavChat -> fragNavController.switchTab(2)
-                R.id.botNavApt -> fragNavController.switchTab(3)
+    private fun bottomBarSelection(itemId: Int) {
+        when (itemId) {
+            R.id.botNavHome -> {
+                fragNavController.switchTab(0)
+                binding.ivBack.visibility = View.GONE
+                binding.tvHeading.visibility = View.GONE
+                binding.ivProfile.visibility = View.VISIBLE
+                toggle.isDrawerIndicatorEnabled = true
             }
-
-            if (itemId != R.id.botNavHome) {
-                binding.toolbar.visibility = View.GONE
-            } else {
-                binding.toolbar.visibility = View.VISIBLE
+            R.id.botNavDoctor -> {
+                fragNavController.switchTab(1)
+                binding.ivBack.visibility = View.VISIBLE
+                binding.tvHeading.visibility = View.VISIBLE
+                binding.tvHeading.text = getString(R.string.doctor_list)
+                binding.ivProfile.visibility = View.GONE
+                toggle.isDrawerIndicatorEnabled = false
             }
-        }, initial)
+            R.id.botNavChat -> {
+                fragNavController.switchTab(2)
+                binding.ivBack.visibility = View.VISIBLE
+                binding.tvHeading.visibility = View.VISIBLE
+                binding.tvHeading.text = getString(R.string.chat_with_doc)
+                binding.ivProfile.visibility = View.GONE
+                toggle.isDrawerIndicatorEnabled = false
+            }
+            R.id.botNavApt -> {
+                fragNavController.switchTab(3)
+                binding.ivBack.visibility = View.VISIBLE
+                binding.tvHeading.visibility = View.VISIBLE
+                binding.tvHeading.text = getString(R.string.tv_my_appointments)
+                binding.ivProfile.visibility = View.GONE
+                toggle.isDrawerIndicatorEnabled = false
+            }
+        }
     }
 
 
@@ -160,26 +183,11 @@ class BottomNavigationActivity(override val numberOfRootFragments: Int = 4) : Ap
             }
         }
 
-        if (item.itemId != R.id.botNavHome) {
-            binding.toolbar.visibility = View.GONE
-        } else {
-            binding.toolbar.visibility = View.VISIBLE
-        }
-
         if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
             binding.drawerLayout.closeDrawer(GravityCompat.START)
         }
         return true
     }
-
-    /* override fun onBackPressed() {
-         val selectedItemId = binding.bottomNav.selectedItemId
-         if (R.id.botNavHome != selectedItemId) {
-             binding.bottomNav.selectedItemId = R.id.botNavHome
-         } else {
-             super.onBackPressed()
-         }
-     }*/
 
     override fun onBackPressed() {
         if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
@@ -220,10 +228,5 @@ class BottomNavigationActivity(override val numberOfRootFragments: Int = 4) : Ap
 
     override fun onTabTransaction(fragment: Fragment?, index: Int) {
         supportActionBar?.setDisplayHomeAsUpEnabled(fragNavController.isRootFragment.not())
-    }
-
-    override fun onResume() {
-        Timber.d("Main Activity Resumed")
-        super.onResume()
     }
 }

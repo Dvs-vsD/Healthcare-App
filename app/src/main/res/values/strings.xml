@@ -27,6 +27,7 @@
     <string name="tv_don_t_have_an_account">Don\'t have an account?</string>
     <string name="menu_logout">Logout</string>
     <string name="doctor_list">Doctor List</string>
+    <string name="chat_with_doc">Chat with doctor</string>
     <string name="tv_time">Time</string>
     <string name="tv_select_appointment_time">Select Appointment Time</string>
     <string name="tv_appointment_title">Appointment Title</string>

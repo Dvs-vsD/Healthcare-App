@@ -5,16 +5,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.app.consultationpoint.BaseFragment
 import com.app.consultationpoint.R
 import com.app.consultationpoint.calender.CalenderFragment
 import com.app.consultationpoint.databinding.FragmentDashboardBinding
-import com.app.consultationpoint.patient.bottomNavigation.BottomNavigationActivity
+import com.app.consultationpoint.patient.dashboard.adapter.SpecialistAdapter
 import com.app.consultationpoint.patient.dashboard.adapter.TodayAtpAdapter
 import com.app.consultationpoint.patient.doctor.DoctorListFragment
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_bottom_navigation.*
 import kotlinx.android.synthetic.main.header_layout.view.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -27,6 +26,7 @@ class DashboardFragment : BaseFragment() {
     private lateinit var binding: FragmentDashboardBinding
     private val viewModel by viewModel<DashboardViewModel>()
     private var adapterTodayApt: TodayAtpAdapter? = null
+    private var specialistAdapter: SpecialistAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,6 +43,13 @@ class DashboardFragment : BaseFragment() {
             if (adapterTodayApt != null && it.isNotEmpty()) {
                 Timber.d("notified")
                 adapterTodayApt?.notifyDataSetChanged()
+            }
+        })
+
+        viewModel.getSpCategoryList().observe(this, {
+            if (specialistAdapter != null && it.isNotEmpty()) {
+                Timber.d("Special item notified")
+                specialistAdapter?.notifyDataSetChanged()
             }
         })
     }
@@ -69,6 +76,15 @@ class DashboardFragment : BaseFragment() {
         transaction.commit()
 
 //        viewModel.init()
+
+        viewModel.fetchSpFromFB()
+        viewModel.fetchSpItemsFromRDB()
+
+        binding.rvHorizontal.layoutManager =
+            LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
+
+        specialistAdapter = SpecialistAdapter(viewModel.getSpCategoryList(), requireActivity())
+        binding.rvHorizontal.adapter = specialistAdapter
 
         adapterTodayApt = TodayAtpAdapter(viewModel.getTodayAptList(), this@DashboardFragment)
         binding.recyclerView.itemAnimator = null

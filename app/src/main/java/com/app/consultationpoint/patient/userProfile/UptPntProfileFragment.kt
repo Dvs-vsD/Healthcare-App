@@ -56,7 +56,7 @@ class UpdateProfileFragment : Fragment() {
 
         binding.etFirstName.setText(Utils.getFirstName())
         binding.etLastName.setText(Utils.getLastName())
-        binding.etAddress.setText(Utils.getUserAdr())
+        binding.etCity.setText(Utils.getUserAdr())
         binding.etPhnNo.setText(Utils.getUserPhnNo())
 
         binding.tvChangeProfile.setOnClickListener {
@@ -87,14 +87,14 @@ class UpdateProfileFragment : Fragment() {
         binding.btnUpdate.setOnClickListener {
             val firstName = etFirstName.text.trim().toString()
             val lastName = etLastName.text.trim().toString()
-            val address = etAddress.text.trim().toString()
+            val city = etCity.text.trim().toString()
             val phnNo = etPhnNo.text.trim().toString()
             if (firstName.isNotEmpty() && lastName.isNotEmpty()) {
                 val model = UserModel()
                 model.email = Utils.getUserEmail()
                 model.first_name = firstName
                 model.last_name = lastName
-                model.address = address
+                model.city = city
                 model.mobile = phnNo
                 model.profile = profile
 

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_gray_200"
+    android:background="@color/bg_gray"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -36,6 +36,7 @@
             android:importantForAutofill="no"
             android:inputType="text"
             android:padding="@dimen/_8sdp"
+            android:layout_marginTop="0dp"
             app:backgroundTint="@color/white"
             app:drawableTint="@color/clr_tv_light_gray"
             app:layout_constraintCircleRadius="@dimen/_16sdp"

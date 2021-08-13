@@ -29,7 +29,7 @@ class TodayAtpAdapter(
         fun bind(item: AppointmentModel) {
             val doctorDetails = viewModel.getDoctorDetails(item.doctor_id)
             binding.tvDocName.text = doctorDetails.first_name + " " + doctorDetails.last_name
-            binding.tvSpecAdr.text = doctorDetails.specialization + ", " + doctorDetails.city
+//            binding.tvSpecAdr.text = doctorDetails.specialization + ", " + doctorDetails.city
             if (doctorDetails.profile != "" && doctorDetails.profile != "null") {
                 Glide.with(context).load(doctorDetails.profile).into(binding.ivProfile)
             }

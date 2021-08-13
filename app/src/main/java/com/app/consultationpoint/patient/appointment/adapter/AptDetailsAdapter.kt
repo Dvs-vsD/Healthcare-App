@@ -30,7 +30,7 @@ class AptDetailsAdapter(
             binding.tvMonth.text = item.schedual_date.toDate("yyyy-MM-dd")?.formatTo("MMMM")
             val docDetails: UserModel = viewModel.getDoctorDetails(item.doctor_id)
             binding.tvDocName.text = "${docDetails.first_name} ${docDetails.last_name}"
-            binding.tvSpecAdr.text = "${docDetails.specialization}, ${docDetails.city}"
+//            binding.tvSpecAdr.text = "${docDetails.specialization}, ${docDetails.city}"
             binding.tvTitleTime.text = "For ${item.title} at ${item.schedual_time}"
         }
     }

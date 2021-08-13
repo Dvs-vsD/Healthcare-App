@@ -49,10 +49,18 @@ class DoctorDetailsActivity : AppCompatActivity() {
         val docName = model.first_name + " " + model.last_name
 
         binding.tvDocName.text = docName
-        binding.tvSpecAdr.text = model.specialization + ", " + model.city
-        if (model.profile != "" && model.profile != "null") {
+//        binding.tvSpecAdr.text = model.specialization + ", " + model.city
+        if (model.profile != "" && model.profile != null) {
             Glide.with(this).load(model.profile).into(binding.ivProfile)
         }
+        binding.tvYearCount.text = model.experience_yr + "+"
+
+        if (model.about_info != "") {
+            binding.tvAbout.text = model.about_info
+        } else {
+            binding.tvAbout.text = "Not yet added"
+        }
+
 
         binding.btnBookAppt.setOnClickListener {
             val intent = Intent(this, ChooseTimeActivity::class.java)

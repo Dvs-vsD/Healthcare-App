@@ -125,19 +125,19 @@
                     android:importantForAutofill="no"
                     android:inputType="text"
                     android:padding="@dimen/_12sdp"
-                    app:layout_constraintBottom_toTopOf="@id/etAddress"
+                    app:layout_constraintBottom_toTopOf="@id/etCity"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/etFirstName" />
 
                 <EditText
-                    android:id="@+id/etAddress"
+                    android:id="@+id/etCity"
                     style="@style/st_et_style"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_16sdp"
                     android:background="@drawable/background_with_radius_12"
-                    android:hint="@string/hint_address"
+                    android:hint="@string/hint_city"
                     android:importantForAutofill="no"
                     android:inputType="text"
                     android:padding="@dimen/_12sdp"
@@ -160,7 +160,7 @@
                     android:padding="@dimen/_12sdp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/etAddress"
+                    app:layout_constraintTop_toBottomOf="@+id/etCity"
                     app:layout_constraintBottom_toTopOf="@id/btnUpdate"/>
 
 

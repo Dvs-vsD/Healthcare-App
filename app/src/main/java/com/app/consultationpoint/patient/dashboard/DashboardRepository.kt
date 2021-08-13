@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.app.consultationpoint.firebase.FirebaseSource
 import com.app.consultationpoint.general.model.UserModel
 import com.app.consultationpoint.patient.appointment.model.AppointmentModel
+import com.app.consultationpoint.patient.dashboard.model.SpecialistModel
 import com.app.consultationpoint.patient.doctor.model.DoctorModel
 import com.app.consultationpoint.utils.Utils
 import com.app.consultationpoint.utils.Utils.formatTo
@@ -20,6 +21,8 @@ class DashboardRepository(private val firebaseSource: FirebaseSource) {
 
 //    private lateinit var mRealmResults: RealmResults<AppointmentModel>
     private var todayAptList: MutableLiveData<ArrayList<AppointmentModel>> =
+        MutableLiveData(ArrayList())
+    private var specialItemList: MutableLiveData<ArrayList<SpecialistModel>> =
         MutableLiveData(ArrayList())
 
 //    fun init() {
@@ -69,5 +72,28 @@ class DashboardRepository(private val firebaseSource: FirebaseSource) {
 
     fun getDoctorDetails(docId: Long): UserModel {
         return firebaseSource.getDoctorDetails(docId)
+    }
+
+    fun fetchSpItemsFromFB() {
+        firebaseSource.fetchSpFromFB()
+    }
+
+    fun fetchSpItemsFromRDB() {
+        Realm.getDefaultInstance().use { mRealm ->
+            val mRealmResults = mRealm.where(SpecialistModel::class.java).findAll()
+            var list: ArrayList<SpecialistModel> = mRealm.copyFromRealm(mRealmResults) as ArrayList<SpecialistModel>
+            specialItemList.value = list
+
+            mRealmResults.addChangeListener { change ->
+                list.clear()
+                specialItemList.value?.clear()
+                list = mRealm.copyFromRealm(change) as ArrayList<SpecialistModel>
+                specialItemList.value = list
+            }
+        }
+    }
+
+    fun getSpCategoryList(): LiveData<ArrayList<SpecialistModel>> {
+        return specialItemList
     }
 }

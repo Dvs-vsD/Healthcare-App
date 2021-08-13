@@ -111,9 +111,9 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun enableButton() {
-        binding.btnSignUp.isEnabled = userModel.first_name?.isNotEmpty() == true
-                && userModel.last_name?.isNotEmpty() == true
-                && userModel.email?.isNotEmpty() == true
-                && userModel.password?.isNotEmpty() == true
+        binding.btnSignUp.isEnabled = userModel.first_name.isNotEmpty() == true
+                && userModel.last_name.isNotEmpty() == true
+                && userModel.email.isNotEmpty() == true
+                && userModel.password.isNotEmpty() == true
     }
 }

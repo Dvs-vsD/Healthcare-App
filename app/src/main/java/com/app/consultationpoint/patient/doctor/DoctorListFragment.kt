@@ -55,11 +55,6 @@ class DoctorListFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (param1 == "1")
-            binding.grpToolbar.visibility = View.GONE
-        else
-            binding.grpToolbar.visibility = View.VISIBLE
-
         viewModel.fetchDocFromFB()
         viewModel.fetchDocFromRDB()
         adapterDoctor = DoctorAdapter(viewModel.getDoctorList(), activity)

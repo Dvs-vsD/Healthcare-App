@@ -25,11 +25,13 @@
         android:background="@drawable/background_with_radius_12"
         android:padding="@dimen/_12sdp"
         android:text="@string/tv_dummy_text"
-        android:maxWidth="370dp"
         android:layout_marginStart="@dimen/_8sdp"
         app:layout_constraintStart_toEndOf="@id/ivProfile"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="@id/ivProfile"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constrainedWidth="true"
         />
 
     <TextView

@@ -243,6 +243,7 @@
             />
 
         <TextView
+            android:id="@+id/tvAbout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             style="@style/st_tv_small.bold_gray"
