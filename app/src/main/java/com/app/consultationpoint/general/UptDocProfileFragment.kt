@@ -115,7 +115,6 @@ class DoctorSignupFragment : Fragment() {
         userModel.email = etEmail.text.trim().toString()
         userModel.password = etPassword.text.trim().toString()
         userModel.mobile = etPhnNo.text.trim().toString()
-        userModel.city = etCity.text.trim().toString()
 //
 //        if (cbMBBS.isChecked) {
 //            userModel.degrees.add("MBBS")

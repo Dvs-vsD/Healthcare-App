@@ -9,6 +9,7 @@ import com.app.consultationpoint.patient.chat.chatScreen.model.MessageModel
 import com.app.consultationpoint.patient.chat.room.model.ParticipantModel
 import com.app.consultationpoint.patient.chat.room.model.RoomModel
 import com.app.consultationpoint.patient.dashboard.model.SpecialistModel
+import com.app.consultationpoint.patient.userProfile.model.AddressModel
 import com.app.consultationpoint.utils.Const
 import com.app.consultationpoint.utils.Utils
 import com.google.firebase.auth.FirebaseAuth
@@ -41,9 +42,8 @@ class FirebaseSource {
                 if (snapshot.get("gender") != null && snapshot.get("gender").toString() != "")
                     model.gender = snapshot.get("gender").toString().toInt()
                 model.dob = snapshot.get("dob").toString()
-                //new added 2 fields
+                //new added field
                 model.profile = snapshot.get("profile").toString()
-                model.city = snapshot.get("city").toString()
 
                 model.user_type_id = snapshot.get("user_type_id").toString().toInt()
                 model.user_status = snapshot.get("user_status").toString()
@@ -124,6 +124,7 @@ class FirebaseSource {
                 ConsultationApp.shPref.edit().putString(Const.FIRST_NAME, model.first_name).apply()
                 ConsultationApp.shPref.edit().putString(Const.LAST_NAME, model.last_name).apply()
                 ConsultationApp.shPref.edit().putString(Const.USER_EMAIL, model.email).apply()
+                ConsultationApp.shPref.edit().putInt(Const.USER_TYPE, model.user_type_id).apply()
                 ConsultationApp.shPref.edit().putBoolean(Const.PREF_IS_LOGIN, true).apply()
 
                 status.value = "success"
@@ -166,6 +167,34 @@ class FirebaseSource {
                             Const.USER_EMAIL, snapshot.get("email").toString()
                         ).apply()
 
+                        ConsultationApp.shPref.edit().putInt(
+                            Const.USER_TYPE, snapshot.get("user_type_id").toString().toInt()
+                        ).apply()
+
+                        database.collection("Addresses").document(userId).get()
+                            .addOnSuccessListener { address ->
+
+                                ConsultationApp.shPref.edit().putString(
+                                    Const.ADDRESS, address.get("address").toString()
+                                ).apply()
+
+                                ConsultationApp.shPref.edit().putString(
+                                    Const.CITY, address.get("city").toString()
+                                ).apply()
+
+                                ConsultationApp.shPref.edit().putString(
+                                    Const.STATE, address.get("state").toString()
+                                ).apply()
+
+                                ConsultationApp.shPref.edit().putString(
+                                    Const.COUNTRY, address.get("country").toString()
+                                ).apply()
+
+                                ConsultationApp.shPref.edit().putInt(
+                                    Const.PIN_CODE, address.get("pincode").toString().toInt()
+                                ).apply()
+                            }
+
                         ConsultationApp.shPref.edit().putBoolean(Const.PREF_IS_LOGIN, true).apply()
                     }
                 }
@@ -194,22 +223,28 @@ class FirebaseSource {
         database.collection("Appointments").document(model.appointment_id.toString()).set(model)
     }
 
-    fun updateProfile(model: UserModel): String {
-        var state = ""
+    fun updateProfile(model: UserModel, adrModel: AddressModel) {
         database.collection("Users").document(Utils.getUserId()).set(model).addOnSuccessListener {
+
+            database.collection("Addresses").document(Utils.getUserId()).set(adrModel)
 
             ConsultationApp.shPref.edit().putString(Const.USER_ID, Utils.getUserId()).apply()
             ConsultationApp.shPref.edit().putString(Const.FIRST_NAME, model.first_name).apply()
             ConsultationApp.shPref.edit().putString(Const.LAST_NAME, model.last_name).apply()
             ConsultationApp.shPref.edit().putString(Const.USER_PROFILE, model.profile).apply()
             ConsultationApp.shPref.edit().putString(Const.PHN_NO, model.mobile).apply()
-            ConsultationApp.shPref.edit().putString(Const.ADDRESS, model.city).apply()
+            ConsultationApp.shPref.edit().putString(Const.ADDRESS, adrModel.address).apply()
+            ConsultationApp.shPref.edit().putString(Const.CITY, adrModel.city).apply()
+            ConsultationApp.shPref.edit().putString(Const.STATE, adrModel.state).apply()
+            ConsultationApp.shPref.edit().putString(Const.COUNTRY, adrModel.country).apply()
+            ConsultationApp.shPref.edit().putInt(Const.PIN_CODE, adrModel.pincode).apply()
 
-            state = "success"
+            status.value = "Profile Updated"
+            status.value = ""
         }.addOnFailureListener {
-            state = it.message.toString()
+            status.value = it.message.toString()
+            status.value = ""
         }
-        return state
     }
 
     fun getDoctorDetails(docId: Long): UserModel {
@@ -218,11 +253,6 @@ class FirebaseSource {
         Realm.getDefaultInstance().use { mRealm ->
             Timber.d("Doctor Details Fetching instance")
             val result = mRealm.where(UserModel::class.java).equalTo("id", docId).findFirst()
-//            model.first_name = result?.first_name ?: ""
-//            model.last_name = result?.last_name ?: ""
-//            model.profile = result?.profile ?: ""
-//            model.specialization = result?.specialization ?: ""
-//            model.city = result?.city ?: ""
             model = mRealm.copyFromRealm(result) as UserModel
             Timber.d("Open Instance att %s", System.currentTimeMillis().toString())
         }

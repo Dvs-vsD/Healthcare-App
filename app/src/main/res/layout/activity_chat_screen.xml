@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_gray_200"
+    android:paddingTop="@dimen/_12sdp"
     tools:context=".patient.chat.chatScreen.ChatScreenActivity">
 
     <androidx.constraintlayout.widget.Guideline

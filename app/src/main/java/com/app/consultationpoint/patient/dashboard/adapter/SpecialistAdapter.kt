@@ -22,6 +22,7 @@ class SpecialistAdapter(
         fun bind(item: SpecialistModel) {
             Glide.with(context).load(item.image).into(binding.ivSpecialistIcon)
             binding.ivSpecialistIcon.setColorFilter(Color.parseColor(item.color_code))
+            binding.tvName.text = item.name
         }
     }
 

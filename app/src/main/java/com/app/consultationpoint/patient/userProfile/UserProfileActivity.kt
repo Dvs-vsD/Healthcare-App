@@ -2,24 +2,15 @@ package com.app.consultationpoint.patient.userProfile
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.graphics.Bitmap
 import android.graphics.Typeface
-import android.graphics.drawable.Drawable
-import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import com.app.consultationpoint.R
 import com.app.consultationpoint.databinding.ActivityUserProfileBinding
 import com.app.consultationpoint.general.LoginActivity
 import com.app.consultationpoint.utils.Utils
-import com.bumptech.glide.Glide
-import kotlinx.android.synthetic.main.activity_user_profile.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
-import java.io.File
-import androidx.core.net.toUri as toUri
 
 class UserProfileActivity : AppCompatActivity() {
 
@@ -52,6 +43,14 @@ class UserProfileActivity : AppCompatActivity() {
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
             startActivity(intent)
         }
+
+        supportFragmentManager.addOnBackStackChangedListener {
+            val bSCount = supportFragmentManager.backStackEntryCount
+            if (bSCount == 0) {
+                Timber.d("Back Stack Change Listener executed")
+                getProfileDetails()
+            }
+        }
     }
 
     @SuppressLint("SetTextI18n")
@@ -71,8 +70,8 @@ class UserProfileActivity : AppCompatActivity() {
             binding.tvPhnNo.setTypeface(null, Typeface.NORMAL)
             binding.tvPhnNo.text = phnNo
         }
-    }
 
+    }
 
 //    override fun onResume() {
 //        super.onResume()

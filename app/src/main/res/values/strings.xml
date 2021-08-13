@@ -40,7 +40,7 @@
     <string name="tv_patients">Patients</string>
     <string name="tv_about_doctor">About Doctor</string>
     <string name="tv_profile">Profile</string>
-    <string name="tv_update_profile">Update Profile</string>
+    <string name="tv_edit_profile">Edit Profile</string>
     <string name="tv_change_profile_picture">Change Profile Picture</string>
     <string name="hint_address">Address</string>
     <string name="btn_update">Update</string>
@@ -68,4 +68,14 @@
     <string name="tv_tag_line">Healthcare made simple</string>
     <string name="hint_send_message">Send message...</string>
     <string name="tv_dummy_text">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s,</string>
+    <string name="btn_save">save</string>
+    <string name="tv_gender">Gender</string>
+    <string name="rb_other">Other</string>
+    <string name="rb_female">Female</string>
+    <string name="rb_male">Male</string>
+    <string name="hint_username">UserName</string>
+    <string name="hint_state">State</string>
+    <string name="hint_country">Country</string>
+    <string name="hint_pin_code">PIN Code</string>
+    <string name="hint_date_of_birth">Date of Birth</string>
 </resources>

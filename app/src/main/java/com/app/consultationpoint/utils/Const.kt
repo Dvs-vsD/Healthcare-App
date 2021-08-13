@@ -10,4 +10,9 @@ object Const {
     const val USER_PROFILE: String = "profile"
     const val PHN_NO: String = "phone"
     const val ADDRESS: String = "address"
+    const val CITY: String = "city"
+    const val STATE: String = "state"
+    const val COUNTRY: String = "country"
+    const val PIN_CODE: String = "pin_code"
+    const val USER_TYPE: String = "user_type"
 }

@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/bg_gray"
     android:focusable="true"
+    android:paddingTop="@dimen/_12sdp"
     android:focusableInTouchMode="true"
     tools:context=".patient.appointment.bookAppointment.ChooseTimeActivity">
 

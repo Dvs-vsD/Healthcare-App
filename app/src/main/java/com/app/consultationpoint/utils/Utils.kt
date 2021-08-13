@@ -101,4 +101,8 @@ object Utils {
         return MediaStore.Images.Media.getBitmap(context.contentResolver,imgUri)
     }
 
+    fun getUserType(): Int {
+        return ConsultationApp.shPref.getInt(Const.USER_TYPE, 0)
+    }
+
 }

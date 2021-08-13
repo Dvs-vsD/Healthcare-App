@@ -7,10 +7,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.app.consultationpoint.R
 import com.app.consultationpoint.databinding.FragmentUpdateProfileBinding
 import com.app.consultationpoint.general.model.UserModel
+import com.app.consultationpoint.patient.userProfile.model.AddressModel
 import com.app.consultationpoint.utils.Utils
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
@@ -39,6 +42,17 @@ class UpdateProfileFragment : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+
+        viewModel.getProfileUptStatus().observe(this, {
+            Utils.dismissProgressDialog()
+            if (it == "Profile Updated") {
+                Toast.makeText(activity, "Profile updated successfully", Toast.LENGTH_SHORT)
+                    .show()
+                parentFragmentManager.popBackStack()
+            } else if (it != "") {
+                Toast.makeText(activity, it.toString(), Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 
     override fun onCreateView(
@@ -59,7 +73,7 @@ class UpdateProfileFragment : Fragment() {
         binding.etCity.setText(Utils.getUserAdr())
         binding.etPhnNo.setText(Utils.getUserPhnNo())
 
-        binding.tvChangeProfile.setOnClickListener {
+        binding.ivChoosePic.setOnClickListener {
             Dexter.withContext(activity)
                 .withPermissions(
                     Manifest.permission.CAMERA,
@@ -80,33 +94,64 @@ class UpdateProfileFragment : Fragment() {
                 }).check()
         }
 
+        // Date picker Dialog for DOB is remaining
+
         binding.ivCancel.setOnClickListener {
             parentFragmentManager.popBackStack()
         }
 
-        binding.btnUpdate.setOnClickListener {
-            val firstName = etFirstName.text.trim().toString()
-            val lastName = etLastName.text.trim().toString()
-            val city = etCity.text.trim().toString()
-            val phnNo = etPhnNo.text.trim().toString()
+        binding.btnSave.setOnClickListener {
+            val userName = etUserName.text?.trim().toString()
+            val firstName = etFirstName.text?.trim().toString()
+            val lastName = etLastName.text?.trim().toString()
+            val phnNo = etPhnNo.text?.trim().toString()
+
+            var gender: Int? = null
+            when (rgGender.checkedRadioButtonId) {
+                R.id.rbMale -> gender = 0
+                R.id.rbFemale -> gender = 1
+                R.id.rbOther -> gender = 2
+            }
+            val dob = etDob.text?.trim().toString()
+
+            // Address
+            val address = etAddress.text?.trim().toString()
+            val city = etCity.text?.trim().toString()
+            val state = etState.text?.trim().toString()
+            val country = etCountry.text?.trim().toString()
+            val pincode = etPinCode.text?.trim().toString().toInt()
+
             if (firstName.isNotEmpty() && lastName.isNotEmpty()) {
+                val userId = Utils.getUserId().toLong()
                 val model = UserModel()
+                model.id = userId
+                model.doc_id = userId
                 model.email = Utils.getUserEmail()
+                model.username = userName
                 model.first_name = firstName
                 model.last_name = lastName
-                model.city = city
                 model.mobile = phnNo
                 model.profile = profile
-
-                val status = viewModel.updateProfile(model)
-
-                if (status != "") {
-                    Toast.makeText(activity, status, Toast.LENGTH_SHORT).show()
-                } else {
-                    Toast.makeText(activity, "Profile updated successfully", Toast.LENGTH_SHORT)
-                        .show()
-                    parentFragmentManager.popBackStack()
+                if (gender != null) {
+                    model.gender = gender
                 }
+                model.dob = dob
+                model.user_type_id = Utils.getUserType()
+                model.created_at = userId
+                model.updated_at = System.currentTimeMillis()
+
+                val adrModel = AddressModel()
+                adrModel.user_id = Utils.getUserId().toLong()
+                adrModel.address = address
+                adrModel.city = city
+                adrModel.state = state
+                adrModel.country = country
+                adrModel.pincode = pincode
+                adrModel.created_at = userId
+                adrModel.updated_at = System.currentTimeMillis()
+
+                viewModel.updateProfile(model, adrModel)
+                activity?.let { it1 -> Utils.showProgressDialog(it1,"") }
             } else {
                 if (firstName.isEmpty()) {
                     binding.etFirstName.error = "Please enter first name!!!"

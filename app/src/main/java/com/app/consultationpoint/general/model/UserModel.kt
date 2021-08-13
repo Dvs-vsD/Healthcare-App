@@ -16,9 +16,8 @@ open class UserModel: RealmObject() {
     var gender: Int = 0 //0-Male 1-Female 2-Other
     var dob: String = ""
 
-    //new added 2 fields
+    //new added 1 fields
     var profile: String? = ""
-    var city: String? = ""
 
     var user_type_id: Int = 0 //0-Patient 1-Doctor 2-Staff 3-Laboratory
     var user_status: String = ""
