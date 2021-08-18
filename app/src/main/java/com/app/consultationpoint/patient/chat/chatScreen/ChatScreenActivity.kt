@@ -2,6 +2,8 @@ package com.app.consultationpoint.patient.chat.chatScreen
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.view.Window
+import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
 import com.app.consultationpoint.databinding.ActivityChatScreenBinding

@@ -1,6 +1,7 @@
 package com.app.consultationpoint.calender
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,6 +11,7 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import com.app.consultationpoint.R
 import com.app.consultationpoint.databinding.FragmentCalenderBinding
+import com.app.consultationpoint.patient.appointment.allAppointments.AllAppointmentsActivity
 import com.app.consultationpoint.patient.dashboard.DashboardViewModel
 import com.app.consultationpoint.utils.Utils
 import com.app.consultationpoint.utils.Utils.formatTo
@@ -32,8 +34,6 @@ class CalenderFragment : Fragment() {
     private lateinit var binding: FragmentCalenderBinding
     private val calender = Calendar.getInstance()
     private var currentMonth = 0
-//    private lateinit var today: Date
-//    private lateinit var tomorrow: Date
     private var currentDtPos: Int = 0
     private val viewModel by viewModel<DashboardViewModel>()
 
@@ -63,6 +63,11 @@ class CalenderFragment : Fragment() {
 //        viewModel.init()
 
         setCalender()
+
+        binding.tvViewAll.setOnClickListener {
+            val intent = Intent(activity, AllAppointmentsActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     @SuppressLint("SetTextI18n")
@@ -105,7 +110,7 @@ class CalenderFragment : Fragment() {
             override fun whenSelectionChanged(isSelected: Boolean, position: Int, date: Date) {
                 super.whenSelectionChanged(isSelected, position, date)
 
-                viewModel.getTodayApt(date.formatTo("yyyy-MM-dd"))
+                viewModel.fetchTodayApt(date.formatTo("yyyy-MM-dd"))
             }
         }
 

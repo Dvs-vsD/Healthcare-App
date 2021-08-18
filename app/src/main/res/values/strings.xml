@@ -15,10 +15,10 @@
     <string name="bn_appointments">Appointments</string>
     <string name="tv_create_an_account">Create an account</string>
     <string name="tv_sign_up_to_continue">Sign up to continue</string>
-    <string name="hint_first_name">First Name*</string>
-    <string name="hint_last_name">Last Name*</string>
-    <string name="hint_email">Email*</string>
-    <string name="hint_password">Password*</string>
+    <string name="hint_first_name">First Name</string>
+    <string name="hint_last_name">Last Name</string>
+    <string name="hint_email">Email</string>
+    <string name="hint_password">Password</string>
     <string name="btn_sign_up">Sign Up</string>
     <string name="already_have_an_account">Already have an account?</string>
     <string name="btn_login">Login</string>
@@ -46,8 +46,7 @@
     <string name="btn_update">Update</string>
     <string name="btn_edit_profile">Edit Profile</string>
     <string name="hint_phone_number">Phone Number</string>
-    <string name="place_holder_address">Address not yet inserted</string>
-    <string name="place_holder_phone_number">Phone number not yet inserted</string>
+    <string name="place_holder">---</string>
     <string name="tv_no_appointments">No appointments for this day !!!</string>
     <string name="tv_no_recent_chat">No recent chat found !!!</string>
     <string name="rb_patient">Patient</string>
@@ -78,4 +77,9 @@
     <string name="hint_country">Country</string>
     <string name="hint_pin_code">PIN Code</string>
     <string name="hint_date_of_birth">Date of Birth</string>
+    <string name="tv_my_all_appointments">My All Appointments</string>
+    <string name="tv_view_all">view all</string>
+    <string name="tv_hello">Hello,</string>
+    <string name="tv_personal_info">Personal Information :</string>
+    <string name="tv_residence">Residence  :</string>
 </resources>

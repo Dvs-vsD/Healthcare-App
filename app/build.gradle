@@ -72,7 +72,7 @@ dependencies {
     implementation 'com.jakewharton.timber:timber:4.7.1'
 
     // for viewModel
-    def version= '1.1.1'
+    def version = '1.1.1'
     implementation "android.arch.lifecycle:extensions:$version"
     annotationProcessor "android.arch.lifecycle:compiler:$version"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1"
@@ -98,4 +98,7 @@ dependencies {
 
     //bottom bar
     implementation "com.roughike:bottom-bar:2.3.1"
+
+    //custom calender with events
+    implementation 'com.github.sundeepk:compact-calendar-view:3.0.0'
 }

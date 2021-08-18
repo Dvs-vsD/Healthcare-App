@@ -2,6 +2,7 @@ package com.app.consultationpoint.patient.doctor
 
 import android.content.BroadcastReceiver
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.app.consultationpoint.general.model.UserModel
 import com.app.consultationpoint.patient.chat.room.model.RoomModel
@@ -15,7 +16,7 @@ class DoctorViewModel(private val repository: DoctorRepository): ViewModel() {
         repository.fetchDocFromRDB()
     }
 
-    fun getDoctorList() : LiveData<ArrayList<UserModel>>{
+    fun getDoctorList() : MutableLiveData<ArrayList<UserModel>> {
         return repository.getDoctorList()
     }
 

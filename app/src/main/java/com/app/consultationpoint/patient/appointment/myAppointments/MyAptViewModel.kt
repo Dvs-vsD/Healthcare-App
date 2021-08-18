@@ -8,8 +8,8 @@ import com.app.consultationpoint.patient.doctor.model.DoctorModel
 
 class MyAptViewModel(private val repository: MyAptRepository) : ViewModel() {
 
-    fun initRepo() {
-        repository.init()
+    fun fetchAptFromRealm() {
+        repository.fetchAptFromRealm()
     }
 
     fun fetchAptFromFirebase() {
@@ -22,5 +22,9 @@ class MyAptViewModel(private val repository: MyAptRepository) : ViewModel() {
 
     fun getDoctorDetails(doc_id: Long): UserModel {
         return repository.getDoctorDetails(doc_id)
+    }
+
+    fun getStatus(): LiveData<String> {
+        return repository.getStatus()
     }
 }

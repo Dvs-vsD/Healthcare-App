@@ -12,9 +12,13 @@ import com.app.consultationpoint.utils.Utils.formatTo
 import com.app.consultationpoint.utils.Utils.toDate
 
 class MonthlyAptAdapter(
-    private val list: LiveData<ArrayList<MonthlyAppointments>>,
+    private var list: ArrayList<MonthlyAppointments>,
     private val context: MyAppointmentsFragment
 ) : RecyclerView.Adapter<MonthlyAptAdapter.MyViewHolder>() {
+
+    fun setList(list: ArrayList<MonthlyAppointments>) {
+        this.list = list
+    }
 
     inner class MyViewHolder(private val binding: RowOfMonthlyAppointmentsBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -33,12 +37,10 @@ class MonthlyAptAdapter(
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        list.value?.get(position)?.let {
-            holder.bind(it)
-        }
+            holder.bind(list[position])
     }
 
     override fun getItemCount(): Int {
-        return list.value?.size ?: 0
+        return list.size
     }
 }

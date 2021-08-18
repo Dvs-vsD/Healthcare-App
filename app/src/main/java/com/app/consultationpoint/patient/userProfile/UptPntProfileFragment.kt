@@ -2,6 +2,7 @@ package com.app.consultationpoint.patient.userProfile
 
 import android.Manifest
 import android.app.Activity
+import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -15,6 +16,8 @@ import com.app.consultationpoint.databinding.FragmentUpdateProfileBinding
 import com.app.consultationpoint.general.model.UserModel
 import com.app.consultationpoint.patient.userProfile.model.AddressModel
 import com.app.consultationpoint.utils.Utils
+import com.app.consultationpoint.utils.Utils.formatTo
+import com.google.type.Date
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
@@ -24,6 +27,7 @@ import kotlinx.android.synthetic.main.fragment_update_profile.*
 import okhttp3.internal.Util
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
+import java.util.*
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
@@ -68,10 +72,23 @@ class UpdateProfileFragment : Fragment() {
 
         Timber.d("userId %s", Utils.getUserId())
 
+        binding.etUserName.setText(Utils.getUserName())
         binding.etFirstName.setText(Utils.getFirstName())
         binding.etLastName.setText(Utils.getLastName())
-        binding.etCity.setText(Utils.getUserAdr())
         binding.etPhnNo.setText(Utils.getUserPhnNo())
+
+        when (Utils.getUserGender()) {
+            "0" -> binding.rbMale.isChecked = true
+            "1" -> binding.rbFemale.isChecked = true
+            "2" -> binding.rbOther.isChecked = true
+        }
+
+        binding.etDob.setText(Utils.getDOB())
+        binding.etAddress.setText(Utils.getUserAdr())
+        binding.etCity.setText(Utils.getCity())
+        binding.etState.setText(Utils.getState())
+        binding.etCountry.setText(Utils.getCountry())
+        binding.etPinCode.setText(Utils.getPinCode().toString())
 
         binding.ivChoosePic.setOnClickListener {
             Dexter.withContext(activity)
@@ -94,7 +111,9 @@ class UpdateProfileFragment : Fragment() {
                 }).check()
         }
 
-        // Date picker Dialog for DOB is remaining
+        binding.etDob.setOnClickListener {
+            datePickerDialog()
+        }
 
         binding.ivCancel.setOnClickListener {
             parentFragmentManager.popBackStack()
@@ -162,6 +181,26 @@ class UpdateProfileFragment : Fragment() {
                 }
             }
         }
+    }
+
+    private fun datePickerDialog() {
+        val cal = Calendar.getInstance()
+        val year = cal.get(Calendar.YEAR)
+        val month = cal.get(Calendar.MONTH)
+        val day = cal.get(Calendar.DAY_OF_MONTH)
+
+        val datePickerDialog =
+            activity?.let {
+                DatePickerDialog(it, { _, year, month, dayOfMonth ->
+                    cal[Calendar.YEAR] = year
+                    cal[Calendar.MONTH] = month
+                    cal[Calendar.DAY_OF_MONTH] = dayOfMonth
+                    val dob = cal.time.formatTo("dd-MM-yyyy")
+                    binding.etDob.setText(dob)
+                }, year, month, day)
+            }
+
+        datePickerDialog?.show()
     }
 
     private fun capturePhoto() {

@@ -25,7 +25,7 @@ class MyAptRepository(private val firebaseSource: FirebaseSource) {
         firebaseSource.fetchMyBookings()
     }
 
-    fun init() {
+    fun fetchAptFromRealm() {
 
         // Apt list not updating with livedata change listener even if realm data changed!!!
 
@@ -100,5 +100,9 @@ class MyAptRepository(private val firebaseSource: FirebaseSource) {
         Timber.d("date %s", cal.time)
 
         return cal.time
+    }
+
+    fun getStatus(): LiveData<String> {
+        return firebaseSource.getStatus()
     }
 }

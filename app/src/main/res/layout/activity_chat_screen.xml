@@ -52,7 +52,7 @@
             style="@style/st_tv_small.bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="UserName" />
+            android:text="@string/place_holder" />
 
     </androidx.appcompat.widget.Toolbar>
 
@@ -62,10 +62,10 @@
         android:layout_height="0dp"
         android:layout_marginBottom="@dimen/_4sdp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintStart_toStartOf="@id/guidelineLeft"
         app:layout_constraintBottom_toTopOf="@id/clSendMsg"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
-        app:layout_constraintEnd_toEndOf="@id/guidelineRight" />
+        app:layout_constraintEnd_toEndOf="@id/guidelineRight"
+        app:layout_constraintStart_toStartOf="@id/guidelineLeft"
+        app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/clSendMsg"
@@ -75,8 +75,8 @@
         android:background="@drawable/background_with_radius_12"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@id/guidelineRight"
-        app:layout_constraintTop_toBottomOf="@id/recyclerView"
-        app:layout_constraintStart_toStartOf="@id/guidelineLeft">
+        app:layout_constraintStart_toStartOf="@id/guidelineLeft"
+        app:layout_constraintTop_toBottomOf="@id/recyclerView">
 
         <ImageView
             android:id="@+id/ivAttachment"
@@ -87,8 +87,8 @@
             android:rotation="45"
             android:src="@drawable/ic_baseline_attach_file_24"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/etMsg"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
@@ -103,9 +103,9 @@
             android:inputType="textMultiLine"
             android:maxLines="6"
             android:padding="@dimen/_8sdp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/btnSend"
             app:layout_constraintStart_toEndOf="@id/ivAttachment"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView

@@ -12,10 +12,17 @@ import com.bumptech.glide.Glide
 import timber.log.Timber
 
 class SpecialistAdapter(
-    private val list: LiveData<ArrayList<SpecialistModel>>,
+    private var list: ArrayList<SpecialistModel>,
     private val context: FragmentActivity
 ) :
     RecyclerView.Adapter<SpecialistAdapter.MyViewHolder>() {
+
+    fun setList(it: ArrayList<SpecialistModel>?) {
+        if (it != null) {
+            list = it
+            notifyDataSetChanged()
+        }
+    }
 
     inner class MyViewHolder(private val binding: SingleItemOfSpecialistBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -36,12 +43,10 @@ class SpecialistAdapter(
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        list.value?.get(position)?.let {
-            holder.bind(it)
-        }
+            holder.bind(list[position])
     }
 
     override fun getItemCount(): Int {
-        return list.value?.size ?: 0
+        return list.size
     }
 }

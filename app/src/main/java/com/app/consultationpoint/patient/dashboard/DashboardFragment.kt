@@ -2,6 +2,7 @@ package com.app.consultationpoint.patient.dashboard
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,10 +15,12 @@ import com.app.consultationpoint.databinding.FragmentDashboardBinding
 import com.app.consultationpoint.patient.dashboard.adapter.SpecialistAdapter
 import com.app.consultationpoint.patient.dashboard.adapter.TodayAtpAdapter
 import com.app.consultationpoint.patient.doctor.DoctorListFragment
+import com.app.consultationpoint.utils.Utils.formatTo
 import kotlinx.android.synthetic.main.activity_bottom_navigation.*
 import kotlinx.android.synthetic.main.header_layout.view.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
+import java.util.*
 
 private const val ARG_PARAM1 = "param1"
 
@@ -42,6 +45,7 @@ class DashboardFragment : BaseFragment() {
             }
             if (adapterTodayApt != null && it.isNotEmpty()) {
                 Timber.d("notified")
+//                adapterTodayApt?.setList(it)
                 adapterTodayApt?.notifyDataSetChanged()
             }
         })
@@ -49,7 +53,19 @@ class DashboardFragment : BaseFragment() {
         viewModel.getSpCategoryList().observe(this, {
             if (specialistAdapter != null && it.isNotEmpty()) {
                 Timber.d("Special item notified")
-                specialistAdapter?.notifyDataSetChanged()
+                specialistAdapter?.setList(it)
+            }
+        })
+
+        viewModel.getStatus().observe(this, {
+            if (it == "Special List Updated") {
+                Handler().post {
+                    viewModel.fetchSpItemsFromRDB()
+                }
+            } else if (it == "My Apt Updated") {
+                Handler().post {
+                    viewModel.fetchTodayApt(Calendar.getInstance().time.formatTo("yyyy-MM-dd"))
+                }
             }
         })
     }
@@ -83,10 +99,15 @@ class DashboardFragment : BaseFragment() {
         binding.rvHorizontal.layoutManager =
             LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
 
-        specialistAdapter = SpecialistAdapter(viewModel.getSpCategoryList(), requireActivity())
+        specialistAdapter =
+            viewModel.getSpCategoryList().value?.let { SpecialistAdapter(it, requireActivity()) }
         binding.rvHorizontal.adapter = specialistAdapter
 
-        adapterTodayApt = TodayAtpAdapter(viewModel.getTodayAptList(), this@DashboardFragment)
+        adapterTodayApt = activity?.let { context ->
+            TodayAtpAdapter(
+                viewModel.getTodayAptList(), context, viewModel.getAPtDoctorList()
+            )
+        }
         binding.recyclerView.itemAnimator = null
         binding.recyclerView.adapter = adapterTodayApt
     }

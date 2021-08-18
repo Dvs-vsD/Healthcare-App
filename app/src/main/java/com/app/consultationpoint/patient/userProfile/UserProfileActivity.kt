@@ -2,7 +2,6 @@ package com.app.consultationpoint.patient.userProfile
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.graphics.Typeface
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.app.consultationpoint.R
@@ -58,19 +57,55 @@ class UserProfileActivity : AppCompatActivity() {
         if (Utils.getUserProfile() != "") {
 //            binding.ivProfile.setImageBitmap(Utils.getImageBitMap(this, Utils.getUserProfile()))
         }
-        binding.tvUserName.text = Utils.getFirstName() + " " + Utils.getLastName()
-        binding.tvUserEmail.text = Utils.getUserEmail()
-        val adr = Utils.getUserAdr()
-        if (adr != "") {
-            binding.tvAddress.setTypeface(null, Typeface.NORMAL)
-            binding.tvAddress.text = adr
+        val userName = Utils.getUserName()
+        val firstName = Utils.getFirstName()
+        val lastName = Utils.getLastName()
+        binding.tvUserName.text = if (userName != "") {
+            userName
+        } else {
+            "$firstName $lastName"
         }
+
+        binding.tvFirstName.text = firstName
+        binding.tvLastName.text = lastName
+        binding.tvUserEmail.text = Utils.getUserEmail()
+        binding.tvGender.text = when (Utils.getUserGender()) {
+            "0" -> getString(R.string.rb_male)
+            "1" -> getString(R.string.rb_female)
+            "2" -> getString(R.string.rb_other)
+            else -> getString(R.string.place_holder)
+        }
+
         val phnNo = Utils.getUserPhnNo()
         if (phnNo != "") {
-            binding.tvPhnNo.setTypeface(null, Typeface.NORMAL)
             binding.tvPhnNo.text = phnNo
         }
 
+        val dob = Utils.getDOB()
+        if (dob != "") {
+            binding.tvDob.text = dob
+        }
+
+        val adr = Utils.getUserAdr()
+        if (adr != "") {
+            binding.tvAddress.text = adr
+        }
+
+        val city = Utils.getCity()
+        if (city != "")
+            binding.tvCity.text = city
+
+        val state = Utils.getState()
+        if (state != "")
+            binding.tvState.text = state
+
+        val country = Utils.getCountry()
+        if (country != "")
+            binding.tvCountry.text = country
+
+        val pinCode = Utils.getPinCode()
+        if (pinCode != 0)
+            binding.tvPinCode.text = pinCode.toString()
     }
 
 //    override fun onResume() {

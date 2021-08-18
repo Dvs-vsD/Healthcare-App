@@ -41,7 +41,7 @@ class RegisterActivity : AppCompatActivity() {
                 } else {
                     Toast.makeText(this, "Doctor Signed Up successfully", Toast.LENGTH_SHORT).show()
                 }
-            } else if (it.isNotEmpty()) {
+            } else if (it.startsWith("error")) {
                 Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
             }
         })

@@ -5,7 +5,6 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.app.consultationpoint.databinding.RowOfDoctorListBinding
 import com.app.consultationpoint.general.model.UserModel
@@ -15,9 +14,18 @@ import com.bumptech.glide.Glide
 import timber.log.Timber
 
 class DoctorAdapter(
-    private val list: LiveData<ArrayList<UserModel>>,
-    private var activity: FragmentActivity?
+    list2: ArrayList<UserModel>?,
+    private val activity: FragmentActivity?
 ) : RecyclerView.Adapter<DoctorAdapter.MyViewHolder>() {
+
+    private var list: ArrayList<UserModel>? = null
+    init {
+        list = list2
+    }
+    fun setDataList(dataList: ArrayList<UserModel>?){
+        list = dataList
+        notifyDataSetChanged()
+    }
 
     inner class MyViewHolder(private val binding: RowOfDoctorListBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -44,16 +52,16 @@ class DoctorAdapter(
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        list.value?.get(position)?.let { holder.bind(it) }
+        list?.get(position)?.let { holder.bind(it) }
         holder.itemView.setOnClickListener {
             val intent = Intent(activity, DoctorDetailsActivity::class.java)
-            Timber.d("user id %s", list.value?.get(position)?.id)
-            intent.putExtra("doctor_id", list.value?.get(position)?.id)
+            Timber.d("user id %s", list?.get(position)?.id)
+            intent.putExtra("doctor_id", list?.get(position)?.id)
             activity?.startActivity(intent)
         }
     }
 
     override fun getItemCount(): Int {
-        return list.value?.size ?: 0
+        return list?.size ?: 0
     }
 }

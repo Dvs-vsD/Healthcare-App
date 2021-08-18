@@ -8,11 +8,6 @@
     android:background="@color/bg_gray"
     tools:context=".patient.dashboard.DashboardFragment">
 
-    <!--    <androidx.drawerlayout.widget.DrawerLayout-->
-    <!--        android:id="@+id/drawerLayout"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="match_parent">-->
-
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -38,24 +33,6 @@
                 android:orientation="vertical"
                 app:layout_constraintGuide_end="@dimen/_16sdp" />
 
-            <!--                <androidx.appcompat.widget.Toolbar-->
-            <!--                    android:id="@+id/toolbar"-->
-            <!--                    android:layout_width="0dp"-->
-            <!--                    android:layout_height="wrap_content"-->
-            <!--                    app:layout_constraintEnd_toEndOf="@id/guidelineRight"-->
-            <!--                    app:layout_constraintStart_toStartOf="parent"-->
-            <!--                    app:layout_constraintTop_toTopOf="parent">-->
-
-            <!--                    <com.mikhaellopez.circularimageview.CircularImageView-->
-            <!--                        android:id="@+id/ivProfile"-->
-            <!--                        android:layout_width="@dimen/_24sdp"-->
-            <!--                        android:layout_height="@dimen/_24sdp"-->
-            <!--                        app:civ_border="false"-->
-            <!--                        android:layout_gravity="end|center_vertical"-->
-            <!--                        android:src="@drawable/default_user" />-->
-
-            <!--                </androidx.appcompat.widget.Toolbar>-->
-
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/layoutSearch"
                 android:layout_width="0dp"
@@ -77,69 +54,6 @@
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
-
-<!--                <ImageView-->
-<!--                    android:id="@+id/ivTeeth"-->
-<!--                    android:layout_width="@dimen/_40sdp"-->
-<!--                    android:layout_height="@dimen/_40sdp"-->
-<!--                    android:layout_marginVertical="@dimen/_6sdp"-->
-<!--                    android:background="@drawable/circle_background"-->
-<!--                    android:backgroundTint="@color/white"-->
-<!--                    android:contentDescription="@string/contentDescription"-->
-<!--                    android:padding="@dimen/_12sdp"-->
-<!--                    android:src="@drawable/tooth"-->
-<!--                    app:layout_constraintBottom_toTopOf="@id/tvSearch"-->
-<!--                    app:layout_constraintEnd_toStartOf="@id/ivHeart"-->
-<!--                    app:layout_constraintHorizontal_chainStyle="spread_inside"-->
-<!--                    app:layout_constraintStart_toStartOf="parent"-->
-<!--                    app:layout_constraintTop_toBottomOf="@id/tvText"-->
-<!--                    app:tint="@color/yellow" />-->
-
-<!--                <ImageView-->
-<!--                    android:id="@+id/ivHeart"-->
-<!--                    android:layout_width="@dimen/_40sdp"-->
-<!--                    android:layout_height="@dimen/_40sdp"-->
-<!--                    android:layout_marginVertical="@dimen/_6sdp"-->
-<!--                    android:background="@drawable/circle_background"-->
-<!--                    android:backgroundTint="@color/white"-->
-<!--                    android:contentDescription="@string/contentDescription"-->
-<!--                    android:padding="@dimen/_12sdp"-->
-<!--                    android:src="@drawable/ic_baseline_favorite_24"-->
-<!--                    app:layout_constraintEnd_toStartOf="@id/ivEye"-->
-<!--                    app:layout_constraintStart_toEndOf="@id/ivTeeth"-->
-<!--                    app:layout_constraintTop_toBottomOf="@id/tvText"-->
-<!--                    app:tint="@color/pink" />-->
-
-<!--                <ImageView-->
-<!--                    android:id="@+id/ivEye"-->
-<!--                    android:layout_width="@dimen/_40sdp"-->
-<!--                    android:layout_height="@dimen/_40sdp"-->
-<!--                    android:layout_marginVertical="@dimen/_6sdp"-->
-<!--                    android:background="@drawable/circle_background"-->
-<!--                    android:backgroundTint="@color/white"-->
-<!--                    android:contentDescription="@string/contentDescription"-->
-<!--                    android:padding="@dimen/_12sdp"-->
-<!--                    android:src="@drawable/ic_baseline_remove_red_eye_24"-->
-<!--                    app:layout_constraintEnd_toStartOf="@id/ivInjection"-->
-<!--                    app:layout_constraintStart_toEndOf="@id/ivHeart"-->
-<!--                    app:layout_constraintTop_toBottomOf="@id/tvText"-->
-<!--                    app:tint="@color/pink" />-->
-
-<!--                <ImageView-->
-<!--                    android:id="@+id/ivInjection"-->
-<!--                    android:layout_width="@dimen/_40sdp"-->
-<!--                    android:layout_height="@dimen/_40sdp"-->
-<!--                    android:layout_marginVertical="@dimen/_6sdp"-->
-<!--                    android:background="@drawable/circle_background"-->
-<!--                    android:backgroundTint="@color/white"-->
-<!--                    android:contentDescription="@string/contentDescription"-->
-<!--                    android:padding="@dimen/_12sdp"-->
-<!--                    android:rotationY="180"-->
-<!--                    android:src="@drawable/injection"-->
-<!--                    app:layout_constraintEnd_toEndOf="parent"-->
-<!--                    app:layout_constraintStart_toEndOf="@id/ivEye"-->
-<!--                    app:layout_constraintTop_toBottomOf="@id/tvText"-->
-<!--                    app:tint="@color/blue" />-->
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvHorizontal"
@@ -208,15 +122,5 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.core.widget.NestedScrollView>
-
-    <!--        <com.google.android.material.navigation.NavigationView-->
-    <!--            android:id="@+id/navigationView"-->
-    <!--            android:layout_width="wrap_content"-->
-    <!--            android:layout_height="match_parent"-->
-    <!--            android:layout_gravity="start"-->
-    <!--            app:headerLayout="@layout/header_layout"-->
-    <!--            app:menu="@menu/navigation_menu_main" />-->
-
-    <!--    </androidx.drawerlayout.widget.DrawerLayout>-->
 
 </FrameLayout>

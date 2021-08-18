@@ -24,6 +24,8 @@ class DashboardRepository(private val firebaseSource: FirebaseSource) {
         MutableLiveData(ArrayList())
     private var specialItemList: MutableLiveData<ArrayList<SpecialistModel>> =
         MutableLiveData(ArrayList())
+    private var docDetailsList: MutableLiveData<ArrayList<UserModel>> =
+        MutableLiveData(ArrayList())
 
 //    fun init() {
 //        firebaseSource.fetchMyBookings()
@@ -49,6 +51,14 @@ class DashboardRepository(private val firebaseSource: FirebaseSource) {
                     .equalTo("patient_id", Utils.getUserId().toLong()).and()
                     .equalTo("schedual_date", today).findAll()
             val list: ArrayList<AppointmentModel> = mRealm.copyFromRealm(mRealmResults) as ArrayList<AppointmentModel>
+
+            val docList = ArrayList<UserModel>()
+            for (apt in list) {
+                val doctorId = apt.doctor_id
+                docList.add(getDoctorDetails(doctorId))
+            }
+            docDetailsList.value = docList
+
             Timber.d("list %s", list.toString())
             todayAptList.value?.clear()
             todayAptList.value = list
@@ -56,6 +66,15 @@ class DashboardRepository(private val firebaseSource: FirebaseSource) {
             mRealmResults.addChangeListener { change ->
                 todayAptList.value?.clear()
                 val newList: ArrayList<AppointmentModel> = mRealm.copyFromRealm(change) as ArrayList<AppointmentModel>
+
+                docList.clear()
+                docDetailsList.value?.clear()
+                for (apt in newList) {
+                    val doctorId = apt.doctor_id
+                    docList.add(getDoctorDetails(doctorId))
+                }
+                docDetailsList.value = docList
+
                 todayAptList.value = newList
             }
             Timber.d("Open Instance at %s", System.currentTimeMillis().toString())
@@ -64,6 +83,10 @@ class DashboardRepository(private val firebaseSource: FirebaseSource) {
 
     fun getTodayAptList(): LiveData<ArrayList<AppointmentModel>> {
         return todayAptList
+    }
+
+    fun getAptDoctorList(): LiveData<ArrayList<UserModel>> {
+        return docDetailsList
     }
 
     fun logout() {
@@ -95,5 +118,9 @@ class DashboardRepository(private val firebaseSource: FirebaseSource) {
 
     fun getSpCategoryList(): LiveData<ArrayList<SpecialistModel>> {
         return specialItemList
+    }
+
+    fun getStatus(): LiveData<String> {
+        return firebaseSource.getStatus()
     }
 }

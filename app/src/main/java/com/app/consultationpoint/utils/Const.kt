@@ -15,4 +15,7 @@ object Const {
     const val COUNTRY: String = "country"
     const val PIN_CODE: String = "pin_code"
     const val USER_TYPE: String = "user_type"
+    const val USER_NAME: String = "user_name"
+    const val DOB: String = "dob"
+    const val GENDER: String = "gender"
 }

@@ -98,7 +98,7 @@ class ChooseTimeActivity : AppCompatActivity() {
 
                     createChatRoom(doctor_id ?: 0, docName?:"", userId?:0)
 
-                    myAptViewModel.initRepo()
+                    myAptViewModel.fetchAptFromRealm()
 
                     val intent = Intent(this, BottomNavigationActivity::class.java)
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)

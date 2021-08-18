@@ -28,7 +28,7 @@ class LoginActivity : AppCompatActivity() {
             Utils.dismissProgressDialog()
             if (it == "success") {
                 startActivity()
-            } else if (it != "") {
+            } else if (it.startsWith("error")) {
                 Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
             }
         })

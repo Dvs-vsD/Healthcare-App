@@ -77,6 +77,10 @@ object Utils {
     fun getFirstName(): String {
         return ConsultationApp.shPref.getString(Const.FIRST_NAME,"")?:""
     }
+
+    fun getUserName(): String {
+        return ConsultationApp.shPref.getString(Const.USER_NAME,"")?:""
+    }
     fun getLastName(): String {
         return ConsultationApp.shPref.getString(Const.LAST_NAME,"")?:""
     }
@@ -92,8 +96,30 @@ object Utils {
     fun getUserPhnNo(): String {
         return ConsultationApp.shPref.getString(Const.PHN_NO,"")?:""
     }
+    fun getUserGender(): String {
+        return ConsultationApp.shPref.getString(Const.GENDER,"")?:""
+    }
+    fun getDOB(): String {
+        return ConsultationApp.shPref.getString(Const.DOB,"")?:""
+    }
     fun getUserAdr(): String {
         return ConsultationApp.shPref.getString(Const.ADDRESS,"")?:""
+    }
+
+    fun getCity(): String {
+        return ConsultationApp.shPref.getString(Const.CITY,"")?:""
+    }
+
+    fun getState(): String {
+        return ConsultationApp.shPref.getString(Const.STATE,"")?:""
+    }
+
+    fun getCountry(): String {
+        return ConsultationApp.shPref.getString(Const.COUNTRY,"")?:""
+    }
+
+    fun getPinCode(): Int {
+        return ConsultationApp.shPref.getInt(Const.PIN_CODE,0)
     }
 
     fun getImageBitMap(context: Context, image: String): Bitmap {

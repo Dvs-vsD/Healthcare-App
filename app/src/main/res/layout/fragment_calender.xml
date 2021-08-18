@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/background_with_radius_24">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -18,8 +18,25 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_16sdp"
                 android:layout_marginVertical="@dimen/_8sdp"
-                android:gravity="top|start"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintTop_toTopOf="parent"
                 android:text="April, 2021" />
+
+            <TextView
+                android:id="@+id/tvViewAll"
+                style="@style/st_tv_small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/_4sdp"
+                android:layout_marginEnd="@dimen/_16sdp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBaseline_toBaselineOf="@id/tvCurrentMonthYear"
+                android:text="@string/tv_view_all"
+                app:drawableEndCompat="@drawable/ic_baseline_arrow_forward_ios_24"
+                />
 
             <com.michalsvec.singlerowcalendar.calendar.SingleRowCalendar
                 android:id="@+id/single_row_calendar"
@@ -27,10 +44,15 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_8sdp"
                 android:layout_marginBottom="@dimen/_8sdp"
+                android:layout_marginTop="@dimen/_4sdp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvCurrentMonthYear"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:deselection="false"
                 app:longPress="false"
                 app:multiSelection="false" />
 
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

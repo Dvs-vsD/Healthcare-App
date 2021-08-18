@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import com.app.consultationpoint.BaseFragment
 import com.app.consultationpoint.databinding.FragmentChatListBinding
@@ -29,14 +28,22 @@ class ChatListFragment : BaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getInt(ARG_PARAM1)
+            param1 = it.getString(ARG_PARAM1).toString().toInt()
         }
 
         viewModel.getRoomList().observe(this, {
             if (it != null && it.isNotEmpty() && adapter != null) {
-                adapter?.notifyDataSetChanged()
+                adapter?.setList(it)
                 binding.tvNoData.visibility = View.GONE
                 Timber.d("Room adapter notified %s", it)
+            }
+        })
+
+        viewModel.getStatus().observe(this, {
+            if (it == "Chat Room List Updated") {
+                Handler().post {
+                    viewModel.roomsFromRealm(userId)
+                }
             }
         })
     }
@@ -62,7 +69,11 @@ class ChatListFragment : BaseFragment() {
 
         val roomList: LiveData<ArrayList<RoomModel?>> = viewModel.getRoomList()
 
-        adapter = activity?.let { RoomListAdapter(roomList, it) }
+        adapter = activity?.let { context ->
+            roomList.value?.let { list ->
+                RoomListAdapter(list, context)
+            }
+        }
 
         if (roomList.value?.isEmpty() == true) {
             binding.tvNoData.visibility = View.VISIBLE

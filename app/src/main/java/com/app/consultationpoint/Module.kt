@@ -3,6 +3,8 @@ package com.app.consultationpoint
 import com.app.consultationpoint.firebase.FirebaseSource
 import com.app.consultationpoint.general.LoginRegisterRepository
 import com.app.consultationpoint.general.LoginRegisterViewModel
+import com.app.consultationpoint.patient.appointment.allAppointments.AllAptRepository
+import com.app.consultationpoint.patient.appointment.allAppointments.AllAptViewModel
 import com.app.consultationpoint.patient.appointment.bookAppointment.BookAptRepository
 import com.app.consultationpoint.patient.appointment.bookAppointment.BookAptViewModel
 import com.app.consultationpoint.patient.appointment.myAppointments.MyAptRepository
@@ -29,6 +31,7 @@ val viewModelModule = module {
     viewModel { MyAptViewModel(get()) }
     viewModel { ChatScreenViewModel(get()) }
     viewModel { RoomViewModel(get()) }
+    viewModel { AllAptViewModel(get()) }
 }
 
 val repositoryModule = module {
@@ -40,6 +43,7 @@ val repositoryModule = module {
     single { MyAptRepository(get()) }
     single { ChatScreenRepository(get()) }
     single { RoomRepository(get()) }
+    single { AllAptRepository(get()) }
 }
 
 val firebaseModule = module {

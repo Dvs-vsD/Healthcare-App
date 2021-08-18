@@ -1,42 +1,45 @@
 package com.app.consultationpoint.patient.dashboard.adapter
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
-import com.app.consultationpoint.R
 import com.app.consultationpoint.databinding.RowOfTodayAptBinding
+import com.app.consultationpoint.general.model.UserModel
 import com.app.consultationpoint.patient.appointment.model.AppointmentModel
-import com.app.consultationpoint.patient.appointment.myAppointments.MyAptViewModel
-import com.app.consultationpoint.patient.dashboard.DashboardFragment
-import com.app.consultationpoint.patient.dashboard.DashboardViewModel
 import com.app.consultationpoint.utils.Utils.formatTo
 import com.app.consultationpoint.utils.Utils.toDate
 import com.bumptech.glide.Glide
 
 class TodayAtpAdapter(
     private val list: LiveData<ArrayList<AppointmentModel>>,
-    private val context: DashboardFragment
+    private val context: Context,
+    private val doctorDetails: LiveData<ArrayList<UserModel>>
 ) : RecyclerView.Adapter<TodayAtpAdapter.MyViewHolder>() {
-
-    private val viewModel = ViewModelProvider(context).get(DashboardViewModel::class.java)
 
     inner class MyViewHolder(private val binding: RowOfTodayAptBinding) :
         RecyclerView.ViewHolder(binding.root) {
         @SuppressLint("SetTextI18n")
         fun bind(item: AppointmentModel) {
-            val doctorDetails = viewModel.getDoctorDetails(item.doctor_id)
-            binding.tvDocName.text = doctorDetails.first_name + " " + doctorDetails.last_name
+            binding.tvDocName.text =
+                doctorDetails.value?.get(adapterPosition)?.first_name + " " + doctorDetails.value?.get(
+                    adapterPosition
+                )?.last_name
 //            binding.tvSpecAdr.text = doctorDetails.specialization + ", " + doctorDetails.city
-            if (doctorDetails.profile != "" && doctorDetails.profile != "null") {
-                Glide.with(context).load(doctorDetails.profile).into(binding.ivProfile)
+            if (doctorDetails.value?.get(adapterPosition)?.profile != "" && doctorDetails.value?.get(
+                    adapterPosition
+                )?.profile != "null"
+            ) {
+                Glide.with(context).load(doctorDetails.value?.get(adapterPosition)?.profile)
+                    .into(binding.ivProfile)
             }
             binding.tvAvailableText.text =
-                "Appointment For " + item.title + "\n" + "on " + item.schedual_date.toDate("yyyy-MM-dd")?.formatTo(
-                    "dd/MM/yyyy"
-                ) + " at " + item.schedual_time
+                "Appointment For " + item.title + "\n" + "on " + item.schedual_date.toDate("yyyy-MM-dd")
+                    ?.formatTo(
+                        "dd/MM/yyyy"
+                    ) + " at " + item.schedual_time
         }
     }
 

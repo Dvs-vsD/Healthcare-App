@@ -1,6 +1,7 @@
 package com.app.consultationpoint.patient.doctor
 
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.app.consultationpoint.BaseFragment
 import com.app.consultationpoint.databinding.FragmentDoctorListBinding
+import com.app.consultationpoint.general.model.UserModel
 import com.app.consultationpoint.patient.doctor.adapter.DoctorAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
@@ -21,6 +23,7 @@ class DoctorListFragment : BaseFragment() {
     private lateinit var binding: FragmentDoctorListBinding
     private var adapterDoctor: DoctorAdapter? = null
     private val viewModel by viewModel<DoctorViewModel>()
+    private var listUser: ArrayList<UserModel>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,15 +34,19 @@ class DoctorListFragment : BaseFragment() {
         viewModel.getStatus().observe(this, {
             if (it == "Doctor List Updated" && adapterDoctor != null) {
                 Timber.d("Adapter notified by the init doctor list realm")
-                viewModel.getDoctorList()
+                Handler().post {
+                    viewModel.fetchDocFromRDB()
+                }
             }
         })
 
         viewModel.getDoctorList().observe(this, {
             if (adapterDoctor != null) {
-                Timber.d("doctor list changed")
+                listUser = it
+                Timber.d("doctor list changed #Size : ${listUser?.size}")
 //                adapterDoctor?.notifyItemRangeInserted(0,it.size)
-                adapterDoctor?.notifyDataSetChanged()
+                adapterDoctor?.setDataList(listUser)
+//                adapterDoctor?.notifyDataSetChanged()
             }
         })
     }
@@ -55,9 +62,14 @@ class DoctorListFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.fetchDocFromFB()
         viewModel.fetchDocFromRDB()
-        adapterDoctor = DoctorAdapter(viewModel.getDoctorList(), activity)
+        viewModel.fetchDocFromFB()
+
+        if(listUser== null)
+            listUser = ArrayList()
+
+        listUser = viewModel.getDoctorList().value
+        adapterDoctor = DoctorAdapter(listUser, activity)
 
         binding.recyclerView.layoutManager = GridLayoutManager(activity, 2)
         binding.recyclerView.setHasFixedSize(true)

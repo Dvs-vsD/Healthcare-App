@@ -31,11 +31,19 @@ class MyAppointmentsFragment : BaseFragment() {
             viewModel.getMonthlyAptList().observe(this, { list ->
                 if (adapter != null) {
                     Timber.d("Apt list notified")
-                    adapter?.notifyDataSetChanged()
+                    adapter?.setList(list)
                     if (list.isNotEmpty()) {
                         binding.tvNoData.visibility = View.GONE
                     } else {
                         binding.tvNoData.visibility = View.VISIBLE
+                    }
+                }
+            })
+
+            viewModel.getStatus().observe(this, { status ->
+                if (status == "My Apt Updated") {
+                    Handler().post {
+                        viewModel.fetchAptFromRealm()
                     }
                 }
             })
@@ -55,13 +63,13 @@ class MyAppointmentsFragment : BaseFragment() {
 
         viewModel.fetchAptFromFirebase()
 
-        viewModel.initRepo()
+        viewModel.fetchAptFromRealm()
 
-        val monthlyApt = viewModel.getMonthlyAptList()
+        val monthlyApt = viewModel.getMonthlyAptList().value
 
-        adapter = MonthlyAptAdapter(viewModel.getMonthlyAptList(), this@MyAppointmentsFragment)
+        adapter = monthlyApt?.let { list -> MonthlyAptAdapter(list, this@MyAppointmentsFragment) }
 
-        if (monthlyApt.value?.isEmpty() == true) {
+        if (monthlyApt?.isEmpty() == true) {
             binding.tvNoData.visibility = View.VISIBLE
         } else {
             binding.tvNoData.visibility = View.GONE
@@ -72,7 +80,6 @@ class MyAppointmentsFragment : BaseFragment() {
 
         binding.pullToRefresh.setOnRefreshListener {
             viewModel.fetchAptFromFirebase()
-            viewModel.initRepo()
             Handler().postDelayed({ binding.pullToRefresh.isRefreshing = false }, 3000)
         }
 
@@ -82,7 +89,7 @@ class MyAppointmentsFragment : BaseFragment() {
     }
 
     override fun onResume() {
-        viewModel.initRepo()
+        viewModel.fetchAptFromRealm()
         super.onResume()
     }
 
