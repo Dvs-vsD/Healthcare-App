@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MotionScene 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:motion="http://schemas.android.com/apk/res-auto">
+
+    <Transition
+        motion:constraintSetEnd="@+id/end"
+        motion:constraintSetStart="@id/start"
+        motion:duration="1000"
+        motion:autoTransition="animateToEnd">
+       <KeyFrameSet>
+       </KeyFrameSet>
+    </Transition>
+
+    <ConstraintSet android:id="@+id/start">
+        <Constraint
+            android:id="@+id/btnLogOut"
+            style="@style/st_tv_small.bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/background_with_radius_12"
+            android:backgroundTint="@color/blue"
+            android:paddingHorizontal="@dimen/_8sdp"
+            android:paddingVertical="@dimen/_4sdp"
+            android:text="@string/menu_logout"
+            android:textColor="@color/white"
+            android:alpha="0.0"
+            motion:layout_constraintBottom_toBottomOf="@id/ivBack"
+            motion:layout_constraintStart_toEndOf="parent"
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintTop_toTopOf="@id/ivBack" />
+
+        <Constraint
+            android:id="@+id/tvUserName"
+            style="@style/st_tv_normal.bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/place_holder"
+            android:alpha="0.0"
+            motion:layout_constraintBottom_toBottomOf="@id/ivProfile"
+            motion:layout_constraintEnd_toEndOf="@id/guidelineRight"
+            motion:layout_constraintHorizontal_bias="0"
+            motion:layout_constraintStart_toStartOf="@id/tvHello"
+            motion:layout_constraintTop_toTopOf="@id/tvHello"
+            />
+
+        <Constraint
+            android:id="@+id/scrollView2"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@drawable/background_with_top_radius_24"
+            android:scrollbars="none"
+            android:alpha="0.0"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintTop_toBottomOf="@+id/ivProfile"
+            />
+
+    </ConstraintSet>
+
+    <ConstraintSet android:id="@+id/end">
+    </ConstraintSet>
+</MotionScene>

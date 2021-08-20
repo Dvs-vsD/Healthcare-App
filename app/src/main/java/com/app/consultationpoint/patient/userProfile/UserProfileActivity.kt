@@ -1,8 +1,10 @@
 package com.app.consultationpoint.patient.userProfile
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.app.consultationpoint.R
 import com.app.consultationpoint.databinding.ActivityUserProfileBinding
@@ -30,10 +32,15 @@ class UserProfileActivity : AppCompatActivity() {
 
         getProfileDetails()
 
+        val startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                getProfileDetails()
+            }
+        }
+
         binding.btnEditProfile.setOnClickListener {
-            val uptProfileFrag = UpdateProfileFragment()
-            val transaction = supportFragmentManager.beginTransaction()
-            transaction.replace(R.id.clProfile, uptProfileFrag).addToBackStack("Fragment").commit()
+            val intent = Intent(this, UptPntProfileActivity::class.java)
+            startForResult.launch(intent)
         }
 
         binding.btnLogOut.setOnClickListener {
@@ -41,14 +48,6 @@ class UserProfileActivity : AppCompatActivity() {
             val intent = Intent(this, LoginActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
             startActivity(intent)
-        }
-
-        supportFragmentManager.addOnBackStackChangedListener {
-            val bSCount = supportFragmentManager.backStackEntryCount
-            if (bSCount == 0) {
-                Timber.d("Back Stack Change Listener executed")
-                getProfileDetails()
-            }
         }
     }
 
@@ -107,10 +106,4 @@ class UserProfileActivity : AppCompatActivity() {
         if (pinCode != 0)
             binding.tvPinCode.text = pinCode.toString()
     }
-
-//    override fun onResume() {
-//        super.onResume()
-//        Timber.d("resumed")
-//        getProfileDetails()
-//    }
 }

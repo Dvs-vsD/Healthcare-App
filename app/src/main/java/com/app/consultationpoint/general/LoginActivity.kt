@@ -72,7 +72,7 @@ class LoginActivity : AppCompatActivity() {
         })
 
         binding.btnLogin.setOnClickListener {
-            Utils.showProgressDialog(this, "we are verifying your credentials")
+            Utils.showProgressDialog(this)
             viewModel.login(userEmail ?: "", userPassword ?: "")
         }
     }

@@ -266,7 +266,7 @@ class FirebaseSource {
             status.value = "Profile Updated"
             status.value = ""
         }.addOnFailureListener {
-            status.value = it.message.toString()
+            status.value = "error" + it.message.toString()
             status.value = ""
         }
     }

@@ -101,7 +101,7 @@ class RegisterActivity : AppCompatActivity() {
         })
 
         binding.btnSignUp.setOnClickListener {
-            Utils.showProgressDialog(this, "We are creating your account")
+            Utils.showProgressDialog(this)
             viewModel.signUp(userModel)
         }
     }

@@ -13,6 +13,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ConsultationPoint">
+        <activity android:name=".patient.userProfile.UptPntProfileActivity"></activity>
         <activity android:name=".patient.appointment.allAppointments.AllAppointmentsActivity" />
         <activity android:name=".patient.chat.chatScreen.ChatScreenActivity" />
         <activity android:name=".general.SplashScreenActivity">
@@ -22,8 +23,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".patient.userProfile.UserProfileActivity"
-            android:windowSoftInputMode="adjustResize"/>
+        <activity
+            android:name=".patient.userProfile.UserProfileActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity android:name=".patient.doctor.DoctorDetailsActivity" />
         <activity android:name=".patient.appointment.bookAppointment.ChooseTimeActivity" />
         <activity android:name=".general.LoginActivity" />

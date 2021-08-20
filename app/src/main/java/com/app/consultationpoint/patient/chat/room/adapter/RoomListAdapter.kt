@@ -1,6 +1,8 @@
 package com.app.consultationpoint.patient.chat.room.adapter
 
+import android.app.ActivityOptions
 import android.content.Intent
+import android.util.Pair
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +14,7 @@ import com.app.consultationpoint.patient.chat.room.model.RoomModel
 import com.app.consultationpoint.utils.Utils
 import com.app.consultationpoint.utils.Utils.formatTo
 import com.bumptech.glide.Glide
+import kotlinx.android.synthetic.main.row_of_chat_list.view.*
 import java.util.*
 
 class RoomListAdapter(
@@ -69,8 +72,22 @@ class RoomListAdapter(
             val intent = Intent(context, ChatScreenActivity::class.java)
             intent.putExtra("room_id", list[position]?.room_id)
             intent.putExtra("doctor_id", doctorId)
-            context.startActivity(intent)
+
+            val pairs = arrayOf(
+                Pair<View, String>(holder.itemView.ivProfile, "imageTransition"),
+                Pair<View, String>(holder.itemView.tvDocName, "nameTransition")
+            )
+            val options = ActivityOptions.makeSceneTransitionAnimation(context, *pairs)
+
+            context.startActivity(intent, options.toBundle())
+
         }
+//        holder.itemView.setOnClickListener {
+//            val intent = Intent(context, ChatScreenActivity::class.java)
+//            intent.putExtra("room_id", list[position]?.room_id)
+//            intent.putExtra("doctor_id", doctorId)
+//            context.startActivity(intent)
+//        }
     }
 
     override fun getItemCount(): Int {

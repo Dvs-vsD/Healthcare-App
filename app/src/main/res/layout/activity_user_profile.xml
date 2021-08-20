@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/clProfile"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_gray"
+    app:layoutDescription="@xml/activity_user_profile_scene"
     tools:context=".patient.userProfile.UserProfileActivity">
 
     <androidx.constraintlayout.widget.Guideline
@@ -105,6 +106,7 @@
 
 
     <ScrollView
+        android:id="@+id/scrollView2"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="@dimen/_16sdp"
@@ -133,10 +135,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/tv_personal_info"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0"
                 android:textColor="@color/blue"
                 app:layout_constraintBottom_toTopOf="@id/tvFirstNameHint"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -145,8 +147,8 @@
                 style="@style/st_tv_extra_small"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/hint_first_name"
                 android:layout_marginTop="@dimen/_8sdp"
+                android:text="@string/hint_first_name"
                 app:layout_constraintBottom_toTopOf="@id/tvFirstName"
                 app:layout_constraintEnd_toEndOf="@id/guidelineMiddle"
                 app:layout_constraintHorizontal_bias="0"
@@ -292,12 +294,12 @@
                 style="@style/st_tv_normal.bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/tv_residence"
-                app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginTop="@dimen/_24sdp"
-                app:layout_constraintHorizontal_bias="0"
+                android:text="@string/tv_residence"
                 android:textColor="@color/blue"
                 app:layout_constraintBottom_toTopOf="@id/tvAddressHint"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvPhnNo" />
 
@@ -438,4 +440,4 @@
 
     </ScrollView>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.motion.widget.MotionLayout>

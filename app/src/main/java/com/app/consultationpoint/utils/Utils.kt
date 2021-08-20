@@ -1,13 +1,15 @@
 package com.app.consultationpoint.utils
 
 import android.annotation.SuppressLint
-import android.app.Dialog
-import android.app.ProgressDialog
 import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
 import android.provider.MediaStore
+import androidx.core.content.ContextCompat
+import cc.cloudist.acplibrary.ACProgressConstant
+import cc.cloudist.acplibrary.ACProgressFlower
 import com.app.consultationpoint.ConsultationApp
+import com.app.consultationpoint.R
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -55,16 +57,18 @@ object Utils {
         return cal.time
     }
 
-    private var dialog: ProgressDialog? = null
+    private var dialog: ACProgressFlower? = null
 
-    fun showProgressDialog(context: Context, msg: String) {
+    fun showProgressDialog(context: Context) {
         if (dialog == null) {
-            dialog = ProgressDialog(context)
-            dialog?.setTitle("Please Wait...")
-            dialog?.setMessage(msg)
-            dialog?.setCancelable(false)
-            dialog?.show()
+            dialog = ACProgressFlower.Builder(context)
+                .direction(ACProgressConstant.DIRECT_CLOCKWISE)
+                .themeColor(ContextCompat.getColor(context, R.color.blue))
+                .text("Loading...")
+                .textColor(ContextCompat.getColor(context, R.color.blue))
+                .build()
         }
+        dialog?.show()
     }
 
     fun dismissProgressDialog() {
@@ -75,56 +79,64 @@ object Utils {
     }
 
     fun getFirstName(): String {
-        return ConsultationApp.shPref.getString(Const.FIRST_NAME,"")?:""
+        return ConsultationApp.shPref.getString(Const.FIRST_NAME, "") ?: ""
     }
 
     fun getUserName(): String {
-        return ConsultationApp.shPref.getString(Const.USER_NAME,"")?:""
+        return ConsultationApp.shPref.getString(Const.USER_NAME, "") ?: ""
     }
+
     fun getLastName(): String {
-        return ConsultationApp.shPref.getString(Const.LAST_NAME,"")?:""
+        return ConsultationApp.shPref.getString(Const.LAST_NAME, "") ?: ""
     }
+
     fun getUserEmail(): String {
-        return ConsultationApp.shPref.getString(Const.USER_EMAIL,"")?:""
+        return ConsultationApp.shPref.getString(Const.USER_EMAIL, "") ?: ""
     }
+
     fun getUserId(): String {
-        return ConsultationApp.shPref.getString(Const.USER_ID,"")?:""
+        return ConsultationApp.shPref.getString(Const.USER_ID, "") ?: ""
     }
+
     fun getUserProfile(): String {
-        return ConsultationApp.shPref.getString(Const.USER_PROFILE,"")?:""
+        return ConsultationApp.shPref.getString(Const.USER_PROFILE, "") ?: ""
     }
+
     fun getUserPhnNo(): String {
-        return ConsultationApp.shPref.getString(Const.PHN_NO,"")?:""
+        return ConsultationApp.shPref.getString(Const.PHN_NO, "") ?: ""
     }
+
     fun getUserGender(): String {
-        return ConsultationApp.shPref.getString(Const.GENDER,"")?:""
+        return ConsultationApp.shPref.getString(Const.GENDER, "") ?: ""
     }
+
     fun getDOB(): String {
-        return ConsultationApp.shPref.getString(Const.DOB,"")?:""
+        return ConsultationApp.shPref.getString(Const.DOB, "") ?: ""
     }
+
     fun getUserAdr(): String {
-        return ConsultationApp.shPref.getString(Const.ADDRESS,"")?:""
+        return ConsultationApp.shPref.getString(Const.ADDRESS, "") ?: ""
     }
 
     fun getCity(): String {
-        return ConsultationApp.shPref.getString(Const.CITY,"")?:""
+        return ConsultationApp.shPref.getString(Const.CITY, "") ?: ""
     }
 
     fun getState(): String {
-        return ConsultationApp.shPref.getString(Const.STATE,"")?:""
+        return ConsultationApp.shPref.getString(Const.STATE, "") ?: ""
     }
 
     fun getCountry(): String {
-        return ConsultationApp.shPref.getString(Const.COUNTRY,"")?:""
+        return ConsultationApp.shPref.getString(Const.COUNTRY, "") ?: ""
     }
 
     fun getPinCode(): Int {
-        return ConsultationApp.shPref.getInt(Const.PIN_CODE,0)
+        return ConsultationApp.shPref.getInt(Const.PIN_CODE, 0)
     }
 
     fun getImageBitMap(context: Context, image: String): Bitmap {
         val imgUri: Uri = Uri.parse(image)
-        return MediaStore.Images.Media.getBitmap(context.contentResolver,imgUri)
+        return MediaStore.Images.Media.getBitmap(context.contentResolver, imgUri)
     }
 
     fun getUserType(): Int {
