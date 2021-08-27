@@ -1,6 +1,9 @@
 package com.app.consultationpoint.patient.bottomNavigation
 
 import android.annotation.SuppressLint
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.BroadcastReceiver
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
@@ -13,6 +16,7 @@ import com.app.consultationpoint.BaseFragment
 import com.app.consultationpoint.R
 import com.app.consultationpoint.databinding.ActivityBottomNavigationBinding
 import com.app.consultationpoint.general.LoginActivity
+import com.app.consultationpoint.notification.RemainderBroadcast
 import com.app.consultationpoint.patient.appointment.myAppointments.MyAppointmentsFragment
 import com.app.consultationpoint.patient.chat.room.ChatListFragment
 import com.app.consultationpoint.patient.dashboard.DashboardFragment
@@ -20,6 +24,7 @@ import com.app.consultationpoint.patient.dashboard.DashboardViewModel
 import com.app.consultationpoint.patient.doctor.DoctorListFragment
 import com.app.consultationpoint.patient.userProfile.UserProfileActivity
 import com.app.consultationpoint.utils.Utils
+import com.app.consultationpoint.utils.Utils.formatTo
 import com.google.android.material.navigation.NavigationView
 import com.ncapdevi.fragnav.FragNavController
 import com.ncapdevi.fragnav.FragNavLogger
@@ -31,6 +36,8 @@ import io.realm.RealmConfiguration
 import kotlinx.android.synthetic.main.header_layout.view.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
+import java.util.*
+import kotlin.collections.ArrayList
 
 class BottomNavigationActivity(override val numberOfRootFragments: Int = 4) : AppCompatActivity(),
     BaseFragment.FragmentNavigation,
@@ -48,6 +55,12 @@ class BottomNavigationActivity(override val numberOfRootFragments: Int = 4) : Ap
         super.onCreate(savedInstanceState)
         binding = ActivityBottomNavigationBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        viewModel.getAptDateList().observe(this, { calList ->
+            if (calList != null && calList.isNotEmpty()) {
+                createAptNotifications(calList)
+            }
+        })
 
         if (intent.getBooleanExtra("newUser", false)) {
             val config = RealmConfiguration.Builder()
@@ -117,6 +130,36 @@ class BottomNavigationActivity(override val numberOfRootFragments: Int = 4) : Ap
         fragNavController.rootFragmentListener = this
 
         binding.bottomNav.setOnTabSelectListener({ itemId -> bottomBarSelection(itemId) }, initial)
+
+        //Alarm Notification for first 5 appointments
+        viewModel.fetchALlAptFromRDB()
+    }
+
+    private fun createAptNotifications(calList: ArrayList<Calendar>) {
+        for ((index, value) in calList.withIndex()) {
+            if (index < 5) {
+                Timber.d(value.time.formatTo("dd-MM-yyyy hh:mm a"))
+                val intent = Intent(this, RemainderBroadcast::class.java)
+                intent.putExtra("channel_id", index)
+                intent.putExtra("time",value.time.formatTo("hh:mm a"))
+                val pendingIntent =
+                    PendingIntent.getBroadcast(
+                        this,
+                        index,
+                        intent,
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                    )
+                val alarmManager: AlarmManager =
+                    this.getSystemService(ALARM_SERVICE) as AlarmManager
+
+                alarmManager.set(
+                    AlarmManager.RTC_WAKEUP,
+                    value.timeInMillis - 1800000,
+                    pendingIntent
+                )
+            } else
+                break
+        }
     }
 
     private fun bottomBarSelection(itemId: Int) {

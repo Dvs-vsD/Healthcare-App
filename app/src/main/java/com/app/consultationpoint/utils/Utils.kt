@@ -5,15 +5,21 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
 import android.provider.MediaStore
+import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import cc.cloudist.acplibrary.ACProgressConstant
 import cc.cloudist.acplibrary.ACProgressFlower
 import com.app.consultationpoint.ConsultationApp
 import com.app.consultationpoint.R
+import com.bumptech.glide.Glide
 import java.text.SimpleDateFormat
 import java.util.*
 
 object Utils {
+
+    fun ImageView.loadImage(url: String) {
+        Glide.with(this).load(url).into(this)
+    }
 
     fun String.toDate(
         dateFormat: String = "yyyy-MM-dd HH:mm:ss",

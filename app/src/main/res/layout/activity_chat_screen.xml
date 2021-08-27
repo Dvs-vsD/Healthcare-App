@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/bg_gray_200"
     android:paddingTop="@dimen/_12sdp"
+    android:id="@+id/chatScreenLayout"
     tools:context=".patient.chat.chatScreen.ChatScreenActivity">
 
     <androidx.constraintlayout.widget.Guideline
@@ -51,8 +52,9 @@
         <TextView
             android:id="@+id/tvUserName"
             style="@style/st_tv_normal.bold"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/_16sdp"
             android:transitionName="nameTransition"
             android:text="@string/place_holder" />
 

@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_gray"
+    tools:context=".patient.chat.roomInfo.RoomInfoActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guidelineLeft"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="@dimen/_16sdp" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guidelineRight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="@dimen/_16sdp" />
+
+        <ImageView
+            android:id="@+id/ivProfile"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/_170sdp"
+            android:contentDescription="@string/contentDescription"
+            android:scaleType="centerCrop"
+            android:src="@drawable/default_user"
+            android:transitionName="@string/imageTransition"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/upper_white_gradient"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/ivBack"
+                android:layout_width="@dimen/_25sdp"
+                android:layout_height="@dimen/_25sdp"
+                android:layout_marginStart="-5dp"
+                android:contentDescription="@string/contentDescription"
+                android:src="@drawable/ic_baseline_keyboard_backspace_24" />
+
+        </androidx.appcompat.widget.Toolbar>
+
+        <TextView
+            android:id="@+id/tvUserName"
+            style="@style/st_tv_large.bold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/below_white_gradient"
+            android:paddingHorizontal="@dimen/_16sdp"
+            android:paddingTop="@dimen/_24sdp"
+            android:paddingBottom="@dimen/_4sdp"
+            android:transitionName="@string/nameTransition"
+            android:shadowColor="@color/white"
+            android:shadowDx="1"
+            android:shadowDy="1"
+            android:shadowRadius="0.5"
+            app:layout_constraintBottom_toBottomOf="@id/ivProfile" />
+
+        <TextView
+            android:id="@+id/tvParticipant"
+            style="@style/st_tv_small.bold"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingVertical="@dimen/_8sdp"
+            android:text="@string/tv_participants"
+            android:textAllCaps="true"
+            app:layout_constraintEnd_toEndOf="@id/guidelineRight"
+            app:layout_constraintStart_toStartOf="@id/guidelineLeft"
+            app:layout_constraintTop_toBottomOf="@id/ivProfile" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/clAddInvite"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintVertical_bias="0"
+            android:background="@color/white"
+            app:layout_constraintTop_toBottomOf="@id/tvParticipant"
+            app:layout_constraintBottom_toTopOf="@id/btnExportAsPDF">
+
+        <ImageView
+            android:id="@+id/ivPlusIcon"
+            android:layout_width="@dimen/_30sdp"
+            android:layout_height="@dimen/_30sdp"
+            android:layout_marginStart="@dimen/_16sdp"
+            android:src="@drawable/ic_baseline_add_24"
+            android:background = "@drawable/circle_background"
+            android:backgroundTint="@color/bg_gray"
+            app:tint="@color/blue"
+            app:layout_constraintBottom_toBottomOf="@id/tvAddInvite"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/tvAddInvite"
+            android:contentDescription="@string/contentDescription"
+            app:layout_constraintTop_toTopOf="@id/tvAddInvite" />
+
+        <TextView
+            android:id="@+id/tvAddInvite"
+            style="@style/st_tv_normal.bold"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:drawablePadding="@dimen/_8sdp"
+            android:paddingHorizontal="@dimen/_16sdp"
+            android:paddingVertical="@dimen/_12sdp"
+            android:text="@string/tv_add_invite"
+            android:textColor="@color/blue"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/ivPlusIcon"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0.5dp"
+            android:background="@color/bg_gray"
+            app:layout_constraintBottom_toBottomOf="@id/tvAddInvite"
+            app:layout_constraintEnd_toEndOf="@id/tvAddInvite"
+            app:layout_constraintStart_toEndOf="@id/ivPlusIcon" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/mRecyclerView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:paddingHorizontal="@dimen/_16sdp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_bias="0"
+            app:layout_constraintTop_toBottomOf="@id/clAddInvite" />
+
+        <TextView
+            android:id="@+id/tvCreatedBy"
+            style="@style/st_tv_small10dp.gray"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/_8sdp"
+            android:gravity="end"
+            android:text="@string/tv_created_by"
+            app:layout_constraintBottom_toTopOf="@id/tvNameOfCreator"
+            app:layout_constraintEnd_toStartOf="@id/verticalView"
+            app:layout_constraintStart_toStartOf="@id/guidelineLeft" />
+
+        <TextView
+            android:id="@+id/tvNameOfCreator"
+            style="@style/st_tv_small.bold_gray"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/_8sdp"
+            android:layout_marginBottom="@dimen/_12sdp"
+            android:gravity="end"
+            android:text="@string/place_holder"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/verticalView"
+            app:layout_constraintStart_toStartOf="@id/guidelineLeft" />
+
+        <View
+            android:id="@+id/verticalView"
+            android:layout_width="1dp"
+            android:layout_height="0dp"
+            android:background="@color/clr_tv_extra_light_gray"
+            app:layout_constraintBottom_toBottomOf="@id/tvNameOfCreator"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tvCreatedBy" />
+
+        <TextView
+            android:id="@+id/tvCreatedOn"
+            style="@style/st_tv_small10dp.gray"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:text="@string/tv_created_on"
+            app:layout_constraintBottom_toTopOf="@id/tvDateOnCreated"
+            app:layout_constraintEnd_toStartOf="@id/guidelineRight"
+            app:layout_constraintStart_toEndOf="@id/verticalView" />
+
+        <TextView
+            android:id="@+id/tvDateOnCreated"
+            style="@style/st_tv_small.bold_gray"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:text="@string/place_holder"
+            app:layout_constraintBottom_toBottomOf="@id/verticalView"
+            app:layout_constraintEnd_toStartOf="@id/guidelineRight"
+            app:layout_constraintStart_toStartOf="@id/verticalView" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnExportAsPDF"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_export_as_pdf"
+            android:textAllCaps="false"
+            app:cornerRadius="@dimen/_8sdp"
+            android:layout_marginEnd="@dimen/_4sdp"
+            android:textColor="@color/blue"
+            android:backgroundTint="@color/white"
+            app:layout_constraintBottom_toTopOf="@id/verticalView"
+            app:layout_constraintStart_toStartOf="@id/guidelineLeft"
+            app:layout_constraintEnd_toStartOf="@id/verticalView"
+            />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnDeleteChat"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_delete_chat"
+            android:textAllCaps="false"
+            android:textColor="@color/red"
+            app:cornerRadius="@dimen/_8sdp"
+            android:layout_marginStart="@dimen/_4sdp"
+            android:backgroundTint="@color/white"
+            app:layout_constraintBottom_toTopOf="@id/verticalView"
+            app:layout_constraintStart_toEndOf="@id/verticalView"
+            app:layout_constraintEnd_toStartOf="@id/guidelineRight"
+            />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>

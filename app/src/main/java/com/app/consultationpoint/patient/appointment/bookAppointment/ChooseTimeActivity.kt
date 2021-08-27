@@ -14,6 +14,7 @@ import com.app.consultationpoint.patient.bottomNavigation.BottomNavigationActivi
 import com.app.consultationpoint.patient.chat.room.model.ParticipantModel
 import com.app.consultationpoint.patient.chat.room.model.RoomModel
 import com.app.consultationpoint.utils.Utils
+import com.google.android.material.snackbar.Snackbar
 import io.realm.RealmList
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber

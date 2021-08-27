@@ -104,4 +104,7 @@ dependencies {
 
     //Progress Dialog
     implementation 'cc.cloudist.acplibrary:library:1.2.1'
+
+    //Work Manager
+    implementation("androidx.work:work-runtime-ktx:2.6.0-rc01")
 }

@@ -10,6 +10,7 @@ import com.app.consultationpoint.patient.chat.chatScreen.ChatScreenActivity
 import com.app.consultationpoint.patient.chat.room.model.ParticipantModel
 import com.app.consultationpoint.patient.chat.room.model.RoomModel
 import com.app.consultationpoint.utils.Utils
+import com.app.consultationpoint.utils.Utils.loadImage
 import com.bumptech.glide.Glide
 import io.realm.RealmList
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -51,7 +52,7 @@ class DoctorDetailsActivity : AppCompatActivity() {
         binding.tvDocName.text = docName
 //        binding.tvSpecAdr.text = model.specialization + ", " + model.city
         if (model.profile != "" && model.profile != null) {
-            Glide.with(this).load(model.profile).into(binding.ivProfile)
+            binding.ivProfile.loadImage(model.profile!!)
         }
         binding.tvYearCount.text = model.experience_yr + "+"
 

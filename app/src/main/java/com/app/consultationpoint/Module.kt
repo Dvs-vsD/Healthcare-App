@@ -13,6 +13,8 @@ import com.app.consultationpoint.patient.chat.chatScreen.ChatScreenRepository
 import com.app.consultationpoint.patient.chat.chatScreen.ChatScreenViewModel
 import com.app.consultationpoint.patient.chat.room.RoomRepository
 import com.app.consultationpoint.patient.chat.room.RoomViewModel
+import com.app.consultationpoint.patient.chat.roomInfo.RIRepository
+import com.app.consultationpoint.patient.chat.roomInfo.RIViewModel
 import com.app.consultationpoint.patient.dashboard.DashboardRepository
 import com.app.consultationpoint.patient.dashboard.DashboardViewModel
 import com.app.consultationpoint.patient.doctor.DoctorRepository
@@ -32,6 +34,7 @@ val viewModelModule = module {
     viewModel { ChatScreenViewModel(get()) }
     viewModel { RoomViewModel(get()) }
     viewModel { AllAptViewModel(get()) }
+    viewModel { RIViewModel(get()) }
 }
 
 val repositoryModule = module {
@@ -44,6 +47,7 @@ val repositoryModule = module {
     single { ChatScreenRepository(get()) }
     single { RoomRepository(get()) }
     single { AllAptRepository(get()) }
+    single { RIRepository(get()) }
 }
 
 val firebaseModule = module {

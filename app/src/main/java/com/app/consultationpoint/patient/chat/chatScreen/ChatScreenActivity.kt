@@ -1,15 +1,20 @@
 package com.app.consultationpoint.patient.chat.chatScreen
 
 import android.annotation.SuppressLint
+import android.app.ActivityOptions
+import android.content.Intent
 import android.os.Bundle
-import android.view.Window
-import android.view.WindowManager
+import android.util.Pair
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
+import com.app.consultationpoint.R
 import com.app.consultationpoint.databinding.ActivityChatScreenBinding
 import com.app.consultationpoint.patient.chat.chatScreen.adapter.ChatAdapter
 import com.app.consultationpoint.patient.chat.chatScreen.model.MessageModel
+import com.app.consultationpoint.patient.chat.roomInfo.RoomInfoActivity
 import com.app.consultationpoint.utils.Utils
+import com.app.consultationpoint.utils.Utils.loadImage
 import com.bumptech.glide.Glide
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
@@ -51,15 +56,17 @@ class ChatScreenActivity : AppCompatActivity() {
         docId = intent.getLongExtra("doctor_id", 0)
         userId = Utils.getUserId().toLong()
         val docDetails = viewModel.getDoctorDetails(docId)
-        binding.tvUserName.text = docDetails.first_name + " " + docDetails.last_name
+        val userName = docDetails.first_name + " " + docDetails.last_name
+        binding.tvUserName.text = userName
 
         Timber.d("From tvUserName %s", binding.tvUserName.text.toString())
         Timber.d("From DB %s", docDetails.first_name + " " + docDetails.last_name)
         Timber.d("room id %s", roomId)
 
         val profile = docDetails.profile
-        if (profile != null && profile != "" && profile != "null")
-            Glide.with(this).load(profile).into(binding.ivProfile)
+        if (profile != null && profile != "" && profile != "null") {
+            binding.ivProfile.loadImage(profile)
+        })
 
         binding.recyclerView.setHasFixedSize(true)
 
@@ -72,6 +79,19 @@ class ChatScreenActivity : AppCompatActivity() {
 //        binding.ivAttachment.setOnClickListener {
 //            sendMessage("doctor side check")
 //        }
+
+        binding.tvUserName.setOnClickListener {
+            val intent = Intent(this, RoomInfoActivity::class.java)
+            intent.putExtra("room_id", roomId)
+            intent.putExtra("userName", userName)
+            val pairs = arrayOf(
+                Pair<View, String>(binding.ivProfile, getString(R.string.imageTransition)),
+                Pair<View, String>(binding.tvUserName, getString(R.string.nameTransition))
+            )
+            val options = ActivityOptions.makeSceneTransitionAnimation(this, *pairs)
+
+            startActivity(intent, options.toBundle())
+        }
 
         binding.btnSend.setOnClickListener {
             val content = binding.etMsg.text.trim().toString()

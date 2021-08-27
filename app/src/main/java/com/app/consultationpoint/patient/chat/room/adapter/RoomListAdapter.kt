@@ -13,6 +13,7 @@ import com.app.consultationpoint.patient.chat.chatScreen.ChatScreenActivity
 import com.app.consultationpoint.patient.chat.room.model.RoomModel
 import com.app.consultationpoint.utils.Utils
 import com.app.consultationpoint.utils.Utils.formatTo
+import com.app.consultationpoint.utils.Utils.loadImage
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.row_of_chat_list.view.*
 import java.util.*
@@ -33,7 +34,7 @@ class RoomListAdapter(
         fun bind(item: RoomModel) {
             val profile = item.photo
             if (profile != null && profile.isNotEmpty()) {
-                Glide.with(context).load(profile).into(binding.ivProfile)
+                binding.ivProfile.loadImage(profile)
             }
             binding.tvDocName.text = item.name
 
@@ -72,22 +73,8 @@ class RoomListAdapter(
             val intent = Intent(context, ChatScreenActivity::class.java)
             intent.putExtra("room_id", list[position]?.room_id)
             intent.putExtra("doctor_id", doctorId)
-
-            val pairs = arrayOf(
-                Pair<View, String>(holder.itemView.ivProfile, "imageTransition"),
-                Pair<View, String>(holder.itemView.tvDocName, "nameTransition")
-            )
-            val options = ActivityOptions.makeSceneTransitionAnimation(context, *pairs)
-
-            context.startActivity(intent, options.toBundle())
-
+            context.startActivity(intent)
         }
-//        holder.itemView.setOnClickListener {
-//            val intent = Intent(context, ChatScreenActivity::class.java)
-//            intent.putExtra("room_id", list[position]?.room_id)
-//            intent.putExtra("doctor_id", doctorId)
-//            context.startActivity(intent)
-//        }
     }
 
     override fun getItemCount(): Int {

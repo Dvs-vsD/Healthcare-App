@@ -37,13 +37,13 @@ class UptPntProfileActivity : AppCompatActivity() {
         viewModel.getProfileUptStatus().observe(this, {
             Utils.dismissProgressDialog()
             if (it == "Profile Updated") {
-                Toast.makeText(this, "Profile updated successfully", Toast.LENGTH_SHORT)
-                    .show()
+//                Toast.makeText(this, "Profile updated successfully", Toast.LENGTH_SHORT)
+//                    .show()
                 val intent = Intent()
                 setResult(RESULT_OK, intent)
                 finish()
             } else if (it.startsWith("error")) {
-                Toast.makeText(this, it.toString(), Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, it.toString(), Toast.LENGTH_LONG).show()
             }
         })
 

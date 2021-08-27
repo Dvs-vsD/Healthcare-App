@@ -13,7 +13,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ConsultationPoint">
-        <activity android:name=".patient.userProfile.UptPntProfileActivity"></activity>
+        <activity android:name=".patient.chat.roomInfo.RoomInfoActivity" />
+        <activity android:name=".patient.userProfile.UptPntProfileActivity" />
         <activity android:name=".patient.appointment.allAppointments.AllAppointmentsActivity" />
         <activity android:name=".patient.chat.chatScreen.ChatScreenActivity" />
         <activity android:name=".general.SplashScreenActivity">
@@ -43,6 +44,12 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_provider_path" />
         </provider>
+
+        <receiver
+            android:name=".notification.RemainderBroadcast"
+            android:enabled="true"
+            android:exported="false" >
+        </receiver>
     </application>
 
 </manifest>

@@ -10,6 +10,7 @@ import com.app.consultationpoint.R
 import com.app.consultationpoint.databinding.ActivityUserProfileBinding
 import com.app.consultationpoint.general.LoginActivity
 import com.app.consultationpoint.utils.Utils
+import com.google.android.material.snackbar.Snackbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
@@ -35,6 +36,7 @@ class UserProfileActivity : AppCompatActivity() {
         val startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
                 getProfileDetails()
+                Snackbar.make(binding.clProfile, "Profile updated successfully!!!", Snackbar.LENGTH_SHORT).show()
             }
         }
 

@@ -10,6 +10,7 @@ import com.app.consultationpoint.databinding.RowOfDoctorListBinding
 import com.app.consultationpoint.general.model.UserModel
 import com.app.consultationpoint.patient.appointment.bookAppointment.ChooseTimeActivity
 import com.app.consultationpoint.patient.doctor.DoctorDetailsActivity
+import com.app.consultationpoint.utils.Utils.loadImage
 import com.bumptech.glide.Glide
 import timber.log.Timber
 
@@ -31,8 +32,8 @@ class DoctorAdapter(
         RecyclerView.ViewHolder(binding.root) {
         @SuppressLint("SetTextI18n", "BinaryOperationInTimber")
         fun bind(item: UserModel) {
-            if (item.profile != "" && item.profile != "null") {
-                activity?.let { Glide.with(it).load(item.profile).into(binding.ivProfile) }
+            if (item.profile != "" && item.profile != "null" && item.profile != null) {
+                activity?.let { binding.ivProfile.loadImage(item.profile!!) }
             }
             Timber.d(item.first_name + " " + item.doc_id)
             binding.tvDocName.text = "${item.first_name} ${item.last_name}"

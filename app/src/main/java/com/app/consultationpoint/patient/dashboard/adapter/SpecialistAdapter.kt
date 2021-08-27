@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.app.consultationpoint.databinding.SingleItemOfSpecialistBinding
 import com.app.consultationpoint.patient.dashboard.model.SpecialistModel
+import com.app.consultationpoint.utils.Utils.loadImage
 import com.bumptech.glide.Glide
 import timber.log.Timber
 
@@ -27,7 +28,7 @@ class SpecialistAdapter(
     inner class MyViewHolder(private val binding: SingleItemOfSpecialistBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: SpecialistModel) {
-            Glide.with(context).load(item.image).into(binding.ivSpecialistIcon)
+            binding.ivSpecialistIcon.loadImage(item.image)
             binding.ivSpecialistIcon.setColorFilter(Color.parseColor(item.color_code))
             binding.tvName.text = item.name
         }

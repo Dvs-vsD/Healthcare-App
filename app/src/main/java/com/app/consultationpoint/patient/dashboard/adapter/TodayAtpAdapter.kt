@@ -10,6 +10,7 @@ import com.app.consultationpoint.databinding.RowOfTodayAptBinding
 import com.app.consultationpoint.general.model.UserModel
 import com.app.consultationpoint.patient.appointment.model.AppointmentModel
 import com.app.consultationpoint.utils.Utils.formatTo
+import com.app.consultationpoint.utils.Utils.loadImage
 import com.app.consultationpoint.utils.Utils.toDate
 import com.bumptech.glide.Glide
 
@@ -32,8 +33,9 @@ class TodayAtpAdapter(
                     adapterPosition
                 )?.profile != "null"
             ) {
-                Glide.with(context).load(doctorDetails.value?.get(adapterPosition)?.profile)
-                    .into(binding.ivProfile)
+                doctorDetails.value?.get(adapterPosition)?.profile?.let {
+                    binding.ivProfile.loadImage(it)
+                }
             }
             binding.tvAvailableText.text =
                 "Appointment For " + item.title + "\n" + "on " + item.schedual_date.toDate("yyyy-MM-dd")

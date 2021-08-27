@@ -46,4 +46,12 @@ class DashboardViewModel(private val repository: DashboardRepository): ViewModel
     fun getStatus(): LiveData<String> {
         return repository.getStatus()
     }
+
+    fun fetchALlAptFromRDB() {
+        repository.fetchAllAptFromRDB()
+    }
+
+    fun getAptDateList(): LiveData<ArrayList<Calendar>> {
+        return repository.getAptDateList()
+    }
 }
