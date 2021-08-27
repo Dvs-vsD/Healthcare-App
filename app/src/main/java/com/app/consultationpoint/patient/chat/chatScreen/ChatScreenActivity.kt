@@ -66,7 +66,7 @@ class ChatScreenActivity : AppCompatActivity() {
         val profile = docDetails.profile
         if (profile != null && profile != "" && profile != "null") {
             binding.ivProfile.loadImage(profile)
-        })
+        }
 
         binding.recyclerView.setHasFixedSize(true)
 

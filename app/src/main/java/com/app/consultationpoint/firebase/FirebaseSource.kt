@@ -1,5 +1,6 @@
 package com.app.consultationpoint.firebase
 
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.app.consultationpoint.ConsultationApp
@@ -14,9 +15,13 @@ import com.app.consultationpoint.utils.Const
 import com.app.consultationpoint.utils.Utils
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import io.realm.Realm
 import io.realm.RealmList
 import timber.log.Timber
+import java.util.*
+import kotlin.collections.ArrayList
 
 class FirebaseSource {
     private var firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
@@ -503,5 +508,26 @@ class FirebaseSource {
                 }
             }
         }
+    }
+
+    fun uploadProfile(path: Uri): StorageReference {
+        val storageRef =
+            FirebaseStorage.getInstance().reference
+                .child("images/" + Utils.getUserId() + ".jpg")
+
+        storageRef.putFile(path)
+            .addOnSuccessListener {
+                storageRef.downloadUrl.addOnCompleteListener {
+                    val url = it.result
+                    Timber.d(url.toString())
+                    status.value = "url$url"
+                    status.value = ""
+                }
+            }
+            .addOnFailureListener {
+                status.value = "profile upload failed"
+                status.value = ""
+            }
+        return storageRef
     }
 }

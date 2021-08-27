@@ -1,19 +1,26 @@
 package com.app.consultationpoint.patient.userProfile
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
+import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.provider.MediaStore
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.app.consultationpoint.R
 import com.app.consultationpoint.databinding.ActivityUpdateProfileBinding
 import com.app.consultationpoint.general.model.UserModel
 import com.app.consultationpoint.patient.userProfile.model.AddressModel
 import com.app.consultationpoint.utils.Utils
 import com.app.consultationpoint.utils.Utils.formatTo
+import com.app.consultationpoint.utils.Utils.loadImage
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
@@ -27,6 +34,7 @@ class UptPntProfileActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityUpdateProfileBinding
     private var profile: String? = ""
+    private val REQUEST_CODE: Int = 100
     private val viewModel by viewModel<UserViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,9 +44,14 @@ class UptPntProfileActivity : AppCompatActivity() {
 
         viewModel.getProfileUptStatus().observe(this, {
             Utils.dismissProgressDialog()
+            /*if (it.startsWith("url")) {
+                profile = it.substring(3, it.length)
+                Timber.d("Profile Url: %s",profile)
+                binding.ivProfile.loadImage(profile?:"")
+            } else */if (it == "profile upload failed") {
+                Toast.makeText(this, "Failed: Please reselect image", Toast.LENGTH_LONG).show()
+            }
             if (it == "Profile Updated") {
-//                Toast.makeText(this, "Profile updated successfully", Toast.LENGTH_SHORT)
-//                    .show()
                 val intent = Intent()
                 setResult(RESULT_OK, intent)
                 finish()
@@ -50,7 +63,31 @@ class UptPntProfileActivity : AppCompatActivity() {
         inThis()
     }
 
+    @SuppressLint("TimberArgCount")
     private fun inThis() {
+//
+//        Glide.with(this).load("https://firebasestorage.googleapis.com/v0/b/alpha-healthcare.appspot.com/o/images%2F1628673623956.jpg?alt=media&token=c53638ba-ae3b-4446-adff-86fd5de95af9")
+//            .listener(object : RequestListener<Drawable?> {
+//                override fun onResourceReady(
+//                    resource: Drawable?,
+//                    model: Any?,
+//                    target: Target<Drawable?>?,
+//                    dataSource: DataSource?,
+//                    isFirstResource: Boolean
+//                ): Boolean {
+//                    return false
+//                }
+//
+//                override fun onLoadFailed(
+//                    e: GlideException?,
+//                    model: Any?,
+//                    target: Target<Drawable?>?,
+//                    isFirstResource: Boolean
+//                ): Boolean {
+//                    return false
+//                }
+//            }).centerCrop().into(binding.ivProfile)
+        //binding.ivProfile.loadImage("https://firebasestorage.googleapis.com/v0/b/alpha-healthcare.appspot.com/o/images%2F1628673623956.jpg?alt=media&token=c53638ba-ae3b-4446-adff-86fd5de95af9")
 
         binding.etUserName.setText(Utils.getUserName())
         binding.etFirstName.setText(Utils.getFirstName())
@@ -78,7 +115,7 @@ class UptPntProfileActivity : AppCompatActivity() {
                 ).withListener(object : MultiplePermissionsListener {
                     override fun onPermissionsChecked(report: MultiplePermissionsReport?) {
                         if (report?.areAllPermissionsGranted() == true) {
-                            capturePhoto()
+                            chooseImage()
                         }
                     }
 
@@ -181,22 +218,27 @@ class UptPntProfileActivity : AppCompatActivity() {
         datePickerDialog.show()
     }
 
-    private fun capturePhoto() {
-        val picImage = Intent(
-            Intent.ACTION_OPEN_DOCUMENT,
-            MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-        )
+    private fun chooseImage() {
+        val picImage = Intent()
         picImage.type = "image/*"
-        startActivityForResult(picImage, 0)
+        picImage.action = Intent.ACTION_GET_CONTENT
+        startActivityForResult(
+            Intent.createChooser(picImage, "Select Profile Pic..."),
+            REQUEST_CODE
+        )
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 0) {
-            if (resultCode == Activity.RESULT_OK) {
-                val profileUri = data?.data
-                binding.ivProfile.setImageURI(profileUri)
-                profile = profileUri.toString()
+        if (requestCode == REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK && data != null && data.data != null) {
+                val profileUri = data.data
+                if (profileUri != null) {
+                    val ref = viewModel.uploadProfile(profileUri)
+                    Glide.with(this).load(ref).into(binding.ivProfile)
+                } else
+                    Toast.makeText(this, "Image Not selected: Please Reselect", Toast.LENGTH_SHORT)
+                        .show()
             }
         }
     }

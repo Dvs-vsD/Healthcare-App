@@ -1,9 +1,12 @@
 package com.app.consultationpoint.patient.userProfile
 
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.app.consultationpoint.general.model.UserModel
 import com.app.consultationpoint.patient.userProfile.model.AddressModel
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 
 class UserViewModel(private val repository: UserRepository): ViewModel() {
     fun logout() {
@@ -16,5 +19,9 @@ class UserViewModel(private val repository: UserRepository): ViewModel() {
 
     fun getProfileUptStatus(): LiveData<String> {
         return repository.getProfileUptStatus()
+    }
+
+    fun uploadProfile(path: Uri): StorageReference {
+        return repository.uploadProfile(path)
     }
 }
