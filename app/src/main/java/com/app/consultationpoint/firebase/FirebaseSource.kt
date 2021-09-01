@@ -19,6 +19,8 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import io.realm.Realm
 import io.realm.RealmList
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.util.*
 import kotlin.collections.ArrayList
@@ -292,7 +294,7 @@ class FirebaseSource {
 
     // chat functionality
 
-    fun fetchChatRooms(userId: Long) {
+    suspend fun fetchChatRooms(userId: Long) = withContext(Dispatchers.Default) {
         val start = System.currentTimeMillis()
         database.collection("Rooms")
             .whereArrayContains("user_ids_participants", userId)

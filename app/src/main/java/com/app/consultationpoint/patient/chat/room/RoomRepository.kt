@@ -18,7 +18,7 @@ class RoomRepository(private val firebaseSource: FirebaseSource) {
         return roomList
     }
 
-    fun roomsFromFirebase(userId: Long) {
+    suspend fun roomsFromFirebase(userId: Long) {
         firebaseSource.fetchChatRooms(userId)
     }
 

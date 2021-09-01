@@ -56,6 +56,7 @@ dependencies {
     // horizontal calender
     implementation 'com.michalsvec:single-row-calednar:1.0.0'
 
+    //scalable text size
     implementation 'com.intuit.sdp:sdp-android:1.0.6'
     implementation 'com.intuit.ssp:ssp-android:1.0.6'
 
@@ -76,7 +77,6 @@ dependencies {
     implementation "android.arch.lifecycle:extensions:$version"
     annotationProcessor "android.arch.lifecycle:compiler:$version"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1"
-
 
     //retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'

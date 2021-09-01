@@ -2,9 +2,11 @@ package com.app.consultationpoint.patient.chat.room
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.app.consultationpoint.patient.chat.room.model.RoomModel
+import kotlinx.coroutines.launch
 
-class RoomViewModel(private val repository: RoomRepository): ViewModel() {
+class RoomViewModel(private val repository: RoomRepository) : ViewModel() {
     fun getRoomList(): LiveData<ArrayList<RoomModel?>> {
         return repository.getRoomList()
     }
@@ -14,7 +16,9 @@ class RoomViewModel(private val repository: RoomRepository): ViewModel() {
     }
 
     fun fetchRoomsFromFirebase(userId: Long) {
-        repository.roomsFromFirebase(userId)
+        viewModelScope.launch {
+            repository.roomsFromFirebase(userId)
+        }
     }
 
     fun searchDoctor(str: String) {
@@ -22,6 +26,6 @@ class RoomViewModel(private val repository: RoomRepository): ViewModel() {
     }
 
     fun getStatus(): LiveData<String> {
-       return repository.getStatus()
+        return repository.getStatus()
     }
 }
