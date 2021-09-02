@@ -8,16 +8,18 @@ import com.app.consultationpoint.patient.chat.room.model.ParticipantModel
 import com.app.consultationpoint.patient.chat.room.model.RoomModel
 import io.realm.Case
 import io.realm.Realm
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 class DoctorRepository(private val firebaseSource: FirebaseSource) {
     private var doctorList: MutableLiveData<ArrayList<UserModel>> = MutableLiveData(ArrayList())
 
-    fun fetchDocFromFB() {
+    suspend fun fetchDocFromFB() {
         firebaseSource.fetchDocFromFB()
     }
 
-    fun fetchDocFromRDB() {
+    suspend fun fetchDocFromRDB() = withContext(Dispatchers.Main) {
         Realm.getDefaultInstance().use { mRealm ->
             Timber.d("Doctor list Fetching instance")
             val usertype = 1
@@ -67,7 +69,7 @@ class DoctorRepository(private val firebaseSource: FirebaseSource) {
 
     // chat Functionality
 
-    fun checkRoomAvailability(senderId: Long, receiverId: Long): Long {
+    suspend fun checkRoomAvailability(senderId: Long, receiverId: Long): Long = withContext(Dispatchers.Main) {
         var participant: ParticipantModel? = null
 
         Realm.getDefaultInstance().use { mRealm ->
@@ -82,10 +84,10 @@ class DoctorRepository(private val firebaseSource: FirebaseSource) {
             Timber.d("Open Instance at %s", System.currentTimeMillis().toString())
         }
 
-        return participant?.room_id ?: 0
+        return@withContext participant?.room_id ?: 0
     }
 
-    fun createChatRoom(model: RoomModel, senderId: Long, receiverId: Long) {
+    suspend fun createChatRoom(model: RoomModel, senderId: Long, receiverId: Long) {
         firebaseSource.createChatRoom(model, senderId, receiverId)
     }
 

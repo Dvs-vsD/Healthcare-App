@@ -2,11 +2,14 @@ package com.app.consultationpoint.patient.appointment.bookAppointment
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.app.consultationpoint.general.model.UserModel
 import com.app.consultationpoint.patient.appointment.bookAppointment.BookAptRepository
 import com.app.consultationpoint.patient.appointment.model.AppointmentModel
 import com.app.consultationpoint.patient.chat.room.model.RoomModel
 import com.app.consultationpoint.patient.doctor.model.DoctorModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class BookAptViewModel(private val repository: BookAptRepository) : ViewModel() {
 
@@ -19,7 +22,9 @@ class BookAptViewModel(private val repository: BookAptRepository) : ViewModel() 
     }
 
     fun createChatRoom(room: RoomModel, userId: Long, doctorId: Long) {
-        repository.createChatRoom(room, userId, doctorId)
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.createChatRoom(room, userId, doctorId)
+        }
     }
 
     fun getStatus(): LiveData<String> {

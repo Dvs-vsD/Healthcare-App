@@ -7,6 +7,8 @@ import com.app.consultationpoint.general.model.UserModel
 import com.app.consultationpoint.patient.appointment.model.AppointmentModel
 import io.realm.Realm
 import io.realm.Sort
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class AllAptRepository(private val firebaseSource: FirebaseSource) {
 
@@ -17,7 +19,7 @@ class AllAptRepository(private val firebaseSource: FirebaseSource) {
     private var docDetailsList: MutableLiveData<ArrayList<UserModel>> =
         MutableLiveData(ArrayList())
 
-    fun fetchAllEventList() {
+    suspend fun fetchAllEventList() = withContext(Dispatchers.Main) {
         Realm.getDefaultInstance().use { mRealm ->
             val mRealmResults = mRealm.where(AppointmentModel::class.java).findAll()
             var list: ArrayList<AppointmentModel> =
@@ -37,7 +39,7 @@ class AllAptRepository(private val firebaseSource: FirebaseSource) {
         return eventList
     }
 
-    fun getAptForThisDay(date: String) {
+    suspend fun getAptForThisDay(date: String) = withContext(Dispatchers.Main) {
         Realm.getDefaultInstance().use { mRealm ->
             val mRealmResults =
                 mRealm.where(AppointmentModel::class.java).equalTo("schedual_date", date)

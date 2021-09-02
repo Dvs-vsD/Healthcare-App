@@ -11,6 +11,8 @@ import com.app.consultationpoint.utils.Utils
 import com.app.consultationpoint.utils.Utils.formatTo
 import com.app.consultationpoint.utils.Utils.toDate
 import io.realm.Realm
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.util.*
 import kotlin.collections.ArrayList
@@ -98,11 +100,11 @@ class DashboardRepository(private val firebaseSource: FirebaseSource) {
         return firebaseSource.getDoctorDetails(docId)
     }
 
-    fun fetchSpItemsFromFB() {
+    suspend fun fetchSpItemsFromFB() {
         firebaseSource.fetchSpFromFB()
     }
 
-    fun fetchSpItemsFromRDB() {
+    suspend fun fetchSpItemsFromRDB() = withContext(Dispatchers.Main) {
         Realm.getDefaultInstance().use { mRealm ->
             val mRealmResults = mRealm.where(SpecialistModel::class.java).findAll()
             var list: ArrayList<SpecialistModel> =

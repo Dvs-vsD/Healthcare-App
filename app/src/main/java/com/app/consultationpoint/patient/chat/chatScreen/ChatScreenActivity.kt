@@ -70,6 +70,8 @@ class ChatScreenActivity : AppCompatActivity() {
 
         binding.recyclerView.setHasFixedSize(true)
 
+        viewModel.fetchMsgFromFB(roomId)
+
         viewModel.fetchMessages(roomId)
 
         getMessages()

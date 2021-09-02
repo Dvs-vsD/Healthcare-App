@@ -10,6 +10,8 @@ import com.app.consultationpoint.utils.Utils
 import com.app.consultationpoint.utils.Utils.toDate
 import io.realm.Realm
 import io.realm.RealmResults
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.util.*
 import kotlin.collections.ArrayList
@@ -21,14 +23,11 @@ class MyAptRepository(private val firebaseSource: FirebaseSource) {
         MutableLiveData(ArrayList())
     private var mRealm: Realm = Realm.getDefaultInstance()
 
-    fun fetchAptFromFirebase() {
+    suspend fun fetchAptFromFirebase() {
         firebaseSource.fetchMyBookings()
     }
 
-    fun fetchAptFromRealm() {
-
-        // Apt list not updating with livedata change listener even if realm data changed!!!
-
+    suspend fun fetchAptFromRealm() = withContext(Dispatchers.Main) {
         val results =
             mRealm.where(AppointmentModel::class.java)
                 .equalTo("patient_id", Utils.getUserId().toLong()).sort("schedual_date").findAll()

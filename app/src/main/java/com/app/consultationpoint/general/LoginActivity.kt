@@ -26,7 +26,7 @@ class LoginActivity : AppCompatActivity() {
 
         viewModel.getRegistrationStatus().observe(this, {
             Utils.dismissProgressDialog()
-            if (it == "success") {
+            if (it == "login success") {
                 startActivity()
             } else if (it.startsWith("error")) {
                 Toast.makeText(this, it, Toast.LENGTH_SHORT).show()

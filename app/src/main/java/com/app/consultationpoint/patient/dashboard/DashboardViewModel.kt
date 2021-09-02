@@ -1,16 +1,16 @@
-    package com.app.consultationpoint.patient.dashboard
+package com.app.consultationpoint.patient.dashboard
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.app.consultationpoint.general.model.UserModel
 import com.app.consultationpoint.patient.appointment.model.AppointmentModel
 import com.app.consultationpoint.patient.dashboard.model.SpecialistModel
-import com.app.consultationpoint.patient.doctor.model.DoctorModel
-import java.security.cert.LDAPCertStoreParameters
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.util.*
-import kotlin.collections.ArrayList
 
-class DashboardViewModel(private val repository: DashboardRepository): ViewModel() {
+class DashboardViewModel(private val repository: DashboardRepository) : ViewModel() {
     fun logout() {
         repository.logout()
     }
@@ -32,11 +32,15 @@ class DashboardViewModel(private val repository: DashboardRepository): ViewModel
     }
 
     fun fetchSpFromFB() {
-        repository.fetchSpItemsFromFB()
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.fetchSpItemsFromFB()
+        }
     }
 
     fun fetchSpItemsFromRDB() {
-        repository.fetchSpItemsFromRDB()
+        viewModelScope.launch {
+            repository.fetchSpItemsFromRDB()
+        }
     }
 
     fun getSpCategoryList(): LiveData<ArrayList<SpecialistModel>> {

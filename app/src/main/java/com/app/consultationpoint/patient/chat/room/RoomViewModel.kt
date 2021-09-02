@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.consultationpoint.patient.chat.room.model.RoomModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class RoomViewModel(private val repository: RoomRepository) : ViewModel() {
@@ -12,11 +13,13 @@ class RoomViewModel(private val repository: RoomRepository) : ViewModel() {
     }
 
     fun roomsFromRealm(userId: Long) {
-        repository.roomsFromRealm(userId)
+        viewModelScope.launch {
+            repository.roomsFromRealm(userId)
+        }
     }
 
     fun fetchRoomsFromFirebase(userId: Long) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             repository.roomsFromFirebase(userId)
         }
     }

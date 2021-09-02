@@ -2,8 +2,11 @@ package com.app.consultationpoint.patient.chat.chatScreen
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.app.consultationpoint.general.model.UserModel
 import com.app.consultationpoint.patient.chat.chatScreen.model.MessageModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class ChatScreenViewModel(private val repository: ChatScreenRepository) : ViewModel() {
     fun sendMsg(msgModel: MessageModel) {
@@ -18,8 +21,16 @@ class ChatScreenViewModel(private val repository: ChatScreenRepository) : ViewMo
         return repository.getDoctorDetails(doc_id)
     }
 
-    fun fetchMessages(roomId: Long){
-        repository.fetchMessages(roomId)
+    fun fetchMsgFromFB(roomId: Long) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.fetchMsgFromFB(roomId)
+        }
+    }
+
+    fun fetchMessages(roomId: Long) {
+        viewModelScope.launch {
+            repository.fetchMessages(roomId)
+        }
     }
 
     fun getMessages(): LiveData<ArrayList<MessageModel>> {

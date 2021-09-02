@@ -7,11 +7,12 @@ import com.app.consultationpoint.patient.chat.room.model.RoomModel
 import com.app.consultationpoint.utils.Utils
 import io.realm.Case
 import io.realm.Realm
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 class RoomRepository(private val firebaseSource: FirebaseSource) {
 
-    //    private val mRealm: Realm = Realm.getDefaultInstance()
     private val roomList: MutableLiveData<ArrayList<RoomModel?>> = MutableLiveData(ArrayList())
 
     fun getRoomList(): LiveData<ArrayList<RoomModel?>> {
@@ -22,7 +23,7 @@ class RoomRepository(private val firebaseSource: FirebaseSource) {
         firebaseSource.fetchChatRooms(userId)
     }
 
-    fun roomsFromRealm(userId: Long) {
+    suspend fun roomsFromRealm(userId: Long) = withContext(Dispatchers.Main) {
         Realm.getDefaultInstance().use { mRealm ->
             Timber.d("Rooms Fetching instance from realm")
             val mRealmResults =

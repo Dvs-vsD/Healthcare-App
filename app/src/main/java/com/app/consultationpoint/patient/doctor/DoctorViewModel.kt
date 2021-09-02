@@ -1,22 +1,30 @@
 package com.app.consultationpoint.patient.doctor
 
-import android.content.BroadcastReceiver
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.app.consultationpoint.general.model.UserModel
 import com.app.consultationpoint.patient.chat.room.model.RoomModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import timber.log.Timber
 
-class DoctorViewModel(private val repository: DoctorRepository): ViewModel() {
+class DoctorViewModel(private val repository: DoctorRepository) : ViewModel() {
 
     fun fetchDocFromFB() {
-        repository.fetchDocFromFB()
-    }
-    fun fetchDocFromRDB() {
-        repository.fetchDocFromRDB()
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.fetchDocFromFB()
+        }
     }
 
-    fun getDoctorList() : MutableLiveData<ArrayList<UserModel>> {
+    fun fetchDocFromRDB() {
+        viewModelScope.launch {
+            repository.fetchDocFromRDB()
+        }
+    }
+
+    fun getDoctorList(): MutableLiveData<ArrayList<UserModel>> {
         return repository.getDoctorList()
     }
 
@@ -31,11 +39,19 @@ class DoctorViewModel(private val repository: DoctorRepository): ViewModel() {
     // chat function
 
     fun checkRoomAvailability(senderId: Long, receiverId: Long): Long {
-        return repository.checkRoomAvailability(senderId, receiverId)
+        var result: Long = 0
+        viewModelScope.launch {
+            result =  repository.checkRoomAvailability(senderId, receiverId)
+        }
+        Timber.d(result.toString()+" result room ID")
+        return result
     }
 
-    fun createChatRoom(model: RoomModel,senderId: Long, receiverId: Long) {
-        repository.createChatRoom(model, senderId, receiverId)
+
+    fun createChatRoom(model: RoomModel, senderId: Long, receiverId: Long) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.createChatRoom(model, senderId, receiverId)
+        }
     }
 
     fun getStatus(): LiveData<String> {

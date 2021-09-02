@@ -6,6 +6,8 @@ import com.app.consultationpoint.firebase.FirebaseSource
 import com.app.consultationpoint.general.model.UserModel
 import com.app.consultationpoint.patient.chat.chatScreen.model.MessageModel
 import io.realm.Realm
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 class ChatScreenRepository(private val firebaseSource: FirebaseSource) {
@@ -25,10 +27,13 @@ class ChatScreenRepository(private val firebaseSource: FirebaseSource) {
         return firebaseSource.getDoctorDetails(id)
     }
 
-    fun fetchMessages(roomId: Long) {
+    suspend fun fetchMsgFromFB(roomId: Long) {
+        firebaseSource.fetchMessages(roomId)
+    }
+
+    suspend fun fetchMessages(roomId: Long) = withContext(Dispatchers.Main) {
         Realm.getDefaultInstance().use { mRealm ->
             Timber.d("Message Fetching instance from realm")
-            firebaseSource.fetchMessages(roomId)
 
             val mRealmResults =
                 mRealm.where(MessageModel::class.java).equalTo("room_id", roomId).findAll()

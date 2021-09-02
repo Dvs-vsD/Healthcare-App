@@ -2,14 +2,17 @@ package com.app.consultationpoint.patient.appointment.allAppointments
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.app.consultationpoint.general.model.UserModel
 import com.app.consultationpoint.patient.appointment.model.AppointmentModel
-import java.security.cert.LDAPCertStoreParameters
+import kotlinx.coroutines.launch
 
 class AllAptViewModel(private val repository: AllAptRepository) : ViewModel() {
 
     fun fetchAllEventList() {
-        repository.fetchAllEventList()
+        viewModelScope.launch {
+            repository.fetchAllEventList()
+        }
     }
 
     fun getALlEventList(): LiveData<ArrayList<AppointmentModel>> {
@@ -17,7 +20,9 @@ class AllAptViewModel(private val repository: AllAptRepository) : ViewModel() {
     }
 
     fun getAptForThisDay(date: String) {
-        repository.getAptForThisDay(date)
+        viewModelScope.launch {
+            repository.getAptForThisDay(date)
+        }
     }
 
     fun getOneDayApt(): LiveData<ArrayList<AppointmentModel>> {

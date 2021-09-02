@@ -29,9 +29,8 @@ class FirebaseSource {
     private var firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
     private var database: FirebaseFirestore = FirebaseFirestore.getInstance()
     private var status: MutableLiveData<String> = MutableLiveData("")
-//    private val mRealm: Realm = Realm.getDefaultInstance()
 
-    fun fetchDocFromFB() {
+    suspend fun fetchDocFromFB() = withContext(Dispatchers.IO) {
         Timber.d("called firebase init")
         val list: ArrayList<UserModel> = ArrayList()
         database.collection("Users").whereEqualTo("user_type_id", 1).get().addOnSuccessListener {
@@ -42,8 +41,6 @@ class FirebaseSource {
 
                 model.doc_id = snapshot.get("doc_id").toString().toLong()
                 model.username = snapshot.getString("username") ?: ""
-                // TODO : Use like this and check it's working or not
-
                 model.password = snapshot.getString("password") ?: ""
                 model.first_name = snapshot.getString("first_name") ?: ""
                 model.last_name = snapshot.getString("last_name") ?: ""
@@ -84,7 +81,7 @@ class FirebaseSource {
         }
     }
 
-    fun fetchMyBookings() {
+    suspend fun fetchMyBookings() = withContext(Dispatchers.IO) {
         val bookingList: ArrayList<AppointmentModel> = ArrayList()
         database.collection("Appointments").whereEqualTo("patient_id", Utils.getUserId().toLong())
             .get().addOnSuccessListener {
@@ -119,7 +116,7 @@ class FirebaseSource {
             }
     }
 
-    fun signUp(model: UserModel) {
+    suspend fun signUp(model: UserModel) = withContext(Dispatchers.Main) {
         firebaseAuth.createUserWithEmailAndPassword(model.email, model.password)
             .addOnSuccessListener {
 //                val userId = firebaseAuth.currentUser?.uid
@@ -152,7 +149,7 @@ class FirebaseSource {
         return status
     }
 
-    fun login(email: String, password: String) {
+    suspend fun login(email: String, password: String) = withContext(Dispatchers.Main) {
         firebaseAuth.signInWithEmailAndPassword(email, password).addOnSuccessListener {
 
             database.collection("Users").get().addOnSuccessListener {
@@ -227,7 +224,7 @@ class FirebaseSource {
                     }
                 }
 
-                status.value = "success"
+                status.value = "login success"
                 status.value = ""
             }
         }
@@ -294,7 +291,8 @@ class FirebaseSource {
 
     // chat functionality
 
-    suspend fun fetchChatRooms(userId: Long) = withContext(Dispatchers.Default) {
+    suspend fun fetchChatRooms(userId: Long) = withContext(Dispatchers.IO) {
+        Timber.d("coroutine works")
         val start = System.currentTimeMillis()
         database.collection("Rooms")
             .whereArrayContains("user_ids_participants", userId)
@@ -399,7 +397,7 @@ class FirebaseSource {
             }
     }
 
-    fun createChatRoom(model: RoomModel, senderId: Long, receiverId: Long) {
+    suspend fun createChatRoom(model: RoomModel, senderId: Long, receiverId: Long) = withContext(Dispatchers.IO) {
         database.collection("Rooms").whereEqualTo("created_by_id", senderId)
             .whereArrayContains("user_ids_participants", receiverId).get()
             .addOnSuccessListener {
@@ -440,7 +438,7 @@ class FirebaseSource {
             }
     }
 
-    fun fetchMessages(roomId: Long) {
+    suspend fun fetchMessages(roomId: Long) = withContext(Dispatchers.IO) {
         database.collection("Messages").whereEqualTo("room_id", roomId)
             .addSnapshotListener { snapshot, e ->
                 if (e != null) {
@@ -487,7 +485,7 @@ class FirebaseSource {
             }
     }
 
-    fun fetchSpFromFB() {
+    suspend fun fetchSpFromFB() = withContext(Dispatchers.IO) {
         database.collection("Specialists").get().addOnSuccessListener { document ->
             val list = ArrayList<SpecialistModel>()
             for (doc in document.documents) {

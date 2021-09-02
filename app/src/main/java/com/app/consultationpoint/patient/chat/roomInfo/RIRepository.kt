@@ -78,12 +78,10 @@ class RIRepository(private val firebaseSource: FirebaseSource) {
                 if (participant != null) {
                     pList.add(participant)
                     Timber.d("list value Added")
-                    Timber.d("p list size %s", pList?.size.toString() + "...")
                 }
             }
 //            participantList.value?.clear()
             participantList.value = pList
-            Timber.d(" main list size %s", participantList?.value?.size.toString() + "...")
         }
     }
 

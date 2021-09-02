@@ -2,12 +2,17 @@ package com.app.consultationpoint.general
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.app.consultationpoint.general.model.UserModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class LoginRegisterViewModel(private val repository: LoginRegisterRepository) : ViewModel() {
 
     fun signUp(model: UserModel) {
-        repository.signUp(model)
+        viewModelScope.launch {
+            repository.signUp(model)
+        }
     }
 
     fun getRegistrationStatus(): LiveData<String> {
@@ -15,6 +20,8 @@ class LoginRegisterViewModel(private val repository: LoginRegisterRepository) : 
     }
 
     fun login(email: String, password: String) {
-        repository.login(email, password)
+        viewModelScope.launch {
+            repository.login(email, password)
+        }
     }
 }
