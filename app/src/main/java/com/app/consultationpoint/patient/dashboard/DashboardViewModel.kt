@@ -6,17 +6,28 @@ import androidx.lifecycle.viewModelScope
 import com.app.consultationpoint.general.model.UserModel
 import com.app.consultationpoint.patient.appointment.model.AppointmentModel
 import com.app.consultationpoint.patient.dashboard.model.SpecialistModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
+import javax.inject.Inject
 
-class DashboardViewModel(private val repository: DashboardRepository) : ViewModel() {
+@HiltViewModel
+class DashboardViewModel @Inject constructor(private val repository: DashboardRepository) : ViewModel() {
     fun logout() {
         repository.logout()
     }
 
+    fun fetchAllMyBookings() {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.fetchAllMyBookings()
+        }
+    }
+
     fun fetchTodayApt(today: String) {
-        repository.fetchTodayApt(today)
+//        viewModelScope.launch {
+            repository.fetchTodayApt(today)
+//        }
     }
 
     fun getTodayAptList(): LiveData<ArrayList<AppointmentModel>> {

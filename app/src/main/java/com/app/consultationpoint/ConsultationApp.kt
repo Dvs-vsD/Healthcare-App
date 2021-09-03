@@ -4,12 +4,14 @@ import android.app.Application
 import android.content.SharedPreferences
 import com.app.consultationpoint.utils.Const
 import com.app.consultationpoint.utils.Utils
+import dagger.hilt.android.HiltAndroidApp
 import io.realm.Realm
 import io.realm.RealmConfiguration
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import timber.log.Timber
 
+@HiltAndroidApp
 class ConsultationApp : Application() {
 
     companion object {

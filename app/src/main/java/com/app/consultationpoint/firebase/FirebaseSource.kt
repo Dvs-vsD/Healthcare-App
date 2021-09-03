@@ -23,9 +23,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.util.*
+import javax.inject.Inject
 import kotlin.collections.ArrayList
 
-class FirebaseSource {
+class FirebaseSource @Inject constructor() {
     private var firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
     private var database: FirebaseFirestore = FirebaseFirestore.getInstance()
     private var status: MutableLiveData<String> = MutableLiveData("")

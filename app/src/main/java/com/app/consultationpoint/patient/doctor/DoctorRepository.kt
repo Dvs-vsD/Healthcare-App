@@ -11,8 +11,9 @@ import io.realm.Realm
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import timber.log.Timber
+import javax.inject.Inject
 
-class DoctorRepository(private val firebaseSource: FirebaseSource) {
+class DoctorRepository @Inject constructor(private val firebaseSource: FirebaseSource) {
     private var doctorList: MutableLiveData<ArrayList<UserModel>> = MutableLiveData(ArrayList())
 
     suspend fun fetchDocFromFB() {

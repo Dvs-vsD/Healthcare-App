@@ -15,9 +15,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.util.*
+import javax.inject.Inject
 import kotlin.collections.ArrayList
 
-class DashboardRepository(private val firebaseSource: FirebaseSource) {
+class DashboardRepository @Inject constructor(private val firebaseSource: FirebaseSource) {
 
     private var todayAptList: MutableLiveData<ArrayList<AppointmentModel>> =
         MutableLiveData(ArrayList())
@@ -44,13 +45,19 @@ class DashboardRepository(private val firebaseSource: FirebaseSource) {
 //        }
 //    }
 
-    fun fetchTodayApt(today: String) {
+    suspend fun fetchAllMyBookings() {
+        firebaseSource.fetchMyBookings()
+    }
+
+//    suspend fun fetchTodayApt(day: String) = withContext(Dispatchers.Main) {
+    fun fetchTodayApt(day: String) {
+        Timber.d(day)
         Realm.getDefaultInstance().use { mRealm ->
             Timber.d("Function Today's apt Fetching instance")
             val mRealmResults =
                 mRealm.where(AppointmentModel::class.java)
                     .equalTo("patient_id", Utils.getUserId().toLong()).and()
-                    .equalTo("schedual_date", today).findAll()
+                    .equalTo("schedual_date", day).findAll()
             val list: ArrayList<AppointmentModel> =
                 mRealm.copyFromRealm(mRealmResults) as ArrayList<AppointmentModel>
 

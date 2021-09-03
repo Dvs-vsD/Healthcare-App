@@ -3,11 +3,11 @@ package com.app.consultationpoint.patient.bottomNavigation
 import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.app.PendingIntent
-import android.content.BroadcastReceiver
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
@@ -31,14 +31,14 @@ import com.ncapdevi.fragnav.FragNavLogger
 import com.ncapdevi.fragnav.FragNavSwitchController
 import com.ncapdevi.fragnav.FragNavTransactionOptions
 import com.ncapdevi.fragnav.tabhistory.UniqueTabHistoryStrategy
+import dagger.hilt.android.AndroidEntryPoint
 import io.realm.Realm
 import io.realm.RealmConfiguration
 import kotlinx.android.synthetic.main.header_layout.view.*
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 import java.util.*
-import kotlin.collections.ArrayList
 
+@AndroidEntryPoint
 class BottomNavigationActivity(override val numberOfRootFragments: Int = 4) : AppCompatActivity(),
     BaseFragment.FragmentNavigation,
     FragNavController.RootFragmentListener,
@@ -47,7 +47,7 @@ class BottomNavigationActivity(override val numberOfRootFragments: Int = 4) : Ap
     private lateinit var binding: ActivityBottomNavigationBinding
     private val fragNavController: FragNavController =
         FragNavController(supportFragmentManager, R.id.container)
-    private val viewModel by viewModel<DashboardViewModel>()
+    private val viewModel by viewModels<DashboardViewModel>()
     private lateinit var toggle: ActionBarDrawerToggle
 
     @SuppressLint("SetTextI18n")

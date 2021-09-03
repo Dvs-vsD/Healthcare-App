@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.app.consultationpoint.R
 import com.app.consultationpoint.databinding.FragmentCalenderBinding
 import com.app.consultationpoint.patient.appointment.allAppointments.AllAppointmentsActivity
@@ -20,6 +21,7 @@ import com.michalsvec.singlerowcalendar.calendar.CalendarViewManager
 import com.michalsvec.singlerowcalendar.calendar.SingleRowCalendarAdapter
 import com.michalsvec.singlerowcalendar.selection.CalendarSelectionManager
 import com.michalsvec.singlerowcalendar.utils.DateUtils
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.calender_item.view.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
@@ -28,6 +30,7 @@ import java.util.*
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
+@AndroidEntryPoint
 class CalenderFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
@@ -35,7 +38,7 @@ class CalenderFragment : Fragment() {
     private val calender = Calendar.getInstance()
     private var currentMonth = 0
     private var currentDtPos: Int = 0
-    private val viewModel by viewModel<DashboardViewModel>()
+    private val viewModel by viewModels<DashboardViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,7 +63,7 @@ class CalenderFragment : Fragment() {
         currentMonth = calender[Calendar.MONTH]
         currentDtPos = calender[Calendar.DATE] - 1
 
-//        viewModel.init()
+//        viewModel.fetchAllMyBookings()
 
         setCalender()
 

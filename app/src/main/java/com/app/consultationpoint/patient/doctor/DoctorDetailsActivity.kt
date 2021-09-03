@@ -3,6 +3,7 @@ package com.app.consultationpoint.patient.doctor
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.app.consultationpoint.databinding.ActivityDoctorDetailsBinding
 import com.app.consultationpoint.patient.appointment.bookAppointment.ChooseTimeActivity
@@ -12,14 +13,16 @@ import com.app.consultationpoint.patient.chat.room.model.RoomModel
 import com.app.consultationpoint.utils.Utils
 import com.app.consultationpoint.utils.Utils.loadImage
 import com.bumptech.glide.Glide
+import dagger.hilt.android.AndroidEntryPoint
 import io.realm.RealmList
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
+@AndroidEntryPoint
 class DoctorDetailsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityDoctorDetailsBinding
-    private val viewModel by viewModel<DoctorViewModel>()
+    private val viewModel by viewModels<DoctorViewModel>()
     private var room: RoomModel? = null
     private var docId: Long = 0
     private var userId: Long = 0

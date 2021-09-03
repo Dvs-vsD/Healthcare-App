@@ -6,11 +6,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.consultationpoint.general.model.UserModel
 import com.app.consultationpoint.patient.chat.room.model.RoomModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import javax.inject.Inject
 
-class DoctorViewModel(private val repository: DoctorRepository) : ViewModel() {
+@HiltViewModel
+class DoctorViewModel @Inject constructor(private val repository: DoctorRepository) : ViewModel() {
 
     fun fetchDocFromFB() {
         viewModelScope.launch(Dispatchers.IO) {

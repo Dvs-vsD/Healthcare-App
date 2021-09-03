@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentTransaction
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.app.consultationpoint.BaseFragment
 import com.app.consultationpoint.R
@@ -16,18 +17,19 @@ import com.app.consultationpoint.patient.dashboard.adapter.SpecialistAdapter
 import com.app.consultationpoint.patient.dashboard.adapter.TodayAtpAdapter
 import com.app.consultationpoint.patient.doctor.DoctorListFragment
 import com.app.consultationpoint.utils.Utils.formatTo
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_bottom_navigation.*
 import kotlinx.android.synthetic.main.header_layout.view.*
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 import java.util.*
 
 private const val ARG_PARAM1 = "param1"
 
+@AndroidEntryPoint
 class DashboardFragment : BaseFragment() {
     private var param1: String? = null
     private lateinit var binding: FragmentDashboardBinding
-    private val viewModel by viewModel<DashboardViewModel>()
+    private val viewModel by viewModels<DashboardViewModel>()
     private var adapterTodayApt: TodayAtpAdapter? = null
     private var specialistAdapter: SpecialistAdapter? = null
 
@@ -46,6 +48,7 @@ class DashboardFragment : BaseFragment() {
             if (adapterTodayApt != null && it.isNotEmpty()) {
                 Timber.d("notified")
 //                adapterTodayApt?.setList(it)
+//                adapterTodayApt?.notifyItemRangeInserted(0,it.size)
                 adapterTodayApt?.notifyDataSetChanged()
             }
         })
@@ -90,8 +93,6 @@ class DashboardFragment : BaseFragment() {
         val transaction: FragmentTransaction = childFragmentManager.beginTransaction()
         transaction.replace(R.id.llCalender, fragmentCalender)
         transaction.commit()
-
-//        viewModel.init()
 
         viewModel.fetchSpFromFB()
         viewModel.fetchSpItemsFromRDB()
