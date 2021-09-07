@@ -26,6 +26,7 @@ import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
 
+
 class FirebaseSource @Inject constructor() {
     private var firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
     private var database: FirebaseFirestore = FirebaseFirestore.getInstance()

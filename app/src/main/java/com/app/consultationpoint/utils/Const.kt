@@ -18,4 +18,5 @@ object Const {
     const val USER_NAME: String = "user_name"
     const val DOB: String = "dob"
     const val GENDER: String = "gender"
+    const val REQUEST_CODE: Int = 100
 }

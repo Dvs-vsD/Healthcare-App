@@ -8,10 +8,13 @@ import com.app.consultationpoint.patient.appointment.bookAppointment.BookAptRepo
 import com.app.consultationpoint.patient.appointment.model.AppointmentModel
 import com.app.consultationpoint.patient.chat.room.model.RoomModel
 import com.app.consultationpoint.patient.doctor.model.DoctorModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class BookAptViewModel(private val repository: BookAptRepository) : ViewModel() {
+@HiltViewModel
+class BookAptViewModel @Inject constructor(private val repository: BookAptRepository) : ViewModel() {
 
     fun bookAppointment(model: AppointmentModel) {
         repository.bookAppointment(model)

@@ -6,8 +6,9 @@ import com.app.consultationpoint.general.model.UserModel
 import com.app.consultationpoint.patient.appointment.model.AppointmentModel
 import com.app.consultationpoint.patient.chat.room.model.RoomModel
 import io.realm.Realm
+import javax.inject.Inject
 
-class BookAptRepository(private val firebaseSource: FirebaseSource) {
+class BookAptRepository @Inject constructor(private val firebaseSource: FirebaseSource) {
 
     fun bookAppointment(model: AppointmentModel) {
         firebaseSource.bookAppointment(model)

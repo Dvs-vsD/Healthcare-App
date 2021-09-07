@@ -5,19 +5,22 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import com.app.consultationpoint.databinding.ActivityLoginBinding
 import com.app.consultationpoint.patient.bottomNavigation.BottomNavigationActivity
 import com.app.consultationpoint.utils.Utils
+import dagger.hilt.android.AndroidEntryPoint
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
+@AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
     private var userEmail: String? = ""
     private var userPassword: String? = ""
-    private val viewModel by viewModel<LoginRegisterViewModel>()
+    private val viewModel by viewModels<LoginRegisterViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

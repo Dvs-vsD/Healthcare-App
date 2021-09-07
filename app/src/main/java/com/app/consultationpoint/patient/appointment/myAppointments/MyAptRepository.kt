@@ -14,10 +14,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.util.*
+import javax.inject.Inject
 import kotlin.collections.ArrayList
 import kotlin.collections.HashSet
 
-class MyAptRepository(private val firebaseSource: FirebaseSource) {
+class MyAptRepository @Inject constructor(private val firebaseSource: FirebaseSource) {
 
     private var appointmentList: MutableLiveData<ArrayList<MonthlyAppointments>> =
         MutableLiveData(ArrayList())

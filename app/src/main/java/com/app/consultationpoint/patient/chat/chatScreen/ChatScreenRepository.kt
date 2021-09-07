@@ -9,8 +9,9 @@ import io.realm.Realm
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import timber.log.Timber
+import javax.inject.Inject
 
-class ChatScreenRepository(private val firebaseSource: FirebaseSource) {
+class ChatScreenRepository @Inject constructor(private val firebaseSource: FirebaseSource) {
 
     //    private var mRealm = Realm.getDefaultInstance()
     private var messageList: MutableLiveData<ArrayList<MessageModel>> = MutableLiveData(ArrayList())
@@ -45,7 +46,7 @@ class ChatScreenRepository(private val firebaseSource: FirebaseSource) {
                 messageList.value?.clear()
                 msgList.clear()
                 msgList.addAll(change)
-                messageList.value = msgList
+                messageList.postValue(msgList)
             }
             Timber.d("Open Instance at %s", System.currentTimeMillis().toString())
         }

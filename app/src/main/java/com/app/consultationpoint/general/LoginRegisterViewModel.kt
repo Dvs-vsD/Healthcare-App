@@ -4,10 +4,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.consultationpoint.general.model.UserModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class LoginRegisterViewModel(private val repository: LoginRegisterRepository) : ViewModel() {
+@HiltViewModel
+class LoginRegisterViewModel @Inject constructor(private val repository: LoginRegisterRepository) : ViewModel() {
 
     fun signUp(model: UserModel) {
         viewModelScope.launch {

@@ -3,23 +3,22 @@ package com.app.consultationpoint.patient.appointment.adapter
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.app.consultationpoint.databinding.RowOfAppointmentDetailBinding
 import com.app.consultationpoint.general.model.UserModel
 import com.app.consultationpoint.patient.appointment.model.AppointmentModel
 import com.app.consultationpoint.patient.appointment.myAppointments.MyAppointmentsFragment
 import com.app.consultationpoint.patient.appointment.myAppointments.MyAptViewModel
-import com.app.consultationpoint.patient.doctor.model.DoctorModel
 import com.app.consultationpoint.utils.Utils.formatTo
 import com.app.consultationpoint.utils.Utils.toDate
 
 class AptDetailsAdapter(
     private val aptList: ArrayList<AppointmentModel>?,
-    private val context: MyAppointmentsFragment
+    private val context: MyAppointmentsFragment,
+    private val viewModel: MyAptViewModel
 ) : RecyclerView.Adapter<AptDetailsAdapter.MyViewHolder>() {
 
-    private val viewModel = context.let { ViewModelProvider(it).get(MyAptViewModel::class.java) }
+//    private val viewModel = context.let { ViewModelProvider(it).get(MyAptViewModel::class.java) }
 
     inner class MyViewHolder(private val binding: RowOfAppointmentDetailBinding) :
         RecyclerView.ViewHolder(binding.root) {

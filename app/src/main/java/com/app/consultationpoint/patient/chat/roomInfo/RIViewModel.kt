@@ -4,9 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.app.consultationpoint.general.model.UserModel
 import com.app.consultationpoint.patient.chat.room.model.RoomModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import java.security.cert.LDAPCertStoreParameters
+import javax.inject.Inject
 
-class RIViewModel(private val repository: RIRepository): ViewModel() {
+@HiltViewModel
+class RIViewModel @Inject constructor(private val repository: RIRepository): ViewModel() {
     fun fetchParticipantFromR(roomId: Long) {
         repository.fetchParticipantFromR(roomId)
     }

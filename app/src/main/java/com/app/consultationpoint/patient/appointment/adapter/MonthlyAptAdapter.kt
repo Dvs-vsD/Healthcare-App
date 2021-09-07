@@ -8,12 +8,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.app.consultationpoint.databinding.RowOfMonthlyAppointmentsBinding
 import com.app.consultationpoint.patient.appointment.model.MonthlyAppointments
 import com.app.consultationpoint.patient.appointment.myAppointments.MyAppointmentsFragment
+import com.app.consultationpoint.patient.appointment.myAppointments.MyAptViewModel
 import com.app.consultationpoint.utils.Utils.formatTo
 import com.app.consultationpoint.utils.Utils.toDate
 
 class MonthlyAptAdapter(
     private var list: ArrayList<MonthlyAppointments>,
-    private val context: MyAppointmentsFragment
+    private val context: MyAppointmentsFragment,
+    private val viewModel: MyAptViewModel
 ) : RecyclerView.Adapter<MonthlyAptAdapter.MyViewHolder>() {
 
     fun setList(list: ArrayList<MonthlyAppointments>) {
@@ -25,7 +27,7 @@ class MonthlyAptAdapter(
         @SuppressLint("SetTextI18n")
         fun bind(item: MonthlyAppointments) {
             binding.tvMonthYear.text = item.month.toDate("MM")?.formatTo("MMMM") + ", " + item.year
-            binding.recyclerView.adapter = AptDetailsAdapter(item.appointment, context)
+            binding.recyclerView.adapter = AptDetailsAdapter(item.appointment, context, viewModel)
         }
     }
 

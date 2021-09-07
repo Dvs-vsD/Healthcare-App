@@ -4,10 +4,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.consultationpoint.patient.chat.room.model.RoomModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class RoomViewModel(private val repository: RoomRepository) : ViewModel() {
+@HiltViewModel
+class RoomViewModel @Inject constructor(private val repository: RoomRepository) : ViewModel() {
     fun getRoomList(): LiveData<ArrayList<RoomModel?>> {
         return repository.getRoomList()
     }

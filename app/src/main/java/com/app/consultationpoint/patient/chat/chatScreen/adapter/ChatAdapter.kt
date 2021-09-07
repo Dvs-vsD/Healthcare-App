@@ -10,13 +10,24 @@ import com.app.consultationpoint.patient.chat.chatScreen.model.MessageModel
 import com.app.consultationpoint.utils.Utils
 import com.app.consultationpoint.utils.Utils.formatTo
 import java.util.*
+import kotlin.collections.ArrayList
 
-class ChatAdapter(private val msgList: LiveData<ArrayList<MessageModel>>) :
+class ChatAdapter(msgList: LiveData<ArrayList<MessageModel>>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val userId = Utils.getUserId().toLong()
     private val self = 100
     private val other = 200
+
+    private var chatList: ArrayList<MessageModel>? = null
+    init {
+        chatList = msgList.value
+    }
+
+    fun setData(it: ArrayList<MessageModel>) {
+        chatList = it
+        notifyDataSetChanged()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType == self) {
@@ -31,18 +42,18 @@ class ChatAdapter(private val msgList: LiveData<ArrayList<MessageModel>>) :
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if (msgList.value?.get(position)?.sender_id == userId)
-            msgList.value?.get(position)?.let { (holder as SelfViewHolder).bind(it) }
+        if (chatList?.get(position)?.sender_id == userId)
+            chatList?.get(position)?.let { (holder as SelfViewHolder).bind(it) }
         else
-            msgList.value?.get(position)?.let { (holder as OtherViewHolder).bind(it) }
+            chatList?.get(position)?.let { (holder as OtherViewHolder).bind(it) }
     }
 
     override fun getItemCount(): Int {
-        return msgList.value?.size ?: 0
+        return chatList?.size ?: 0
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (msgList.value?.get(position)?.sender_id == userId)
+        return if (chatList?.get(position)?.sender_id == userId)
             self
         else
             other

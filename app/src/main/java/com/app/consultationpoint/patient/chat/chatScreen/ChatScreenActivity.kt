@@ -4,10 +4,14 @@ import android.annotation.SuppressLint
 import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Pair
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.app.consultationpoint.R
 import com.app.consultationpoint.databinding.ActivityChatScreenBinding
 import com.app.consultationpoint.patient.chat.chatScreen.adapter.ChatAdapter
@@ -15,10 +19,10 @@ import com.app.consultationpoint.patient.chat.chatScreen.model.MessageModel
 import com.app.consultationpoint.patient.chat.roomInfo.RoomInfoActivity
 import com.app.consultationpoint.utils.Utils
 import com.app.consultationpoint.utils.Utils.loadImage
-import com.bumptech.glide.Glide
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
+@AndroidEntryPoint
 class ChatScreenActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityChatScreenBinding
@@ -27,12 +31,15 @@ class ChatScreenActivity : AppCompatActivity() {
     private var docId: Long = 0
     private val msgModel = MessageModel()
     private var chatAdapter: ChatAdapter? = null
-    private val viewModel by viewModel<ChatScreenViewModel>()
+    private var linearLayoutManager: LinearLayoutManager? = null
+    private val viewModel by viewModels<ChatScreenViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityChatScreenBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        setSupportActionBar(binding.toolbar)
 
         viewModel.getStatus().observe(this, {
             if (it == "Sending Failed" && msgModel.message_id != 0L) {
@@ -43,7 +50,8 @@ class ChatScreenActivity : AppCompatActivity() {
 
         viewModel.getMessages().observe(this, {
             if (it != null && it.isNotEmpty()) {
-                chatAdapter?.notifyItemInserted(it.size)
+                chatAdapter?.setData(it)
+                binding.recyclerView.scrollToPosition(it.size - 1)
             }
         })
 
@@ -105,9 +113,19 @@ class ChatScreenActivity : AppCompatActivity() {
     }
 
     private fun getMessages() {
+        linearLayoutManager = LinearLayoutManager(this)
+        binding.recyclerView.setHasFixedSize(true)
+        binding.recyclerView.layoutManager = linearLayoutManager
         val msgList: LiveData<ArrayList<MessageModel>> = viewModel.getMessages()
         chatAdapter = ChatAdapter(msgList)
         binding.recyclerView.adapter = chatAdapter
+
+        binding.recyclerView.addOnLayoutChangeListener { _, _, _, _, bottom, _, _, _, oldBottom ->
+            if (bottom < oldBottom)
+                linearLayoutManager?.smoothScrollToPosition(
+                    binding.recyclerView, null, chatAdapter?.itemCount ?: 0
+                )
+        }
     }
 
     private fun sendMessage(content: String) {

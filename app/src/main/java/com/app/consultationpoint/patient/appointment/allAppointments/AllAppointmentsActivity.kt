@@ -3,6 +3,7 @@ package com.app.consultationpoint.patient.appointment.allAppointments
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.app.consultationpoint.R
@@ -12,14 +13,16 @@ import com.app.consultationpoint.utils.Utils.formatTo
 import com.app.consultationpoint.utils.Utils.toDate
 import com.github.sundeepk.compactcalendarview.CompactCalendarView
 import com.github.sundeepk.compactcalendarview.domain.Event
+import dagger.hilt.android.AndroidEntryPoint
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 import java.util.*
 
+@AndroidEntryPoint
 class AllAppointmentsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAllAppointmentsBinding
-    private val viewModel by viewModel<AllAptViewModel>()
+    private val viewModel by viewModels<AllAptViewModel>()
     private var dayAptAdapter: TodayAtpAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {

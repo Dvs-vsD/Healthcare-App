@@ -7,23 +7,26 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
 import com.app.consultationpoint.BaseFragment
 import com.app.consultationpoint.databinding.FragmentChatListBinding
 import com.app.consultationpoint.patient.chat.room.adapter.RoomListAdapter
 import com.app.consultationpoint.patient.chat.room.model.RoomModel
 import com.app.consultationpoint.utils.Utils
+import dagger.hilt.android.AndroidEntryPoint
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
 private const val ARG_PARAM1 = "param1"
 
+@AndroidEntryPoint
 class ChatListFragment : BaseFragment() {
     private var param1: Int? = null
     private var userId: Long = 0
     private lateinit var binding: FragmentChatListBinding
     private var adapter: RoomListAdapter? = null
-    private val viewModel by viewModel<RoomViewModel>()
+    private val viewModel by viewModels<RoomViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

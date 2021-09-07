@@ -3,10 +3,12 @@ package com.app.consultationpoint.patient.appointment.myAppointments
 import android.os.Bundle
 import android.os.Handler
 import android.view.*
+import androidx.fragment.app.viewModels
 import com.app.consultationpoint.BaseFragment
 import com.app.consultationpoint.databinding.FragmentMyAppointmentsBinding
 import com.app.consultationpoint.patient.appointment.adapter.MonthlyAptAdapter
 import com.app.consultationpoint.patient.doctor.DoctorListFragment
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_bottom_navigation.*
 import kotlinx.android.synthetic.main.fragment_dashboard.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -15,12 +17,13 @@ import timber.log.Timber
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
+@AndroidEntryPoint
 class MyAppointmentsFragment : BaseFragment() {
     private var param1: String? = null
     private var param2: String? = null
     private lateinit var binding: FragmentMyAppointmentsBinding
     private var adapter: MonthlyAptAdapter? = null
-    private val viewModel by viewModel<MyAptViewModel>()
+    private val viewModel by viewModels<MyAptViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,7 +70,7 @@ class MyAppointmentsFragment : BaseFragment() {
 
         val monthlyApt = viewModel.getMonthlyAptList().value
 
-        adapter = monthlyApt?.let { list -> MonthlyAptAdapter(list, this@MyAppointmentsFragment) }
+        adapter = monthlyApt?.let { list -> MonthlyAptAdapter(list, this@MyAppointmentsFragment, viewModel) }
 
         if (monthlyApt?.isEmpty() == true) {
             binding.tvNoData.visibility = View.VISIBLE

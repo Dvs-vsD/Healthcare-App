@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.app.consultationpoint.databinding.ActivityChooseTimeBinding
 import com.app.consultationpoint.patient.appointment.model.AppointmentModel
@@ -15,12 +16,14 @@ import com.app.consultationpoint.patient.chat.room.model.ParticipantModel
 import com.app.consultationpoint.patient.chat.room.model.RoomModel
 import com.app.consultationpoint.utils.Utils
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 import io.realm.RealmList
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
 
+@AndroidEntryPoint
 class ChooseTimeActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityChooseTimeBinding
@@ -30,8 +33,8 @@ class ChooseTimeActivity : AppCompatActivity() {
     private var selectedTime: String? = ""
     private var selectedDate: String? = ""
     private var room: RoomModel? = null
-    private val viewModel by viewModel<BookAptViewModel>()
-    private val myAptViewModel by viewModel<MyAptViewModel>()
+    private val viewModel by viewModels<BookAptViewModel>()
+    private val myAptViewModel by viewModels<MyAptViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

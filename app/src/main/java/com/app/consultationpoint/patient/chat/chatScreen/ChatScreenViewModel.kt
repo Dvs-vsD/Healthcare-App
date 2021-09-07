@@ -5,10 +5,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.consultationpoint.general.model.UserModel
 import com.app.consultationpoint.patient.chat.chatScreen.model.MessageModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ChatScreenViewModel(private val repository: ChatScreenRepository) : ViewModel() {
+@HiltViewModel
+class ChatScreenViewModel @Inject constructor(private val repository: ChatScreenRepository) : ViewModel() {
     fun sendMsg(msgModel: MessageModel) {
         repository.sendMessage(msgModel)
     }
@@ -28,7 +31,7 @@ class ChatScreenViewModel(private val repository: ChatScreenRepository) : ViewMo
     }
 
     fun fetchMessages(roomId: Long) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.Main) {
             repository.fetchMessages(roomId)
         }
     }

@@ -9,8 +9,9 @@ import com.app.consultationpoint.utils.Utils
 import io.realm.Realm
 import io.realm.RealmList
 import timber.log.Timber
+import javax.inject.Inject
 
-class RIRepository(private val firebaseSource: FirebaseSource) {
+class RIRepository @Inject constructor(private val firebaseSource: FirebaseSource) {
 
     private var participantList: MutableLiveData<ArrayList<UserModel>> = MutableLiveData(
         ArrayList()

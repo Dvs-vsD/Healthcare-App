@@ -6,23 +6,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
-import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.app.consultationpoint.BaseFragment
 import com.app.consultationpoint.databinding.FragmentDoctorListBinding
 import com.app.consultationpoint.general.model.UserModel
 import com.app.consultationpoint.patient.doctor.adapter.DoctorAdapter
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
 private const val ARG_PARAM1 = "param1"
 
+@AndroidEntryPoint
 class DoctorListFragment : BaseFragment() {
-    // TODO: Rename and change types of parameters
     private var param1: String? = null
     private lateinit var binding: FragmentDoctorListBinding
     private var adapterDoctor: DoctorAdapter? = null
-    private val viewModel by viewModel<DoctorViewModel>()
+    private val viewModel: DoctorViewModel by viewModels()
     private var listUser: ArrayList<UserModel>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {

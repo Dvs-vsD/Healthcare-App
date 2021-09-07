@@ -3,8 +3,9 @@ package com.app.consultationpoint.general
 import androidx.lifecycle.LiveData
 import com.app.consultationpoint.firebase.FirebaseSource
 import com.app.consultationpoint.general.model.UserModel
+import javax.inject.Inject
 
-class LoginRegisterRepository(private val firebaseSource: FirebaseSource) {
+class LoginRegisterRepository @Inject constructor(private val firebaseSource: FirebaseSource) {
     suspend fun signUp(model: UserModel) {
         firebaseSource.signUp(model)
     }

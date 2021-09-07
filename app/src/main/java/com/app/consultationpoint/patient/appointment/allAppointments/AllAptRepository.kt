@@ -9,8 +9,9 @@ import io.realm.Realm
 import io.realm.Sort
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class AllAptRepository(private val firebaseSource: FirebaseSource) {
+class AllAptRepository @Inject constructor(private val firebaseSource: FirebaseSource) {
 
     private var eventList: MutableLiveData<ArrayList<AppointmentModel>> =
         MutableLiveData(ArrayList())

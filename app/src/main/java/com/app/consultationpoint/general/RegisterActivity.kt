@@ -6,6 +6,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.WindowManager
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import com.app.consultationpoint.R
@@ -13,12 +14,14 @@ import com.app.consultationpoint.databinding.ActivityRegisterBinding
 import com.app.consultationpoint.general.model.UserModel
 import com.app.consultationpoint.patient.bottomNavigation.BottomNavigationActivity
 import com.app.consultationpoint.utils.Utils
+import dagger.hilt.android.AndroidEntryPoint
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
+@AndroidEntryPoint
 class RegisterActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityRegisterBinding
-    private val viewModel by viewModel<LoginRegisterViewModel>()
+    private val viewModel by viewModels<LoginRegisterViewModel>()
     private var userModel = UserModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {

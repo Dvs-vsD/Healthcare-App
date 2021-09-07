@@ -9,8 +9,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.app.consultationpoint.databinding.FragmentDoctorSignupBinding
 import com.app.consultationpoint.general.model.UserModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_doctor_signup.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -24,13 +26,15 @@ private const val ARG_PARAM2 = "param2"
  * Use the [DoctorSignupFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
+
+@AndroidEntryPoint
 class DoctorSignupFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
     private lateinit var binding: FragmentDoctorSignupBinding
     private var userModel = UserModel()
-    private val viewModel by viewModel<LoginRegisterViewModel>()
+    private val viewModel by viewModels<LoginRegisterViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

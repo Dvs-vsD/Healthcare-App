@@ -5,9 +5,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.consultationpoint.general.model.UserModel
 import com.app.consultationpoint.patient.appointment.model.AppointmentModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class AllAptViewModel(private val repository: AllAptRepository) : ViewModel() {
+@HiltViewModel
+class AllAptViewModel @Inject constructor(private val repository: AllAptRepository) : ViewModel() {
 
     fun fetchAllEventList() {
         viewModelScope.launch {

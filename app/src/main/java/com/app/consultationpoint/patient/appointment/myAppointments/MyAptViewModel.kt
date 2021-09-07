@@ -6,10 +6,13 @@ import androidx.lifecycle.viewModelScope
 import com.app.consultationpoint.general.model.UserModel
 import com.app.consultationpoint.patient.appointment.model.MonthlyAppointments
 import com.app.consultationpoint.patient.doctor.model.DoctorModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MyAptViewModel(private val repository: MyAptRepository) : ViewModel() {
+@HiltViewModel
+class MyAptViewModel @Inject constructor(private val repository: MyAptRepository) : ViewModel() {
 
     fun fetchAptFromRealm() {
         viewModelScope.launch {

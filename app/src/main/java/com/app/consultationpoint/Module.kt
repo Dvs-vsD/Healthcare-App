@@ -1,5 +1,6 @@
 package com.app.consultationpoint
 
+/*
 import com.app.consultationpoint.firebase.FirebaseSource
 import com.app.consultationpoint.general.LoginRegisterRepository
 import com.app.consultationpoint.general.LoginRegisterViewModel
@@ -52,4 +53,4 @@ val repositoryModule = module {
 
 val firebaseModule = module {
     single { FirebaseSource() }
-}
+}*/

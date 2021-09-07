@@ -10,8 +10,9 @@ import io.realm.Realm
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import timber.log.Timber
+import javax.inject.Inject
 
-class RoomRepository(private val firebaseSource: FirebaseSource) {
+class RoomRepository @Inject constructor(private val firebaseSource: FirebaseSource) {
 
     private val roomList: MutableLiveData<ArrayList<RoomModel?>> = MutableLiveData(ArrayList())
 

@@ -20,10 +20,10 @@ class ConsultationApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        startKoin {
+        /*startKoin {
             androidContext(this@ConsultationApp)
             modules(listOf(viewModelModule, repositoryModule, firebaseModule))
-        }
+        }*/
 
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())

@@ -2,21 +2,24 @@ package com.app.consultationpoint.patient.chat.roomInfo
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.app.consultationpoint.databinding.ActivityRoomInfoBinding
 import com.app.consultationpoint.patient.chat.roomInfo.adapter.ParticipantAdapter
 import com.app.consultationpoint.utils.Utils
 import com.app.consultationpoint.utils.Utils.formatTo
 import com.app.consultationpoint.utils.Utils.toDate
+import dagger.hilt.android.AndroidEntryPoint
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 
+@AndroidEntryPoint
 class RoomInfoActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRoomInfoBinding
     private var roomId: Long = 0
     private var userName: String = ""
     private var participantAdapter: ParticipantAdapter? = null
-    private val viewModel by viewModel<RIViewModel>()
+    private val viewModel by viewModels<RIViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityRoomInfoBinding.inflate(layoutInflater)

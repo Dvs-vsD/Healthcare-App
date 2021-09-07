@@ -8,11 +8,13 @@ import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.app.consultationpoint.R
 import com.app.consultationpoint.databinding.ActivityUpdateProfileBinding
 import com.app.consultationpoint.general.model.UserModel
 import com.app.consultationpoint.patient.userProfile.model.AddressModel
+import com.app.consultationpoint.utils.Const.REQUEST_CODE
 import com.app.consultationpoint.utils.Utils
 import com.app.consultationpoint.utils.Utils.formatTo
 import com.app.consultationpoint.utils.Utils.loadImage
@@ -26,16 +28,17 @@ import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
+import dagger.hilt.android.AndroidEntryPoint
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 import java.util.*
 
+@AndroidEntryPoint
 class UptPntProfileActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityUpdateProfileBinding
     private var profile: String? = ""
-    private val REQUEST_CODE: Int = 100
-    private val viewModel by viewModel<UserViewModel>()
+    private val viewModel by viewModels<UserViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

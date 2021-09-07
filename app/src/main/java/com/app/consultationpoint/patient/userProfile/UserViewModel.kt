@@ -7,8 +7,11 @@ import com.app.consultationpoint.general.model.UserModel
 import com.app.consultationpoint.patient.userProfile.model.AddressModel
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class UserViewModel(private val repository: UserRepository): ViewModel() {
+@HiltViewModel
+class UserViewModel @Inject constructor(private val repository: UserRepository): ViewModel() {
     fun logout() {
         repository.logout()
     }
