@@ -1,8 +1,6 @@
 package com.app.consultationpoint.patient.chat.room.adapter
 
-import android.app.ActivityOptions
 import android.content.Intent
-import android.util.Pair
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,17 +8,17 @@ import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.app.consultationpoint.databinding.RowOfChatListBinding
 import com.app.consultationpoint.patient.chat.chatScreen.ChatScreenActivity
+import com.app.consultationpoint.patient.chat.room.RoomViewModel
 import com.app.consultationpoint.patient.chat.room.model.RoomModel
 import com.app.consultationpoint.utils.Utils
 import com.app.consultationpoint.utils.Utils.formatTo
 import com.app.consultationpoint.utils.Utils.loadImage
-import com.bumptech.glide.Glide
-import kotlinx.android.synthetic.main.row_of_chat_list.view.*
 import java.util.*
 
 class RoomListAdapter(
     private var list: ArrayList<RoomModel?>,
-    private val context: FragmentActivity
+    private val context: FragmentActivity,
+    private val viewModel: RoomViewModel
 ) :
     RecyclerView.Adapter<RoomListAdapter.MyViewHolder>() {
 
@@ -32,11 +30,28 @@ class RoomListAdapter(
     inner class MyViewHolder(private val binding: RowOfChatListBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: RoomModel) {
+            var name = ""
+            val pArray: List<Long> = item.user_ids_participants
+
+            for ((index, user) in pArray.withIndex()) {
+                if (user.toString() != Utils.getUserId()) {
+                    val userDetails = viewModel.getUserDetails(user)
+                    if (pArray.size <= 2)
+                        name = userDetails.first_name + " " + userDetails.last_name
+                    else {
+                        name += if (index == pArray.size - 1)
+                            userDetails.first_name + " " + userDetails.last_name
+                        else
+                            userDetails.first_name + " " + userDetails.last_name + ", "
+                    }
+                }
+            }
+
             val profile = item.photo
             if (profile != null && profile.isNotEmpty()) {
                 binding.ivProfile.loadImage(profile)
             }
-            binding.tvDocName.text = item.name
+            binding.tvDocName.text = name
 
             if (item.last_message != null) {
                 val lastMsg = item.last_message

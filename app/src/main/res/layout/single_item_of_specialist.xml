@@ -34,6 +34,7 @@
         style="@style/st_tv_extra_small"
         android:layout_marginTop="@dimen/_4sdp"
         android:gravity="center"
+        android:singleLine="true"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/ivBackGround"

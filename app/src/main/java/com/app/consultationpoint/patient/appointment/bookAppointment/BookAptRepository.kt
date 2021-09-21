@@ -5,7 +5,6 @@ import com.app.consultationpoint.firebase.FirebaseSource
 import com.app.consultationpoint.general.model.UserModel
 import com.app.consultationpoint.patient.appointment.model.AppointmentModel
 import com.app.consultationpoint.patient.chat.room.model.RoomModel
-import io.realm.Realm
 import javax.inject.Inject
 
 class BookAptRepository @Inject constructor(private val firebaseSource: FirebaseSource) {
@@ -15,7 +14,7 @@ class BookAptRepository @Inject constructor(private val firebaseSource: Firebase
     }
 
     fun getDoctorDetails(doctorId: Long): UserModel {
-        return firebaseSource.getDoctorDetails(doctorId)
+        return firebaseSource.getUserDetails(doctorId)
     }
 
     suspend fun createChatRoom(room: RoomModel, userId: Long, doctorId: Long) {

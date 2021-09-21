@@ -2,7 +2,6 @@ package com.app.consultationpoint.patient.chat.room
 
 import android.os.Bundle
 import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +14,6 @@ import com.app.consultationpoint.patient.chat.room.adapter.RoomListAdapter
 import com.app.consultationpoint.patient.chat.room.model.RoomModel
 import com.app.consultationpoint.utils.Utils
 import dagger.hilt.android.AndroidEntryPoint
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
 private const val ARG_PARAM1 = "param1"
@@ -35,11 +33,15 @@ class ChatListFragment : BaseFragment() {
         }
 
         viewModel.getRoomList().observe(this, {
+
             if (it != null && it.isNotEmpty() && adapter != null) {
                 adapter?.setList(it)
                 binding.tvNoData.visibility = View.GONE
                 Timber.d("Room adapter notified %s", it)
             }
+
+            if (binding.pullToRefresh.isRefreshing)
+                binding.pullToRefresh.isRefreshing = false
         })
 
         viewModel.getStatus().observe(this, {
@@ -64,6 +66,14 @@ class ChatListFragment : BaseFragment() {
 
         userId = Utils.getUserId().toLong()
 
+        Timber.d("User Type ${Utils.getUserType()}")
+
+        if (Utils.getUserType() == 0) {
+            binding.etSearch.hint = "Search Doctor"
+        } else {
+            binding.etSearch.hint = "Search Patient"
+        }
+
         viewModel.fetchRoomsFromFirebase(userId)
 
         viewModel.roomsFromRealm(userId)
@@ -74,7 +84,7 @@ class ChatListFragment : BaseFragment() {
 
         adapter = activity?.let { context ->
             roomList.value?.let { list ->
-                RoomListAdapter(list, context)
+                RoomListAdapter(list, context, viewModel)
             }
         }
 
@@ -96,9 +106,6 @@ class ChatListFragment : BaseFragment() {
 
         binding.pullToRefresh.setOnRefreshListener {
             viewModel.roomsFromRealm(userId)
-            Handler(Looper.getMainLooper()).postDelayed({
-                binding.pullToRefresh.isRefreshing = false
-            }, 3000)
         }
     }
 

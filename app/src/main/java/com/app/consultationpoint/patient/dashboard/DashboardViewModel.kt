@@ -69,4 +69,10 @@ class DashboardViewModel @Inject constructor(private val repository: DashboardRe
     fun getAptDateList(): LiveData<ArrayList<Calendar>> {
         return repository.getAptDateList()
     }
+
+    fun fetchDocFromFB(type_id: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.fetchDoctorsFromFB(type_id)
+        }
+    }
 }

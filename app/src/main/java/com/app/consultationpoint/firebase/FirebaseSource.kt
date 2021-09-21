@@ -14,6 +14,7 @@ import com.app.consultationpoint.patient.userProfile.model.AddressModel
 import com.app.consultationpoint.utils.Const
 import com.app.consultationpoint.utils.Utils
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
@@ -32,55 +33,61 @@ class FirebaseSource @Inject constructor() {
     private var database: FirebaseFirestore = FirebaseFirestore.getInstance()
     private var status: MutableLiveData<String> = MutableLiveData("")
 
-    suspend fun fetchDocFromFB() = withContext(Dispatchers.IO) {
+    suspend fun fetchDocFromFB(userType: Int) = withContext(Dispatchers.IO) {
         Timber.d("called firebase init")
         val list: ArrayList<UserModel> = ArrayList()
-        database.collection("Users").whereEqualTo("user_type_id", 1).get().addOnSuccessListener {
+        database.collection("Users").whereEqualTo("user_type_id", userType).get()
+            .addOnSuccessListener {
 
-            for (snapshot in it.documents) {
-                val model = UserModel()
-                model.id = snapshot.getLong("id") ?: 0 //.toString().toLong()
-
-                model.doc_id = snapshot.get("doc_id").toString().toLong()
-                model.username = snapshot.getString("username") ?: ""
-                model.password = snapshot.getString("password") ?: ""
-                model.first_name = snapshot.getString("first_name") ?: ""
-                model.last_name = snapshot.getString("last_name") ?: ""
-                model.email = snapshot.getString("email") ?: ""
-                model.mobile = snapshot.getString("mobile") ?: ""
-                if (snapshot.get("gender") != null && snapshot.get("gender").toString() != "")
-                    model.gender = snapshot.getLong("gender")?.toInt() ?: 0
-                model.dob = snapshot.getString("dob") ?: ""
-                //new added field
-                model.profile = snapshot.getString("profile") ?: ""
-
-                model.user_type_id = snapshot.getLong("user_type_id")?.toInt() ?: 0
-                model.user_status = snapshot.getString("user_status") ?: ""
-                model.is_deleted = snapshot.getBoolean("is_deleted") ?: false
-                model.is_verified = snapshot.getBoolean("is_veryfied") ?: false
-                model.created_at = snapshot.getLong("created_at") ?: 0
-                model.updated_at = snapshot.getLong("updated_at") ?: 0
-                model.user_token = snapshot.getString("user_token") ?: ""
-                model.about_info = snapshot.getString("about_info") ?: ""
-                model.specialist_id = snapshot.getString("specialist_id") ?: ""
-                model.experience_yr = snapshot.getString("experience_yr") ?: ""
-                model.payment_id = snapshot.getString("payment_id") ?: ""
-                model.payment_detail = snapshot.getString("payment_detail") ?: ""
-
-                list.add(model)
-            }
-
-            Realm.getDefaultInstance().use { mRealm ->
-                Timber.d("User Fetching instance")
-
-                mRealm.executeTransaction {
-                    mRealm.insertOrUpdate(list)
-                    status.value = "Doctor List Updated"
-                    status.value = ""
+                for (snapshot in it.documents) {
+                    val model = getUser(snapshot)
+                    list.add(model)
                 }
-                Timber.d("Open Instance at %s", System.currentTimeMillis().toString())
+
+                Realm.getDefaultInstance().use { mRealm ->
+                    Timber.d("User Fetching instance")
+
+                    mRealm.executeTransaction {
+                        mRealm.insertOrUpdate(list)
+                        status.value = "Doctor List Updated"
+                        status.value = ""
+                    }
+                    Timber.d("Open Instance at %s", System.currentTimeMillis().toString())
+                }
             }
-        }
+    }
+
+    private fun getUser(snapshot: DocumentSnapshot): UserModel {
+        val model = UserModel()
+        model.id = snapshot.getLong("id") ?: 0 //.toString().toLong()
+        if (snapshot.get("doc_id") != null)
+            model.doc_id = snapshot.get("doc_id").toString().toLong()
+        model.username = snapshot.getString("username") ?: ""
+        model.password = snapshot.getString("password") ?: ""
+        model.first_name = snapshot.getString("first_name") ?: ""
+        model.last_name = snapshot.getString("last_name") ?: ""
+        model.email = snapshot.getString("email") ?: ""
+        model.mobile = snapshot.getString("mobile") ?: ""
+        if (snapshot.get("gender") != null && snapshot.get("gender").toString() != "")
+            model.gender = snapshot.getLong("gender")?.toInt() ?: 0
+        model.dob = snapshot.getString("dob") ?: ""
+        //new added field
+        model.profile = snapshot.getString("profile") ?: ""
+
+        model.user_type_id = snapshot.getLong("user_type_id")?.toInt() ?: 0
+        model.user_status = snapshot.getString("user_status") ?: ""
+        model.is_deleted = snapshot.getBoolean("is_deleted") ?: false
+        model.is_verified = snapshot.getBoolean("is_veryfied") ?: false
+        model.created_at = snapshot.getLong("created_at") ?: 0
+        model.updated_at = snapshot.getLong("updated_at") ?: 0
+        model.user_token = snapshot.getString("user_token") ?: ""
+        model.about_info = snapshot.getString("about_info") ?: ""
+        model.specialist_id = snapshot.getString("specialist_id") ?: ""
+        model.experience_yr = snapshot.getString("experience_yr") ?: ""
+        model.payment_id = snapshot.getString("payment_id") ?: ""
+        model.payment_detail = snapshot.getString("payment_detail") ?: ""
+
+        return model
     }
 
     suspend fun fetchMyBookings() = withContext(Dispatchers.IO) {
@@ -142,7 +149,7 @@ class FirebaseSource @Inject constructor() {
                 status.value = ""
             }
             .addOnFailureListener {
-                status.value = "error" + it.message
+                status.value = "Error: " + it.message
                 status.value = ""
             }
     }
@@ -186,8 +193,8 @@ class FirebaseSource @Inject constructor() {
                             Const.USER_TYPE, snapshot.getLong("user_type_id")?.toInt() ?: 0
                         ).apply()
 
-                        ConsultationApp.shPref.edit().putString(
-                            Const.GENDER, snapshot.get("gender").toString()
+                        ConsultationApp.shPref.edit().putInt(
+                            Const.GENDER, snapshot.getLong("gender")?.toInt()?:0
                         ).apply()
 
                         ConsultationApp.shPref.edit().putString(
@@ -223,15 +230,15 @@ class FirebaseSource @Inject constructor() {
                             }
 
                         ConsultationApp.shPref.edit().putBoolean(Const.PREF_IS_LOGIN, true).apply()
+
+                        status.value = "login success"
+                        status.value = ""
                     }
                 }
-
-                status.value = "login success"
-                status.value = ""
             }
         }
             .addOnFailureListener {
-                status.value = "error" + it.message
+                status.value = "Error: " + it.message
                 status.value = ""
             }
     }
@@ -261,7 +268,7 @@ class FirebaseSource @Inject constructor() {
             ConsultationApp.shPref.edit().putString(Const.LAST_NAME, model.last_name).apply()
             ConsultationApp.shPref.edit().putString(Const.USER_PROFILE, model.profile).apply()
             ConsultationApp.shPref.edit().putString(Const.PHN_NO, model.mobile).apply()
-            ConsultationApp.shPref.edit().putString(Const.GENDER, model.gender.toString()).apply()
+            ConsultationApp.shPref.edit().putInt(Const.GENDER, model.gender).apply()
             ConsultationApp.shPref.edit().putString(Const.DOB, model.dob).apply()
             ConsultationApp.shPref.edit().putString(Const.ADDRESS, adrModel.address).apply()
             ConsultationApp.shPref.edit().putString(Const.CITY, adrModel.city).apply()
@@ -277,7 +284,7 @@ class FirebaseSource @Inject constructor() {
         }
     }
 
-    fun getDoctorDetails(docId: Long): UserModel {
+    fun getUserDetails(docId: Long): UserModel {
         var model = UserModel()
 
         Realm.getDefaultInstance().use { mRealm ->
@@ -322,6 +329,17 @@ class FirebaseSource @Inject constructor() {
                             results.document.data["user_ids_participants"] as ArrayList<Map<String, String>>
 
                         for (index in 0 until memberList.size) {
+                            if (memberList[index].toString() != Utils.getUserId()) {
+                                database.collection("Users").document(memberList[index].toString())
+                                    .get().addOnSuccessListener { document ->
+                                    val model = getUser(document)
+                                    Realm.getDefaultInstance().use { mRealm ->
+                                        mRealm.executeTransaction {
+                                            mRealm.insertOrUpdate(model)
+                                        }
+                                    }
+                                }
+                            }
                             participantArray.add(memberList[index].toString().toLong())
                         }
 
@@ -363,10 +381,6 @@ class FirebaseSource @Inject constructor() {
                             lastMsg.updated_at = lMsgMap["updated_at"].toString().toLong()
                             lastMsg.is_deleted = lMsgMap["_deleted"].toString().toBoolean()
 
-//                            val msgStsList: RealmList<MessageModel> = RealmList()
-//                            val mgStList: ArrayList<Map<String, String>> = lMsgMap.get("list_message_status") as ArrayList<Map<String, String>>
-//                            lastMsg.list_message_status =
-
                             room.last_message = lastMsg
                         }
 
@@ -399,10 +413,11 @@ class FirebaseSource @Inject constructor() {
             }
     }
 
-    suspend fun createChatRoom(model: RoomModel, senderId: Long, receiverId: Long) = withContext(Dispatchers.IO) {
-        database.collection("Rooms").whereEqualTo("created_by_id", senderId)
-            .whereArrayContains("user_ids_participants", receiverId).get()
-            .addOnSuccessListener {
+    suspend fun createChatRoom(model: RoomModel, senderId: Long, receiverId: Long) =
+        withContext(Dispatchers.IO) {
+            database.collection("Rooms").whereEqualTo("created_by_id", senderId)
+                .whereArrayContains("user_ids_participants", receiverId).get()
+                .addOnSuccessListener {
 //                for (result in it.documents) {
 //                    val array: List<Map<String, String>> =
 //                        result.get("list_participants") as List<Map<String, String>>
@@ -416,19 +431,19 @@ class FirebaseSource @Inject constructor() {
 //                        }
 //                    }
 //                }
-                if (it.isEmpty) {
-                    database.collection("Rooms").document(model.room_id.toString()).set(model)
-                        .addOnFailureListener { error ->
-                            status.value = error.message
-                            status.value = ""
-                        }
-                    Timber.d("room added to firebase")
+                    if (it.isEmpty) {
+                        database.collection("Rooms").document(model.room_id.toString()).set(model)
+                            .addOnFailureListener { error ->
+                                status.value = error.message
+                                status.value = ""
+                            }
+                        Timber.d("room added to firebase")
+                    }
+                }.addOnFailureListener { e ->
+                    status.value = e.message
+                    status.value = ""
                 }
-            }.addOnFailureListener { e ->
-                status.value = e.message
-                status.value = ""
-            }
-    }
+        }
 
     fun sendMessage(msgModel: MessageModel) {
         database.collection("Messages").document(msgModel.message_id.toString()).set(msgModel)

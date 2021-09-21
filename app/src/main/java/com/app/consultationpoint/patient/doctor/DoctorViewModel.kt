@@ -15,9 +15,9 @@ import javax.inject.Inject
 @HiltViewModel
 class DoctorViewModel @Inject constructor(private val repository: DoctorRepository) : ViewModel() {
 
-    fun fetchDocFromFB() {
+    fun fetchDocFromFB(userType: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.fetchDocFromFB()
+            repository.fetchDocFromFB(userType)
         }
     }
 

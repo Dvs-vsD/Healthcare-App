@@ -1,6 +1,7 @@
 package com.app.consultationpoint.patient.appointment.adapter
 
 import android.annotation.SuppressLint
+import android.text.TextUtils.substring
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -26,7 +27,9 @@ class AptDetailsAdapter(
         @SuppressLint("SetTextI18n")
         fun bind(item: AppointmentModel) {
             binding.tvDate.text = item.schedual_date.substring(8)
-            binding.tvMonth.text = item.schedual_date.toDate("yyyy-MM-dd")?.formatTo("MMMM")
+            binding.tvMonth.text =
+                item.schedual_date.toDate("yyyy-MM-dd")?.formatTo("MMMM")
+                    ?.substring(0, 3)?.uppercase()
             val docDetails: UserModel = viewModel.getDoctorDetails(item.doctor_id)
             binding.tvDocName.text = "${docDetails.first_name} ${docDetails.last_name}"
 //            binding.tvSpecAdr.text = "${docDetails.specialization}, ${docDetails.city}"

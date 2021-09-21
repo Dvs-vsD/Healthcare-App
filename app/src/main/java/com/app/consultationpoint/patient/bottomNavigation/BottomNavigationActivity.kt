@@ -141,7 +141,7 @@ class BottomNavigationActivity(override val numberOfRootFragments: Int = 4) : Ap
                 Timber.d(value.time.formatTo("dd-MM-yyyy hh:mm a"))
                 val intent = Intent(this, RemainderBroadcast::class.java)
                 intent.putExtra("channel_id", index)
-                intent.putExtra("time",value.time.formatTo("hh:mm a"))
+                intent.putExtra("time", value.time.formatTo("hh:mm a"))
                 val pendingIntent =
                     PendingIntent.getBroadcast(
                         this,
@@ -183,7 +183,10 @@ class BottomNavigationActivity(override val numberOfRootFragments: Int = 4) : Ap
                 fragNavController.switchTab(2)
                 binding.ivBack.visibility = View.VISIBLE
                 binding.tvHeading.visibility = View.VISIBLE
-                binding.tvHeading.text = getString(R.string.chat_with_doc)
+                if (Utils.getUserType() == 0)
+                    binding.tvHeading.text = getString(R.string.chat_with_doc)
+                else
+                    binding.tvHeading.text = getString(R.string.chat_with_patient)
                 binding.ivProfile.visibility = View.GONE
                 toggle.isDrawerIndicatorEnabled = false
             }

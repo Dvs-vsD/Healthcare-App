@@ -29,6 +29,7 @@ class ChatScreenActivity : AppCompatActivity() {
     private var roomId: Long = 0
     private var userId: Long = 0
     private var docId: Long = 0
+    private var userName: String = ""
     private val msgModel = MessageModel()
     private var chatAdapter: ChatAdapter? = null
     private var linearLayoutManager: LinearLayoutManager? = null
@@ -49,7 +50,7 @@ class ChatScreenActivity : AppCompatActivity() {
         })
 
         viewModel.getMessages().observe(this, {
-            if (it != null && it.isNotEmpty()) {
+            if (chatAdapter != null) {
                 chatAdapter?.setData(it)
                 binding.recyclerView.scrollToPosition(it.size - 1)
             }
@@ -64,11 +65,11 @@ class ChatScreenActivity : AppCompatActivity() {
         docId = intent.getLongExtra("doctor_id", 0)
         userId = Utils.getUserId().toLong()
         val docDetails = viewModel.getDoctorDetails(docId)
-        val userName = docDetails.first_name + " " + docDetails.last_name
+        userName = docDetails.first_name + " " + docDetails.last_name
         binding.tvUserName.text = userName
 
         Timber.d("From tvUserName %s", binding.tvUserName.text.toString())
-        Timber.d("From DB %s", docDetails.first_name + " " + docDetails.last_name)
+        Timber.d("From DB %s %s", docDetails.first_name, docDetails.last_name)
         Timber.d("room id %s", roomId)
 
         val profile = docDetails.profile
@@ -86,21 +87,12 @@ class ChatScreenActivity : AppCompatActivity() {
 
         binding.ivBack.setOnClickListener { onBackPressed() }
 
-//        binding.ivAttachment.setOnClickListener {
-//            sendMessage("doctor side check")
-//        }
-
         binding.tvUserName.setOnClickListener {
-            val intent = Intent(this, RoomInfoActivity::class.java)
-            intent.putExtra("room_id", roomId)
-            intent.putExtra("userName", userName)
-            val pairs = arrayOf(
-                Pair<View, String>(binding.ivProfile, getString(R.string.imageTransition)),
-                Pair<View, String>(binding.tvUserName, getString(R.string.nameTransition))
-            )
-            val options = ActivityOptions.makeSceneTransitionAnimation(this, *pairs)
+            goToRoomInfo()
+        }
 
-            startActivity(intent, options.toBundle())
+        binding.ivProfile.setOnClickListener {
+            goToRoomInfo()
         }
 
         binding.btnSend.setOnClickListener {
@@ -116,7 +108,7 @@ class ChatScreenActivity : AppCompatActivity() {
         linearLayoutManager = LinearLayoutManager(this)
         binding.recyclerView.setHasFixedSize(true)
         binding.recyclerView.layoutManager = linearLayoutManager
-        val msgList: LiveData<ArrayList<MessageModel>> = viewModel.getMessages()
+        val msgList: ArrayList<MessageModel>? = viewModel.getMessages().value
         chatAdapter = ChatAdapter(msgList)
         binding.recyclerView.adapter = chatAdapter
 
@@ -141,5 +133,18 @@ class ChatScreenActivity : AppCompatActivity() {
         msgModel.is_deleted = false
 
         viewModel.sendMsg(msgModel)
+    }
+
+    private fun goToRoomInfo() {
+        val intent = Intent(this, RoomInfoActivity::class.java)
+        intent.putExtra("room_id", roomId)
+        intent.putExtra("userName", userName)
+        val pairs = arrayOf(
+            Pair<View, String>(binding.ivProfile, getString(R.string.imageTransition)),
+            Pair<View, String>(binding.tvUserName, getString(R.string.nameTransition))
+        )
+        val options = ActivityOptions.makeSceneTransitionAnimation(this, *pairs)
+
+        startActivity(intent, options.toBundle())
     }
 }

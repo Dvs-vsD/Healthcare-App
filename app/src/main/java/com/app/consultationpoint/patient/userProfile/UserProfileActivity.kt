@@ -74,9 +74,9 @@ class UserProfileActivity : AppCompatActivity() {
         binding.tvLastName.text = lastName
         binding.tvUserEmail.text = Utils.getUserEmail()
         binding.tvGender.text = when (Utils.getUserGender()) {
-            "0" -> getString(R.string.rb_male)
-            "1" -> getString(R.string.rb_female)
-            "2" -> getString(R.string.rb_other)
+            0 -> getString(R.string.rb_male)
+            1 -> getString(R.string.rb_female)
+            2 -> getString(R.string.rb_other)
             else -> getString(R.string.place_holder)
         }
 

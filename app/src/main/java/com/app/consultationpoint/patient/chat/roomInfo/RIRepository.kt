@@ -44,7 +44,7 @@ class RIRepository @Inject constructor(private val firebaseSource: FirebaseSourc
 
     private fun fetchUserFromId(list: RealmList<Long>) {
 
-        Timber.d("got list size %s", list.size.toString()+"...")
+        Timber.d("got list size %s", list.size.toString() + "...")
 
         Realm.getDefaultInstance().use { mRealm ->
             val pList: ArrayList<UserModel> = ArrayList()
@@ -66,7 +66,7 @@ class RIRepository @Inject constructor(private val firebaseSource: FirebaseSourc
                     model.last_name = Utils.getLastName()
                     model.email = Utils.getUserEmail()
                     model.mobile = Utils.getUserPhnNo()
-                    model.gender = Utils.getUserGender().toInt()
+                    model.gender = Utils.getUserGender()
                     model.dob = Utils.getDOB()
                     model.profile = Utils.getUserProfile()
                     model.user_type_id = Utils.getUserType()
@@ -93,8 +93,9 @@ class RIRepository @Inject constructor(private val firebaseSource: FirebaseSourc
     fun getRoomDetails(roomId: Long): RoomModel {
         var room: RoomModel
         Realm.getDefaultInstance().use { mRealm ->
-            val roomResult = mRealm.where(RoomModel::class.java).equalTo("room_id", roomId).findFirst()
-            room = mRealm.copyFromRealm(roomResult)?: RoomModel()
+            val roomResult =
+                mRealm.where(RoomModel::class.java).equalTo("room_id", roomId).findFirst()
+            room = mRealm.copyFromRealm(roomResult) ?: RoomModel()
         }
         return room
     }
@@ -102,7 +103,8 @@ class RIRepository @Inject constructor(private val firebaseSource: FirebaseSourc
     fun getCreatorDetails(createdById: Long): UserModel? {
         var creator: UserModel? = null
         Realm.getDefaultInstance().use { mRealm ->
-            val userData = mRealm.where(UserModel::class.java).equalTo("id", createdById).findFirst()
+            val userData =
+                mRealm.where(UserModel::class.java).equalTo("id", createdById).findFirst()
             if (userData != null)
                 creator = mRealm.copyFromRealm(userData)
         }

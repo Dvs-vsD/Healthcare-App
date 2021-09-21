@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_gray_200"
-    android:paddingTop="@dimen/_12sdp"
     android:id="@+id/chatScreenLayout"
     tools:context=".patient.chat.chatScreen.ChatScreenActivity">
 
@@ -26,7 +25,7 @@
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="?attr/actionBarSize"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -34,7 +33,7 @@
         <ImageView
             android:id="@+id/ivBack"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginEnd="@dimen/_8sdp"
             android:contentDescription="@string/contentDescription"
             android:padding="@dimen/_4sdp"
@@ -53,7 +52,8 @@
             android:id="@+id/tvUserName"
             style="@style/st_tv_normal.bold"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
             android:layout_marginEnd="@dimen/_16sdp"
             android:transitionName="nameTransition"
             android:text="@string/place_holder" />

@@ -45,11 +45,11 @@ class DashboardFragment : BaseFragment() {
             } else {
                 binding.tvNoData.visibility = View.GONE
             }
-            if (adapterTodayApt != null && it.isNotEmpty()) {
+            if (adapterTodayApt != null) {
                 Timber.d("notified")
-//                adapterTodayApt?.setList(it)
+                adapterTodayApt?.setList(it)
 //                adapterTodayApt?.notifyItemRangeInserted(0,it.size)
-                adapterTodayApt?.notifyDataSetChanged()
+//                adapterTodayApt?.notifyDataSetChanged()
             }
         })
 
@@ -89,6 +89,9 @@ class DashboardFragment : BaseFragment() {
             mFragmentNavigation.pushFragment(DoctorListFragment.newInstance(1))
         }
 
+        viewModel.fetchDocFromFB(1)
+        viewModel.fetchAllMyBookings()
+
         val fragmentCalender = CalenderFragment()
         val transaction: FragmentTransaction = childFragmentManager.beginTransaction()
         transaction.replace(R.id.llCalender, fragmentCalender)
@@ -106,7 +109,7 @@ class DashboardFragment : BaseFragment() {
 
         adapterTodayApt = activity?.let { context ->
             TodayAtpAdapter(
-                viewModel.getTodayAptList(), context, viewModel.getAPtDoctorList()
+                viewModel.getTodayAptList().value, context, viewModel.getAPtDoctorList()
             )
         }
         binding.recyclerView.itemAnimator = null

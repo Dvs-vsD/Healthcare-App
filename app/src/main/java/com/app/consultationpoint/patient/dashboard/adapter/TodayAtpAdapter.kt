@@ -12,13 +12,18 @@ import com.app.consultationpoint.patient.appointment.model.AppointmentModel
 import com.app.consultationpoint.utils.Utils.formatTo
 import com.app.consultationpoint.utils.Utils.loadImage
 import com.app.consultationpoint.utils.Utils.toDate
-import com.bumptech.glide.Glide
 
 class TodayAtpAdapter(
-    private val list: LiveData<ArrayList<AppointmentModel>>,
+    private var list: ArrayList<AppointmentModel>?,
     private val context: Context,
     private val doctorDetails: LiveData<ArrayList<UserModel>>
 ) : RecyclerView.Adapter<TodayAtpAdapter.MyViewHolder>() {
+
+
+    fun setList(it: ArrayList<AppointmentModel>?) {
+        list = it
+        notifyDataSetChanged()
+    }
 
     inner class MyViewHolder(private val binding: RowOfTodayAptBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -51,10 +56,10 @@ class TodayAtpAdapter(
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        list.value?.get(position)?.let { holder.bind(it) }
+        list?.get(position)?.let { holder.bind(it) }
     }
 
     override fun getItemCount(): Int {
-        return list.value?.size ?: 0
+        return list?.size ?: 0
     }
 }

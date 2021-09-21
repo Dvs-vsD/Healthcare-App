@@ -3,6 +3,7 @@ package com.app.consultationpoint.patient.chat.room
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.app.consultationpoint.firebase.FirebaseSource
+import com.app.consultationpoint.general.model.UserModel
 import com.app.consultationpoint.patient.chat.room.model.RoomModel
 import com.app.consultationpoint.utils.Utils
 import io.realm.Case
@@ -61,5 +62,9 @@ class RoomRepository @Inject constructor(private val firebaseSource: FirebaseSou
 
     fun getStatus(): LiveData<String> {
         return firebaseSource.getStatus()
+    }
+
+    fun getUserDetails(userId: Long): UserModel {
+        return firebaseSource.getUserDetails(userId)
     }
 }

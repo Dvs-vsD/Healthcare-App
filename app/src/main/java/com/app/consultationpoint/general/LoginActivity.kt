@@ -2,24 +2,19 @@ package com.app.consultationpoint.general
 
 import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.widget.addTextChangedListener
 import com.app.consultationpoint.databinding.ActivityLoginBinding
 import com.app.consultationpoint.patient.bottomNavigation.BottomNavigationActivity
 import com.app.consultationpoint.utils.Utils
+import com.app.consultationpoint.utils.Utils.showToast
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
-import org.koin.androidx.viewmodel.ext.android.viewModel
 
 @AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
-    private var userEmail: String? = ""
-    private var userPassword: String? = ""
     private val viewModel by viewModels<LoginRegisterViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,8 +26,8 @@ class LoginActivity : AppCompatActivity() {
             Utils.dismissProgressDialog()
             if (it == "login success") {
                 startActivity()
-            } else if (it.startsWith("error")) {
-                Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+            } else if (it.startsWith("Error")) {
+                this.showToast("Error: $it")
             }
         })
 
@@ -41,48 +36,61 @@ class LoginActivity : AppCompatActivity() {
 
     private fun inThat() {
 
-        binding.btnLogin.isEnabled = false
-
-        val fromRegister = intent.getBooleanExtra("fromRegister", false)
         binding.tvSignUp.setOnClickListener {
-            if (fromRegister)
-                onBackPressed()
-            else
-                startActivity(Intent(this, RegisterActivity::class.java))
+            startActivity(Intent(this, RegisterActivity::class.java))
         }
-
-        binding.etEmail.addTextChangedListener { email ->
-            userEmail = email?.trim().toString()
-            enableButton()
-        }
-        binding.etPassword.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-
-            override fun afterTextChanged(pass: Editable?) {
-                val password = pass?.trim().toString()
-                if (password.length > 7) {
-                    userPassword = password
-                    enableButton()
-                } else {
-                    userPassword = ""
-                    binding.etPassword.error = "Please Enter minimum 8 characters"
-                    binding.etPassword.requestFocus()
-                    enableButton()
-                }
-            }
-        })
 
         binding.btnLogin.setOnClickListener {
-            Utils.showProgressDialog(this)
-            viewModel.login(userEmail ?: "", userPassword ?: "")
+            checkValidation()
         }
     }
 
-    private fun enableButton() {
-        binding.btnLogin.isEnabled =
-            userEmail?.isNotEmpty() == true && userPassword?.isNotEmpty() == true
+    private fun checkValidation() {
+
+        val userEmail = binding.etEmail.text?.trim().toString()
+        val userPassword = binding.etPassword.text?.trim().toString()
+
+        if (userEmail.isNotEmpty() && userPassword.isNotEmpty() && userPassword.length > 7) {
+            Utils.setErrorFreeEdt(this, binding.tilEmail)
+            Utils.setErrorFreeEdt(this, binding.tilPassword)
+            binding.tilPassword.error = ""
+
+            Utils.showProgressDialog(this)
+
+            if (Utils.isNetworkAvailable(this)) {
+                viewModel.login(userEmail ?: "", userPassword ?: "")
+            } else {
+                Utils.dismissProgressDialog()
+                Snackbar.make(
+                    this,
+                    binding.clLogin,
+                    "Please check your network connection!!!",
+                    Snackbar.LENGTH_LONG
+                ).show()
+            }
+
+        } else {
+
+            if (userEmail.isEmpty()) {
+                Utils.setErrorEdt(this, binding.tilEmail)
+            } else {
+                Utils.setErrorFreeEdt(this, binding.tilEmail)
+            }
+
+            if (userPassword.isEmpty()) {
+                Utils.setErrorEdt(this, binding.tilPassword)
+            } else {
+                if (userPassword.length < 8) {
+                    binding.tilPassword.error =
+                        "Password must be more then or equal to 8 characters"
+                    Utils.setErrorEdt(this, binding.tilPassword)
+                } else {
+                    Utils.setErrorFreeEdt(this, binding.tilPassword)
+                    binding.tilPassword.error = ""
+                }
+            }
+
+        }
     }
 
     private fun startActivity() {

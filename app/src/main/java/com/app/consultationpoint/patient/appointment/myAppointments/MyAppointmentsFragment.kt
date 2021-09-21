@@ -11,7 +11,6 @@ import com.app.consultationpoint.patient.doctor.DoctorListFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_bottom_navigation.*
 import kotlinx.android.synthetic.main.fragment_dashboard.*
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
 private const val ARG_PARAM1 = "param1"
@@ -32,6 +31,7 @@ class MyAppointmentsFragment : BaseFragment() {
             param2 = it.getString(ARG_PARAM2)
 
             viewModel.getMonthlyAptList().observe(this, { list ->
+
                 if (adapter != null) {
                     Timber.d("Apt list notified")
                     adapter?.setList(list)
@@ -41,6 +41,9 @@ class MyAppointmentsFragment : BaseFragment() {
                         binding.tvNoData.visibility = View.VISIBLE
                     }
                 }
+
+                if (binding.pullToRefresh.isRefreshing)
+                    binding.pullToRefresh.isRefreshing = false
             })
 
             viewModel.getStatus().observe(this, { status ->
@@ -70,7 +73,13 @@ class MyAppointmentsFragment : BaseFragment() {
 
         val monthlyApt = viewModel.getMonthlyAptList().value
 
-        adapter = monthlyApt?.let { list -> MonthlyAptAdapter(list, this@MyAppointmentsFragment, viewModel) }
+        adapter = monthlyApt?.let { list ->
+            MonthlyAptAdapter(
+                list,
+                this@MyAppointmentsFragment,
+                viewModel
+            )
+        }
 
         if (monthlyApt?.isEmpty() == true) {
             binding.tvNoData.visibility = View.VISIBLE
@@ -83,7 +92,6 @@ class MyAppointmentsFragment : BaseFragment() {
 
         binding.pullToRefresh.setOnRefreshListener {
             viewModel.fetchAptFromFirebase()
-            Handler().postDelayed({ binding.pullToRefresh.isRefreshing = false }, 3000)
         }
 
         binding.fab.setOnClickListener {

@@ -16,8 +16,8 @@ import javax.inject.Inject
 class DoctorRepository @Inject constructor(private val firebaseSource: FirebaseSource) {
     private var doctorList: MutableLiveData<ArrayList<UserModel>> = MutableLiveData(ArrayList())
 
-    suspend fun fetchDocFromFB() {
-        firebaseSource.fetchDocFromFB()
+    suspend fun fetchDocFromFB(userType: Int) {
+        firebaseSource.fetchDocFromFB(userType)
     }
 
     suspend fun fetchDocFromRDB() = withContext(Dispatchers.Main) {
@@ -65,7 +65,7 @@ class DoctorRepository @Inject constructor(private val firebaseSource: FirebaseS
     }
 
     fun getDoctorDetails(id: Long): UserModel {
-        return firebaseSource.getDoctorDetails(id)
+        return firebaseSource.getUserDetails(id)
     }
 
     // chat Functionality

@@ -25,7 +25,7 @@ class ChatScreenRepository @Inject constructor(private val firebaseSource: Fireb
     }
 
     fun getDoctorDetails(id: Long): UserModel {
-        return firebaseSource.getDoctorDetails(id)
+        return firebaseSource.getUserDetails(id)
     }
 
     suspend fun fetchMsgFromFB(roomId: Long) {
@@ -46,7 +46,7 @@ class ChatScreenRepository @Inject constructor(private val firebaseSource: Fireb
                 messageList.value?.clear()
                 msgList.clear()
                 msgList.addAll(change)
-                messageList.postValue(msgList)
+                messageList.value = msgList
             }
             Timber.d("Open Instance at %s", System.currentTimeMillis().toString())
         }

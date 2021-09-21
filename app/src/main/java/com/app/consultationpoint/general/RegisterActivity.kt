@@ -2,20 +2,17 @@ package com.app.consultationpoint.general
 
 import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.widget.addTextChangedListener
 import com.app.consultationpoint.R
 import com.app.consultationpoint.databinding.ActivityRegisterBinding
 import com.app.consultationpoint.general.model.UserModel
 import com.app.consultationpoint.patient.bottomNavigation.BottomNavigationActivity
 import com.app.consultationpoint.utils.Utils
+import com.app.consultationpoint.utils.Utils.showToast
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
-import org.koin.androidx.viewmodel.ext.android.viewModel
 
 @AndroidEntryPoint
 class RegisterActivity : AppCompatActivity() {
@@ -33,7 +30,7 @@ class RegisterActivity : AppCompatActivity() {
             Utils.dismissProgressDialog()
 
             if (it == "success") {
-                if (userModel.user_type_id == 0) {
+//                if (userModel.user_type_id == 0) {
                     val intent = Intent(this, BottomNavigationActivity::class.java)
                     intent.addFlags(
                         Intent.FLAG_ACTIVITY_CLEAR_TOP
@@ -41,11 +38,11 @@ class RegisterActivity : AppCompatActivity() {
                     )
                     intent.putExtra("newUser", true)
                     startActivity(intent)
-                } else {
+//                } else {
                     Toast.makeText(this, "Doctor Signed Up successfully", Toast.LENGTH_SHORT).show()
-                }
-            } else if (it.startsWith("error")) {
-                Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+//                }
+            } else if (it.startsWith("Error: ")) {
+                this.showToast("Error: $it")
             }
         })
 
@@ -61,58 +58,82 @@ class RegisterActivity : AppCompatActivity() {
                 userModel.user_type_id = 1
         }
 
-        binding.btnSignUp.isEnabled = false
-
         binding.tvLogin.setOnClickListener {
-            startActivity(
-                Intent(this, LoginActivity::class.java).putExtra(
-                    "fromRegister",
-                    true
-                )
-            )
+            onBackPressed()
         }
-
-        binding.etFirstName.addTextChangedListener { fName ->
-            userModel.first_name = fName?.trim().toString()
-            enableButton()
-        }
-        binding.etLastName.addTextChangedListener { lName ->
-            userModel.last_name = lName?.trim().toString()
-            enableButton()
-        }
-        binding.etEmail.addTextChangedListener { email ->
-            userModel.email = email?.trim().toString()
-            enableButton()
-        }
-        binding.etPassword.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-
-            override fun afterTextChanged(pass: Editable?) {
-                val password = pass?.trim().toString()
-                if (password.length > 7) {
-                    userModel.password = password
-                    enableButton()
-                } else {
-                    userModel.password = ""
-                    binding.etPassword.error = "Please Enter minimum 8 characters"
-                    binding.etPassword.requestFocus()
-                    enableButton()
-                }
-            }
-        })
 
         binding.btnSignUp.setOnClickListener {
-            Utils.showProgressDialog(this)
-            viewModel.signUp(userModel)
+            checkValidation()
         }
     }
 
-    private fun enableButton() {
-        binding.btnSignUp.isEnabled = userModel.first_name.isNotEmpty() == true
-                && userModel.last_name.isNotEmpty() == true
-                && userModel.email.isNotEmpty() == true
-                && userModel.password.isNotEmpty() == true
+    private fun checkValidation() {
+
+        val firstName = binding.etFirstName.text?.trim().toString()
+        val lastName = binding.etLastName.text?.trim().toString()
+        val userEmail = binding.etEmail.text?.trim().toString()
+        val userPassword = binding.etPassword.text?.trim().toString()
+
+        if (firstName.isNotEmpty() && lastName.isNotEmpty() && userEmail.isNotEmpty()
+            && userPassword.isNotEmpty() && userPassword.length > 7
+        ) {
+            Utils.setErrorFreeEdt(this, binding.tilFirstName)
+            Utils.setErrorFreeEdt(this, binding.tilLastName)
+            Utils.setErrorFreeEdt(this, binding.tilEmail)
+            Utils.setErrorFreeEdt(this, binding.tilPassword)
+            binding.tilPassword.error = ""
+
+            Utils.showProgressDialog(this)
+
+            if (Utils.isNetworkAvailable(this)) {
+                userModel.first_name = firstName
+                userModel.last_name = lastName
+                userModel.email = userEmail
+                userModel.password = userPassword
+
+                viewModel.signUp(userModel)
+            } else {
+                Utils.dismissProgressDialog()
+                Snackbar.make(
+                    this,
+                    binding.svRegister,
+                    "Please check your network connection!!!",
+                    Snackbar.LENGTH_LONG
+                ).show()
+            }
+
+        } else {
+
+            if (firstName.isEmpty()) {
+                Utils.setErrorEdt(this, binding.tilFirstName)
+            } else {
+                Utils.setErrorFreeEdt(this, binding.tilFirstName)
+            }
+
+            if (lastName.isEmpty()) {
+                Utils.setErrorEdt(this, binding.tilLastName)
+            } else {
+                Utils.setErrorFreeEdt(this, binding.tilLastName)
+            }
+
+            if (userEmail.isEmpty()) {
+                Utils.setErrorEdt(this, binding.tilEmail)
+            } else {
+                Utils.setErrorFreeEdt(this, binding.tilEmail)
+            }
+
+            if (userPassword.isEmpty()) {
+                Utils.setErrorEdt(this, binding.tilPassword)
+            } else {
+                if (userPassword.length < 8) {
+                    binding.tilPassword.error = "Password must be more then or equal to 8 characters"
+                    Utils.setErrorEdt(this, binding.tilPassword)
+                } else {
+                    Utils.setErrorFreeEdt(this, binding.tilPassword)
+                    binding.tilPassword.error = ""
+                }
+            }
+        }
     }
+
 }

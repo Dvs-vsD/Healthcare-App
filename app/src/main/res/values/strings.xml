@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ConsultationPoint</string>
+    <string name="app_name">Alpha Healthcare</string>
     <string name="tv_let_s_find_your_doctor">Let\'s Find Your Doctor</string>
     <string name="contentDescription">image</string>
     <string name="et_hint_search_doctor">Search Doctor</string>
@@ -28,6 +28,7 @@
     <string name="menu_logout">Logout</string>
     <string name="doctor_list">Doctor List</string>
     <string name="chat_with_doc">Chat with doctor</string>
+    <string name="chat_with_patient">Chat with patient</string>
     <string name="tv_time">Time</string>
     <string name="tv_select_appointment_time">Select Appointment Time</string>
     <string name="tv_appointment_title">Appointment Title</string>
@@ -69,7 +70,7 @@
     <string name="tv_tag_line">Healthcare made simple</string>
     <string name="hint_send_message">Send message...</string>
     <string name="tv_dummy_text">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s,</string>
-    <string name="btn_save">save</string>
+    <string name="btn_save">Save</string>
     <string name="tv_gender">Gender</string>
     <string name="rb_other">Other</string>
     <string name="rb_female">Female</string>
@@ -92,4 +93,10 @@
     <string name="tv_created_by">Created by</string>
     <string name="btn_export_as_pdf">Export as PDF</string>
     <string name="btn_delete_chat">Delete Chat</string>
+    <string name="btn_next">Next</string>
+    <string name="btn_skip">Skip</string>
+    <string name="tv_find_your_doctor">Find Your Doctor</string>
+    <string name="tv_storage_your_nmedical_records">Storage Your\nMedical Records</string>
+    <string name="tv_personalized_consultation">Personalized consultation\nand Care</string>
+    <string name="btn_get_started">Get Started</string>
 </resources>

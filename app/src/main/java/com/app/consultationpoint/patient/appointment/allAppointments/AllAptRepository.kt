@@ -60,7 +60,7 @@ class AllAptRepository @Inject constructor(private val firebaseSource: FirebaseS
     }
 
     fun getDoctorDetails(docId: Long): UserModel {
-        return firebaseSource.getDoctorDetails(docId)
+        return firebaseSource.getUserDetails(docId)
     }
 
     fun getOneDayAPt(): LiveData<ArrayList<AppointmentModel>> {

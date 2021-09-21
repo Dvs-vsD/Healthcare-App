@@ -12,17 +12,12 @@ import com.app.consultationpoint.utils.Utils.formatTo
 import java.util.*
 import kotlin.collections.ArrayList
 
-class ChatAdapter(msgList: LiveData<ArrayList<MessageModel>>) :
+class ChatAdapter(private var chatList: ArrayList<MessageModel>?) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val userId = Utils.getUserId().toLong()
     private val self = 100
     private val other = 200
-
-    private var chatList: ArrayList<MessageModel>? = null
-    init {
-        chatList = msgList.value
-    }
 
     fun setData(it: ArrayList<MessageModel>) {
         chatList = it
@@ -49,7 +44,7 @@ class ChatAdapter(msgList: LiveData<ArrayList<MessageModel>>) :
     }
 
     override fun getItemCount(): Int {
-        return chatList?.size ?: 0
+        return chatList?.size?: 0
     }
 
     override fun getItemViewType(position: Int): Int {

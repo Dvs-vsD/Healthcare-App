@@ -48,6 +48,9 @@ class DoctorListFragment : BaseFragment() {
                 adapterDoctor?.setDataList(listUser)
 //                adapterDoctor?.notifyDataSetChanged()
             }
+
+            if (binding.pullToRefresh.isRefreshing)
+                binding.pullToRefresh.isRefreshing = false
         })
     }
 
@@ -63,9 +66,9 @@ class DoctorListFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.fetchDocFromRDB()
-        viewModel.fetchDocFromFB()
+        viewModel.fetchDocFromFB(1)
 
-        if(listUser== null)
+        if (listUser == null)
             listUser = ArrayList()
 
         listUser = viewModel.getDoctorList().value
@@ -82,6 +85,10 @@ class DoctorListFragment : BaseFragment() {
             } else {
                 viewModel.searchDoctor("")
             }
+        }
+
+        binding.pullToRefresh.setOnRefreshListener {
+            viewModel.fetchDocFromFB(1)
         }
     }
 

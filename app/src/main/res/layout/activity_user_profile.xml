@@ -205,7 +205,7 @@
 
             <TextView
                 android:id="@+id/tvUserEmail"
-                style="@style/st_tv_normal.bold"
+                style="@style/st_tv_small.bold"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/_8sdp"

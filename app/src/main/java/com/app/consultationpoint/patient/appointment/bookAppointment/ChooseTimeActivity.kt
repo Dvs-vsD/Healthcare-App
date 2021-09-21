@@ -8,6 +8,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import com.app.consultationpoint.R
 import com.app.consultationpoint.databinding.ActivityChooseTimeBinding
 import com.app.consultationpoint.patient.appointment.model.AppointmentModel
 import com.app.consultationpoint.patient.appointment.myAppointments.MyAptViewModel
@@ -146,6 +148,12 @@ class ChooseTimeActivity : AppCompatActivity() {
         receiver.updated_at = System.currentTimeMillis()
         receiver.is_deleted = false
 
+        val participantIdList = RealmList<Long>()
+        participantIdList.add(sender.user_id)
+        participantIdList.add(receiver.user_id)
+
+        room?.user_ids_participants = participantIdList
+
         val list = RealmList<ParticipantModel>()
         list.add(sender)
         list.add(receiver)
@@ -185,6 +193,7 @@ class ChooseTimeActivity : AppCompatActivity() {
             cal.set(Calendar.MINUTE, minuteOfHour)
             selectedTime = SimpleDateFormat("hh:mm").format(cal.time) + " " + timeSet
             tvTimePicker.text = "Selected Time: $selectedTime"
+            tvTimePicker.setTextColor(ContextCompat.getColor(this, R.color.black))
         }
 
         TimePickerDialog(

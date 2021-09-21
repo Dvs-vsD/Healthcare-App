@@ -82,7 +82,7 @@ class MyAptRepository @Inject constructor(private val firebaseSource: FirebaseSo
     }
 
     fun getDoctorDetails(doc_id: Long): UserModel {
-        return firebaseSource.getDoctorDetails(doc_id)
+        return firebaseSource.getUserDetails(doc_id)
     }
 
     private fun currentAndNextMonth(result: AppointmentModel, dateType: String): Date {

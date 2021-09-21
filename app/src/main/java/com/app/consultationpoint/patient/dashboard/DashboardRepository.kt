@@ -104,7 +104,7 @@ class DashboardRepository @Inject constructor(private val firebaseSource: Fireba
     }
 
     fun getDoctorDetails(docId: Long): UserModel {
-        return firebaseSource.getDoctorDetails(docId)
+        return firebaseSource.getUserDetails(docId)
     }
 
     suspend fun fetchSpItemsFromFB() {
@@ -196,5 +196,9 @@ class DashboardRepository @Inject constructor(private val firebaseSource: Fireba
 
     fun getAptDateList(): LiveData<ArrayList<Calendar>> {
         return aptDateList
+    }
+
+    suspend fun fetchDoctorsFromFB(type_id: Int) {
+        firebaseSource.fetchDocFromFB(type_id)
     }
 }

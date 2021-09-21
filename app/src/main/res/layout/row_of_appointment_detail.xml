@@ -9,37 +9,44 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cvDate"
-        android:layout_width="@dimen/_60sdp"
-        android:layout_height="0dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:backgroundTint="@color/blue"
         app:cardCornerRadius="@dimen/_8sdp"
+        android:alpha="0.8"
+        android:elevation="@dimen/_8sdp"
+        app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent" >
 
         <RelativeLayout
+            android:id="@+id/rlDateBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
+            android:layout_gravity="center"
+            android:layout_marginHorizontal="@dimen/_8sdp"
+            android:layout_marginBottom="@dimen/_8sdp"
+            android:layout_marginTop="@dimen/_6sdp"
             >
 
             <TextView
                 android:id="@+id/tvDate"
-                style="@style/st_tv_large.bold"
-                android:layout_width="match_parent"
+                style="@style/st_tv_large"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
+                android:layout_centerHorizontal="true"
                 android:text="8"
                 android:textColor="@color/white" />
 
             <TextView
                 android:id="@+id/tvMonth"
-                style="@style/st_tv_small"
-                android:layout_width="match_parent"
+                style="@style/st_tv_extra_small"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tvDate"
-                android:gravity="center"
-                android:text="October"
+                android:layout_centerHorizontal="true"
+                android:text="AUG"
                 android:textColor="@color/white" />
 
         </RelativeLayout>
@@ -48,33 +55,35 @@
 
     <TextView
         android:id="@+id/tvDocName"
-        style="@style/st_tv_normal.bold"
+        style="@style/st_tv_small"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/_8sdp"
         android:text="Dr.Mahesh Malpani"
+        app:layout_constraintVertical_chainStyle="packed"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/cvDate"
-        app:layout_constraintTop_toTopOf="@id/cvDate" />
+        app:layout_constraintTop_toTopOf="@id/cvDate"
+        app:layout_constraintBottom_toTopOf="@id/tvTitleTime"/>
 
-    <TextView
+    <!--<TextView
         android:id="@+id/tvSpecAdr"
         style="@style/st_tv_small.light_gray"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Heart Specialist, london"
         app:layout_constraintStart_toStartOf="@id/tvDocName"
-        app:layout_constraintTop_toBottomOf="@id/tvDocName" />
+        app:layout_constraintTop_toBottomOf="@id/tvDocName" />-->
 
     <TextView
         android:id="@+id/tvTitleTime"
-        style="@style/st_tv_small.bold_gray"
+        style="@style/st_tv_small.light_gray"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="For Title Of Appointment at 9:30 AM"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/cvDate"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@id/tvSpecAdr"
-        app:layout_constraintTop_toBottomOf="@id/tvSpecAdr" />
+        app:layout_constraintStart_toStartOf="@id/tvDocName"
+        app:layout_constraintTop_toBottomOf="@id/tvDocName" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

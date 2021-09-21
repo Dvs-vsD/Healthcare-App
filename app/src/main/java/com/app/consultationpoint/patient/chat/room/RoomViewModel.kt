@@ -3,6 +3,7 @@ package com.app.consultationpoint.patient.chat.room
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.app.consultationpoint.general.model.UserModel
 import com.app.consultationpoint.patient.chat.room.model.RoomModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -33,5 +34,9 @@ class RoomViewModel @Inject constructor(private val repository: RoomRepository) 
 
     fun getStatus(): LiveData<String> {
         return repository.getStatus()
+    }
+
+    fun getUserDetails(userId: Long): UserModel {
+        return repository.getUserDetails(userId)
     }
 }
