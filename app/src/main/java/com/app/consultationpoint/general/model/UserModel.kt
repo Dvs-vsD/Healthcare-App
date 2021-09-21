@@ -31,4 +31,6 @@ open class UserModel: RealmObject() {
     var experience_yr: String = ""
     var payment_id: String = ""
     var payment_detail: String = ""
+
+    //1 - android
 }

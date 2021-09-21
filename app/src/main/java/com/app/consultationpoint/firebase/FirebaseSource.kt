@@ -69,7 +69,7 @@ class FirebaseSource @Inject constructor() {
         model.email = snapshot.getString("email") ?: ""
         model.mobile = snapshot.getString("mobile") ?: ""
         if (snapshot.get("gender") != null && snapshot.get("gender").toString() != "")
-            model.gender = snapshot.getLong("gender")?.toInt() ?: 0
+            model.gender = snapshot.getLong("gender")?.toInt() ?: -1
         model.dob = snapshot.getString("dob") ?: ""
         //new added field
         model.profile = snapshot.getString("profile") ?: ""
@@ -92,37 +92,55 @@ class FirebaseSource @Inject constructor() {
 
     suspend fun fetchMyBookings() = withContext(Dispatchers.IO) {
         val bookingList: ArrayList<AppointmentModel> = ArrayList()
-        database.collection("Appointments").whereEqualTo("patient_id", Utils.getUserId().toLong())
-            .get().addOnSuccessListener {
+        val ref = if (Utils.getUserType() == 0)
+            database.collection("Appointments")
+                .whereEqualTo("patient_id", Utils.getUserId().toLong())
+        else
+            database.collection("Appointments")
+                .whereEqualTo("doctor_id", Utils.getUserId().toLong())
 
-                for (snapshot in it) {
-                    val model = AppointmentModel()
-                    model.appointment_id = snapshot.getLong("appointment_id") ?: 0
-                    model.doctor_id = snapshot.getLong("doctor_id") ?: 0
-                    model.patient_id = snapshot.getLong("patient_id") ?: 0
+        ref.get().addOnSuccessListener {
 
-                    model.schedual_date = snapshot.getString("schedual_date") ?: ""
+            for (snapshot in it) {
+                val model = AppointmentModel()
+                model.appointment_id = snapshot.getLong("appointment_id") ?: 0
+                model.doctor_id = snapshot.getLong("doctor_id") ?: 0
+                model.patient_id = snapshot.getLong("patient_id") ?: 0
 
-                    model.schedual_time = snapshot.getString("schedual_time") ?: ""
-                    model.title = snapshot.getString("title") ?: ""
-                    model.note = snapshot.getString("note") ?: ""
-                    model.created_at = snapshot.getLong("created_at") ?: 0
-                    model.created_by = snapshot.getLong("created_by") ?: 0
-                    model.updated_at = snapshot.getLong("updated_at") ?: 0
-
-                    bookingList.add(model)
+                if (Utils.getUserType() == 1) {
+                    database.collection("Users").document(model.patient_id.toString())
+                        .get().addOnSuccessListener { document ->
+                            val user = getUser(document)
+                            Realm.getDefaultInstance().use { mRealm ->
+                                mRealm.executeTransaction {
+                                    mRealm.insertOrUpdate(user)
+                                }
+                            }
+                        }
                 }
-                Realm.getDefaultInstance().use { mRealm ->
-                    Timber.d("MyBookings Fetching instance")
 
-                    mRealm.executeTransaction {
-                        mRealm.insertOrUpdate(bookingList)
-                        status.value = "My Apt Updated"
-                        status.value = ""
-                    }
-                    Timber.d("Open Instance at %s", System.currentTimeMillis().toString())
-                }
+                model.schedual_date = snapshot.getString("schedual_date") ?: ""
+
+                model.schedual_time = snapshot.getString("schedual_time") ?: ""
+                model.title = snapshot.getString("title") ?: ""
+                model.note = snapshot.getString("note") ?: ""
+                model.created_at = snapshot.getLong("created_at") ?: 0
+                model.created_by = snapshot.getLong("created_by") ?: 0
+                model.updated_at = snapshot.getLong("updated_at") ?: 0
+
+                bookingList.add(model)
             }
+            Realm.getDefaultInstance().use { mRealm ->
+                Timber.d("MyBookings Fetching instance")
+
+                mRealm.executeTransaction {
+                    mRealm.insertOrUpdate(bookingList)
+                    status.value = "My Apt Updated"
+                    status.value = ""
+                }
+                Timber.d("Open Instance at %s", System.currentTimeMillis().toString())
+            }
+        }
     }
 
     suspend fun signUp(model: UserModel) = withContext(Dispatchers.Main) {
@@ -194,7 +212,7 @@ class FirebaseSource @Inject constructor() {
                         ).apply()
 
                         ConsultationApp.shPref.edit().putInt(
-                            Const.GENDER, snapshot.getLong("gender")?.toInt()?:0
+                            Const.GENDER, snapshot.getLong("gender")?.toInt() ?: -1
                         ).apply()
 
                         ConsultationApp.shPref.edit().putString(
@@ -332,13 +350,13 @@ class FirebaseSource @Inject constructor() {
                             if (memberList[index].toString() != Utils.getUserId()) {
                                 database.collection("Users").document(memberList[index].toString())
                                     .get().addOnSuccessListener { document ->
-                                    val model = getUser(document)
-                                    Realm.getDefaultInstance().use { mRealm ->
-                                        mRealm.executeTransaction {
-                                            mRealm.insertOrUpdate(model)
+                                        val model = getUser(document)
+                                        Realm.getDefaultInstance().use { mRealm ->
+                                            mRealm.executeTransaction {
+                                                mRealm.insertOrUpdate(model)
+                                            }
                                         }
                                     }
-                                }
                             }
                             participantArray.add(memberList[index].toString().toLong())
                         }
@@ -449,6 +467,8 @@ class FirebaseSource @Inject constructor() {
         database.collection("Messages").document(msgModel.message_id.toString()).set(msgModel)
             .addOnSuccessListener {
                 Timber.d("Msg sent")
+                database.collection("Rooms").document(msgModel.room_id.toString())
+                    .update("last_message", msgModel)
             }.addOnFailureListener { _ ->
                 status.value = "Sending Failed"
                 status.value = ""

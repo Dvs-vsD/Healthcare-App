@@ -75,7 +75,7 @@
     <string name="rb_other">Other</string>
     <string name="rb_female">Female</string>
     <string name="rb_male">Male</string>
-    <string name="hint_username">UserName</string>
+    <string name="hint_username">Username</string>
     <string name="hint_state">State</string>
     <string name="hint_country">Country</string>
     <string name="hint_pin_code">PIN Code</string>

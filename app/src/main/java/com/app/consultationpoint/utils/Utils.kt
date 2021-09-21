@@ -120,7 +120,7 @@ object Utils {
     }
 
     fun getUserGender(): Int {
-        return ConsultationApp.shPref.getInt(Const.GENDER, 0) ?: 0
+        return ConsultationApp.shPref.getInt(Const.GENDER, -1)
     }
 
     fun getDOB(): String {

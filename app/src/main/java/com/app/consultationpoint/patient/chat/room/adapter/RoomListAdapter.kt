@@ -57,9 +57,12 @@ class RoomListAdapter(
                 val lastMsg = item.last_message
                 binding.tvLastMsg.visibility = View.VISIBLE
                 binding.tvLastMsg.text = lastMsg?.content
+                val time = lastMsg?.let { Date(it.created_at) }
+                binding.tvLastMsgTime.text = time?.formatTo("h:mm a")
+            } else {
+                val time = Date(item.created_at)
+                binding.tvLastMsgTime.text = time.formatTo("h:mm a")
             }
-            val time = Date(item.created_at)
-            binding.tvLastMsgTime.text = time.formatTo("HH:mm")
         }
     }
 

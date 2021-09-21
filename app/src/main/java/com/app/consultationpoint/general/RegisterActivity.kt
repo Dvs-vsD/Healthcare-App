@@ -39,7 +39,7 @@ class RegisterActivity : AppCompatActivity() {
                     intent.putExtra("newUser", true)
                     startActivity(intent)
 //                } else {
-                    Toast.makeText(this, "Doctor Signed Up successfully", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Sign Up successful", Toast.LENGTH_SHORT).show()
 //                }
             } else if (it.startsWith("Error: ")) {
                 this.showToast("Error: $it")
@@ -90,6 +90,7 @@ class RegisterActivity : AppCompatActivity() {
                 userModel.last_name = lastName
                 userModel.email = userEmail
                 userModel.password = userPassword
+                userModel.gender = -1
 
                 viewModel.signUp(userModel)
             } else {

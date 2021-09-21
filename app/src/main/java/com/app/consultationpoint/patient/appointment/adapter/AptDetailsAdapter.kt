@@ -1,7 +1,6 @@
 package com.app.consultationpoint.patient.appointment.adapter
 
 import android.annotation.SuppressLint
-import android.text.TextUtils.substring
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -10,6 +9,7 @@ import com.app.consultationpoint.general.model.UserModel
 import com.app.consultationpoint.patient.appointment.model.AppointmentModel
 import com.app.consultationpoint.patient.appointment.myAppointments.MyAppointmentsFragment
 import com.app.consultationpoint.patient.appointment.myAppointments.MyAptViewModel
+import com.app.consultationpoint.utils.Utils
 import com.app.consultationpoint.utils.Utils.formatTo
 import com.app.consultationpoint.utils.Utils.toDate
 
@@ -30,9 +30,13 @@ class AptDetailsAdapter(
             binding.tvMonth.text =
                 item.schedual_date.toDate("yyyy-MM-dd")?.formatTo("MMMM")
                     ?.substring(0, 3)?.uppercase()
-            val docDetails: UserModel = viewModel.getDoctorDetails(item.doctor_id)
-            binding.tvDocName.text = "${docDetails.first_name} ${docDetails.last_name}"
-//            binding.tvSpecAdr.text = "${docDetails.specialization}, ${docDetails.city}"
+            val userDetails: UserModel = if (Utils.getUserType() == 0)
+                viewModel.getDoctorDetails(item.doctor_id)
+            else
+                viewModel.getDoctorDetails(item.patient_id)
+
+            binding.tvDocName.text = "${userDetails.first_name} ${userDetails.last_name}"
+//            binding.tvSpecAdr.text = "${userDetails.specialization}, ${docDetails.city}"
             binding.tvTitleTime.text = "For ${item.title} at ${item.schedual_time}"
         }
     }

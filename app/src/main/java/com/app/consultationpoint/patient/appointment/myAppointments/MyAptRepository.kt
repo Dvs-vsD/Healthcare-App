@@ -29,9 +29,12 @@ class MyAptRepository @Inject constructor(private val firebaseSource: FirebaseSo
     }
 
     suspend fun fetchAptFromRealm() = withContext(Dispatchers.Main) {
-        val results =
+        val results = if (Utils.getUserType() == 0)
             mRealm.where(AppointmentModel::class.java)
                 .equalTo("patient_id", Utils.getUserId().toLong()).sort("schedual_date").findAll()
+        else
+            mRealm.where(AppointmentModel::class.java)
+                .equalTo("doctor_id", Utils.getUserId().toLong()).sort("schedual_date").findAll()
 
         appointmentList.value = monthlyAppointments(getYearMonth(results))
 
@@ -64,13 +67,19 @@ class MyAptRepository @Inject constructor(private val firebaseSource: FirebaseSo
             monthlyModel.year = month.substring(0, month.length - 3)
             monthlyModel.month = month.substring(5, month.length)
 
-            val mRealmResults =
+            val mRealmResults = if (Utils.getUserType() == 0)
                 mRealm.where(AppointmentModel::class.java)
                     .equalTo("patient_id", Utils.getUserId().toLong())
                     .beginsWith("schedual_date", month)
                     .sort("schedual_date").findAll()
+            else
+                mRealm.where(AppointmentModel::class.java)
+                    .equalTo("doctor_id", Utils.getUserId().toLong())
+                    .beginsWith("schedual_date", month)
+                    .sort("schedual_date").findAll()
 
-            val aptList: ArrayList<AppointmentModel> = mRealm.copyFromRealm(mRealmResults) as ArrayList<AppointmentModel>
+            val aptList: ArrayList<AppointmentModel> =
+                mRealm.copyFromRealm(mRealmResults) as ArrayList<AppointmentModel>
             monthlyModel.appointment = aptList
             list.add(monthlyModel)
         }

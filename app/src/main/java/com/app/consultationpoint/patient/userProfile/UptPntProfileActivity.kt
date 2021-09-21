@@ -58,9 +58,6 @@ class UptPntProfileActivity : AppCompatActivity() {
 
         viewModel.getPostalData().observe(this, {
             if (it != null) {
-                /*binding.etCity.setText("")
-                binding.etState.setText("")
-                binding.etCountry.setText("")*/
                 binding.etCity.setText(it.District)
                 binding.etState.setText(it.State)
                 binding.etCountry.setText(it.Country)
@@ -76,6 +73,7 @@ class UptPntProfileActivity : AppCompatActivity() {
         binding.etFirstName.setText(Utils.getFirstName())
         binding.etLastName.setText(Utils.getLastName())
         binding.etPhnNo.setText(Utils.getUserPhnNo())
+        binding.etEmail.setText(Utils.getUserEmail())
 
         when (Utils.getUserGender()) {
             0 -> binding.rbMale.isChecked = true
@@ -138,7 +136,7 @@ class UptPntProfileActivity : AppCompatActivity() {
             val lastName = binding.etLastName.text?.trim().toString()
             val phnNo = binding.etPhnNo.text?.trim().toString()
 
-            var gender: Int? = null
+            var gender: Int = -1
             when (binding.rgGender.checkedRadioButtonId) {
                 R.id.rbMale -> gender = 0
                 R.id.rbFemale -> gender = 1
@@ -167,9 +165,7 @@ class UptPntProfileActivity : AppCompatActivity() {
                 model.last_name = lastName
                 model.mobile = phnNo
                 model.profile = profile
-                if (gender != null) {
-                    model.gender = gender
-                }
+                model.gender = gender
                 model.dob = dob
                 model.user_type_id = Utils.getUserType()
                 model.created_at = userId

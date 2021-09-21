@@ -59,7 +59,7 @@ class ChatAdapter(private var chatList: ArrayList<MessageModel>?) :
         fun bind(item: MessageModel) {
             binding.tvMsg.text = item.content
             val date = Date(item.created_at)
-            binding.tvTime.text = date.formatTo("HH:mm")
+            binding.tvTime.text = date.formatTo("h:mm a")
         }
     }
 
@@ -68,7 +68,7 @@ class ChatAdapter(private var chatList: ArrayList<MessageModel>?) :
         fun bind(item: MessageModel) {
             binding.tvMsg.text = item.content
             val date = Date(item.created_at)
-            binding.tvTime.text = date.formatTo("HH:mm")
+            binding.tvTime.text = date.formatTo("h:mm a")
         }
     }
 }
