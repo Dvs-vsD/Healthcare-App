@@ -10,6 +10,8 @@ import com.app.consultationpoint.R
 import com.app.consultationpoint.databinding.ActivityAllAppointmentsBinding
 import com.app.consultationpoint.patient.dashboard.adapter.TodayAtpAdapter
 import com.app.consultationpoint.utils.Utils.formatTo
+import com.app.consultationpoint.utils.Utils.hide
+import com.app.consultationpoint.utils.Utils.show
 import com.app.consultationpoint.utils.Utils.toDate
 import com.github.sundeepk.compactcalendarview.CompactCalendarView
 import com.github.sundeepk.compactcalendarview.domain.Event
@@ -43,10 +45,10 @@ class AllAppointmentsActivity : AppCompatActivity() {
 
         viewModel.getOneDayApt().observe(this, { dayApt ->
             if (dayApt.isNotEmpty() && dayAptAdapter != null) {
-                binding.recyclerView.visibility = View.VISIBLE
+                binding.recyclerView.show()
                 dayAptAdapter?.setList(dayApt)
             } else {
-                binding.recyclerView.visibility = View.GONE
+                binding.recyclerView.hide()
                 binding.tvDate.text = getString(R.string.tv_no_appointments)
             }
         })

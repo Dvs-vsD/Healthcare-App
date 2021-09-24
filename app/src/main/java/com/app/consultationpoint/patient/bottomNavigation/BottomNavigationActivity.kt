@@ -25,6 +25,9 @@ import com.app.consultationpoint.patient.doctor.DoctorListFragment
 import com.app.consultationpoint.patient.userProfile.UserProfileActivity
 import com.app.consultationpoint.utils.Utils
 import com.app.consultationpoint.utils.Utils.formatTo
+import com.app.consultationpoint.utils.Utils.hide
+import com.app.consultationpoint.utils.Utils.loadImageFromCloud
+import com.app.consultationpoint.utils.Utils.show
 import com.google.android.material.navigation.NavigationView
 import com.ncapdevi.fragnav.FragNavController
 import com.ncapdevi.fragnav.FragNavLogger
@@ -87,8 +90,8 @@ class BottomNavigationActivity(override val numberOfRootFragments: Int = 4) : Ap
         binding.navigationView.setNavigationItemSelectedListener(this)
 
         binding.navigationView.getHeaderView(0).tvUserName.text = "Hello, ${Utils.getFirstName()}"
-//        binding.navigationView.getHeaderView(0).ivProfile.setImageBitmap(Utils.getImageBitMap(this, Utils.getUserProfile()))
-//        binding.ivProfile.setImageBitmap(Utils.getImageBitMap(this, Utils.getUserProfile()))
+
+        loadProfile()
 
         binding.ivProfile.setOnClickListener {
             startActivity(Intent(this, UserProfileActivity::class.java))
@@ -135,6 +138,13 @@ class BottomNavigationActivity(override val numberOfRootFragments: Int = 4) : Ap
         viewModel.fetchALlAptFromRDB()
     }
 
+    private fun loadProfile() {
+        if (Utils.getUserProfile().isNotEmpty()) {
+            binding.navigationView.getHeaderView(0).ivProfile.loadImageFromCloud(Utils.getUserProfile())
+            binding.ivProfile.loadImageFromCloud(Utils.getUserProfile())
+        }
+    }
+
     private fun createAptNotifications(calList: ArrayList<Calendar>) {
         for ((index, value) in calList.withIndex()) {
             if (index < 5) {
@@ -166,36 +176,42 @@ class BottomNavigationActivity(override val numberOfRootFragments: Int = 4) : Ap
         when (itemId) {
             R.id.botNavHome -> {
                 fragNavController.switchTab(0)
-                binding.ivBack.visibility = View.GONE
-                binding.tvHeading.visibility = View.GONE
-                binding.ivProfile.visibility = View.VISIBLE
+                binding.ivBack.hide()
+                binding.tvHeading.hide()
+                binding.ivProfile.show()
                 toggle.isDrawerIndicatorEnabled = true
             }
             R.id.botNavDoctor -> {
                 fragNavController.switchTab(1)
-                binding.ivBack.visibility = View.VISIBLE
-                binding.tvHeading.visibility = View.VISIBLE
+                binding.ivBack.show()
+                binding.tvHeading.show()
                 binding.tvHeading.text = getString(R.string.doctor_list)
-                binding.ivProfile.visibility = View.GONE
+
+                if (Utils.getUserType() == 0)
+                    binding.tvHeading.text = getString(R.string.doctor_list)
+                else
+                    binding.tvHeading.text = getString(R.string.patient_list)
+
+                binding.ivProfile.hide()
                 toggle.isDrawerIndicatorEnabled = false
             }
             R.id.botNavChat -> {
                 fragNavController.switchTab(2)
-                binding.ivBack.visibility = View.VISIBLE
-                binding.tvHeading.visibility = View.VISIBLE
+                binding.ivBack.show()
+                binding.tvHeading.show()
                 if (Utils.getUserType() == 0)
                     binding.tvHeading.text = getString(R.string.chat_with_doc)
                 else
                     binding.tvHeading.text = getString(R.string.chat_with_patient)
-                binding.ivProfile.visibility = View.GONE
+                binding.ivProfile.hide()
                 toggle.isDrawerIndicatorEnabled = false
             }
             R.id.botNavApt -> {
                 fragNavController.switchTab(3)
-                binding.ivBack.visibility = View.VISIBLE
-                binding.tvHeading.visibility = View.VISIBLE
+                binding.ivBack.show()
+                binding.tvHeading.show()
                 binding.tvHeading.text = getString(R.string.tv_my_appointments)
-                binding.ivProfile.visibility = View.GONE
+                binding.ivProfile.hide()
                 toggle.isDrawerIndicatorEnabled = false
             }
         }
@@ -274,5 +290,10 @@ class BottomNavigationActivity(override val numberOfRootFragments: Int = 4) : Ap
 
     override fun onTabTransaction(fragment: Fragment?, index: Int) {
         supportActionBar?.setDisplayHomeAsUpEnabled(fragNavController.isRootFragment.not())
+    }
+
+    override fun onResume() {
+        loadProfile()
+        super.onResume()
     }
 }

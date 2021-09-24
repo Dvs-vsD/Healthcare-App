@@ -1,13 +1,15 @@
 package com.app.consultationpoint.patient.appointment.adapter
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.app.consultationpoint.databinding.RowOfAppointmentDetailBinding
 import com.app.consultationpoint.general.model.UserModel
+import com.app.consultationpoint.patient.appointment.bookAppointment.ChooseTimeActivity
 import com.app.consultationpoint.patient.appointment.model.AppointmentModel
-import com.app.consultationpoint.patient.appointment.myAppointments.MyAppointmentsFragment
 import com.app.consultationpoint.patient.appointment.myAppointments.MyAptViewModel
 import com.app.consultationpoint.utils.Utils
 import com.app.consultationpoint.utils.Utils.formatTo
@@ -15,7 +17,7 @@ import com.app.consultationpoint.utils.Utils.toDate
 
 class AptDetailsAdapter(
     private val aptList: ArrayList<AppointmentModel>?,
-    private val context: MyAppointmentsFragment,
+    private val context: Context,
     private val viewModel: MyAptViewModel
 ) : RecyclerView.Adapter<AptDetailsAdapter.MyViewHolder>() {
 
@@ -38,6 +40,12 @@ class AptDetailsAdapter(
             binding.tvDocName.text = "${userDetails.first_name} ${userDetails.last_name}"
 //            binding.tvSpecAdr.text = "${userDetails.specialization}, ${docDetails.city}"
             binding.tvTitleTime.text = "For ${item.title} at ${item.schedual_time}"
+
+            binding.clRowAppointment.setOnClickListener {
+                val intent = Intent(context, ChooseTimeActivity::class.java)
+                intent.putExtra("appointment_model", item)
+                context.startActivity(intent)
+            }
         }
     }
 

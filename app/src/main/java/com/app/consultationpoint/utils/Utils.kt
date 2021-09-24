@@ -16,16 +16,25 @@ import androidx.core.content.ContextCompat
 import cc.cloudist.acplibrary.ACProgressConstant
 import cc.cloudist.acplibrary.ACProgressFlower
 import com.app.consultationpoint.ConsultationApp
+import com.app.consultationpoint.GlideApp
 import com.app.consultationpoint.R
 import com.bumptech.glide.Glide
 import com.google.android.material.textfield.TextInputLayout
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import java.io.ByteArrayOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
 
 object Utils {
 
     fun ImageView.loadImage(url: String) {
-        Glide.with(this).load(url).into(this)
+        Glide.with(this).load(url).placeholder(R.drawable.default_user).into(this)
+    }
+
+    fun ImageView.loadImageFromCloud(url: String) {
+        val ref: StorageReference = FirebaseStorage.getInstance().getReferenceFromUrl(url)
+        GlideApp.with(this).load(ref).placeholder(R.drawable.default_user).into(this)
     }
 
     fun String.toDate(
@@ -70,7 +79,7 @@ object Utils {
         return cal.time
     }
 
-    private var dialog: ACProgressFlower? = null
+    var dialog: ACProgressFlower? = null
 
     fun showProgressDialog(context: Context) {
         if (dialog == null) {
@@ -80,7 +89,9 @@ object Utils {
                 .text("Loading...")
                 .textColor(ContextCompat.getColor(context, R.color.blue))
                 .build()
+
         }
+        dialog?.setCancelable(false)
         dialog?.show()
     }
 
@@ -172,16 +183,19 @@ object Utils {
     }
 
     fun isNetworkAvailable(context: Context): Boolean {
-        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
         // For 29 api or above
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            val capabilities = connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork) ?: return false
+            val capabilities =
+                connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+                    ?: return false
             return when {
-                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ->    true
-                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) ->   true
-                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) ->   true
-                else ->     false
+                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
+                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+                else -> false
             }
         }
         // For below 29 api
@@ -199,5 +213,17 @@ object Utils {
 
     fun View.hide() {
         this.visibility = View.GONE
+    }
+
+    fun getImageUri(context: Context, bitmap: Bitmap): Uri? {
+        val bytes = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
+        val path: String = MediaStore.Images.Media.insertImage(
+            context.contentResolver,
+            bitmap,
+            "IMG_" + System.currentTimeMillis(),
+            null
+        )
+        return Uri.parse(path)
     }
 }

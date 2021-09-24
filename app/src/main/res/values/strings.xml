@@ -3,10 +3,12 @@
     <string name="tv_let_s_find_your_doctor">Let\'s Find Your Doctor</string>
     <string name="contentDescription">image</string>
     <string name="et_hint_search_doctor">Search Doctor</string>
+    <string name="et_hint_search_patient">Search Patient</string>
     <string name="drawer_open">Drawer Open</string>
     <string name="drawer_close">Drawer Close</string>
     <string name="tv_available_for_your_need">Available for your need</string>
     <string name="btn_appointment">Appointment</string>
+    <string name="btn_serve">Serve</string>
     <string name="tv_how_re_you_today">How\'re you today?</string>
     <string name="tv_consults_for_today">Consults for today</string>
     <string name="bn_home">Home</string>
@@ -27,6 +29,7 @@
     <string name="tv_don_t_have_an_account">Don\'t have an account?</string>
     <string name="menu_logout">Logout</string>
     <string name="doctor_list">Doctor List</string>
+    <string name="patient_list">My Patient List</string>
     <string name="chat_with_doc">Chat with doctor</string>
     <string name="chat_with_patient">Chat with patient</string>
     <string name="tv_time">Time</string>
@@ -52,6 +55,7 @@
     <string name="nameTransition">nameTransition</string>
     <string name="tv_no_appointments">No appointments for this day !!!</string>
     <string name="tv_no_recent_chat">No recent chat found !!!</string>
+    <string name="tv_no_data_found">No data found !!!</string>
     <string name="rb_patient">Patient</string>
     <string name="tv_are_you_a_patient_or_doctor">Are you a Patient or Doctor ?</string>
     <string name="hint_city">City</string>

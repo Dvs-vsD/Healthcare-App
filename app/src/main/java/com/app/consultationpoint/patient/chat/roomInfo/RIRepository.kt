@@ -91,11 +91,12 @@ class RIRepository @Inject constructor(private val firebaseSource: FirebaseSourc
     }
 
     fun getRoomDetails(roomId: Long): RoomModel {
-        var room: RoomModel
+        var room = RoomModel()
         Realm.getDefaultInstance().use { mRealm ->
             val roomResult =
                 mRealm.where(RoomModel::class.java).equalTo("room_id", roomId).findFirst()
-            room = mRealm.copyFromRealm(roomResult) ?: RoomModel()
+            if (roomResult != null)
+                room = mRealm.copyFromRealm(roomResult) ?: RoomModel()
         }
         return room
     }

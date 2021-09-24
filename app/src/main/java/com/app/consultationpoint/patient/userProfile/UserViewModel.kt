@@ -26,8 +26,8 @@ class UserViewModel @Inject constructor(private val repository: UserRepository):
         return repository.getProfileUptStatus()
     }
 
-    fun uploadProfile(path: Uri): StorageReference {
-        return repository.uploadProfile(path)
+    fun uploadProfile(path: Uri) {
+        repository.uploadProfile(path)
     }
 
     fun fetchPostalData(it: String) {

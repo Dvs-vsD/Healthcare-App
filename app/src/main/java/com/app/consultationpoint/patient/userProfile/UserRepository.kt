@@ -32,8 +32,8 @@ class UserRepository @Inject constructor(private var firebaseSource: FirebaseSou
         return firebaseSource.getStatus()
     }
 
-    fun uploadProfile(path: Uri): StorageReference {
-        return firebaseSource.uploadProfile(path)
+    fun uploadProfile(path: Uri) {
+        firebaseSource.uploadProfile(path)
     }
 
     fun fetchPostalData(it: String) {

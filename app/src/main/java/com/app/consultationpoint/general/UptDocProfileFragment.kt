@@ -12,6 +12,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.app.consultationpoint.databinding.FragmentDoctorSignupBinding
 import com.app.consultationpoint.general.model.UserModel
+import com.app.consultationpoint.utils.Utils.hide
+import com.app.consultationpoint.utils.Utils.show
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_doctor_signup.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -97,9 +99,9 @@ class DoctorSignupFragment : Fragment() {
 
         binding.cbOther.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked)
-                binding.etOtherDegree.visibility = View.VISIBLE
+                binding.etOtherDegree.show()
             else
-                binding.etOtherDegree.visibility = View.GONE
+                binding.etOtherDegree.hide()
         }
 
         binding.etPhnNo.addTextChangedListener { phnNo ->

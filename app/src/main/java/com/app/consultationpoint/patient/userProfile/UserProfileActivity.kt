@@ -11,8 +11,10 @@ import com.app.consultationpoint.R
 import com.app.consultationpoint.databinding.ActivityUserProfileBinding
 import com.app.consultationpoint.general.LoginActivity
 import com.app.consultationpoint.utils.Utils
+import com.app.consultationpoint.utils.Utils.loadImageFromCloud
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import okhttp3.internal.Util
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
@@ -58,8 +60,9 @@ class UserProfileActivity : AppCompatActivity() {
 
     @SuppressLint("SetTextI18n")
     private fun getProfileDetails() {
-        if (Utils.getUserProfile() != "") {
-//            binding.ivProfile.setImageBitmap(Utils.getImageBitMap(this, Utils.getUserProfile()))
+        val profile = Utils.getUserProfile()
+        if (profile != "") {
+            binding.ivProfile.loadImageFromCloud(profile)
         }
         val userName = Utils.getUserName()
         val firstName = Utils.getFirstName()

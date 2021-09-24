@@ -10,6 +10,7 @@ import com.app.consultationpoint.databinding.RowOfParticipantListBinding
 import com.app.consultationpoint.general.model.UserModel
 import com.app.consultationpoint.utils.Utils
 import com.app.consultationpoint.utils.Utils.loadImage
+import com.app.consultationpoint.utils.Utils.loadImageFromCloud
 import com.bumptech.glide.Glide
 
 class ParticipantAdapter(
@@ -23,7 +24,7 @@ class ParticipantAdapter(
         @SuppressLint("SetTextI18n")
         fun bind(item: UserModel) {
             if (item.profile != null && item.profile!!.isNotEmpty()) {
-                binding.ivProfile.loadImage(item.profile!!)
+                binding.ivProfile.loadImageFromCloud(item.profile!!)
             }
             if (item.id.toString() != Utils.getUserId())
                 binding.tvParticipant.text = item.first_name + " " + item.last_name

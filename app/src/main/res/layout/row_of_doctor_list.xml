@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:id="@+id/doctorDetailLayout"
     android:layout_marginTop="@dimen/_8sdp"
@@ -9,7 +9,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/llDetails"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -77,6 +77,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/llDetails"
         app:layout_constraintBottom_toTopOf="@+id/llDetails"
-        android:elevation="@dimen/_6sdp"/>
+        android:elevation="@dimen/_4sdp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

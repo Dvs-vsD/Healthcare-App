@@ -8,13 +8,15 @@
 
     <com.mikhaellopez.circularimageview.CircularImageView
         android:id="@+id/ivProfile"
-        android:layout_width="@dimen/_30sdp"
-        android:layout_height="@dimen/_30sdp"
+        android:layout_width="@dimen/_48sdp"
+        android:layout_height="@dimen/_48sdp"
         app:civ_border="false"
+        android:elevation="@dimen/_4sdp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/tvUserName"
+        android:scaleType="centerCrop"
         android:src="@drawable/default_user"
         android:layout_marginHorizontal="@dimen/_16sdp"
         />

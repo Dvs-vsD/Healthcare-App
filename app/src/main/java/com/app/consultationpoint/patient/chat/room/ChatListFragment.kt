@@ -13,6 +13,8 @@ import com.app.consultationpoint.databinding.FragmentChatListBinding
 import com.app.consultationpoint.patient.chat.room.adapter.RoomListAdapter
 import com.app.consultationpoint.patient.chat.room.model.RoomModel
 import com.app.consultationpoint.utils.Utils
+import com.app.consultationpoint.utils.Utils.hide
+import com.app.consultationpoint.utils.Utils.show
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
@@ -34,9 +36,14 @@ class ChatListFragment : BaseFragment() {
 
         viewModel.getRoomList().observe(this, {
 
-            if (it != null && it.isNotEmpty() && adapter != null) {
+            if (adapter != null) {
                 adapter?.setList(it)
-                binding.tvNoData.visibility = View.GONE
+
+                if (it.isNotEmpty())
+                    binding.tvNoData.hide()
+                else
+                    binding.tvNoData.show()
+
                 Timber.d("Room adapter notified %s", it)
             }
 
@@ -66,6 +73,11 @@ class ChatListFragment : BaseFragment() {
 
         userId = Utils.getUserId().toLong()
 
+        /*if (Utils.getUserType() == 0)
+            binding.etSearch.show()
+        else*/
+        binding.etSearch.hide()
+
         Timber.d("User Type ${Utils.getUserType()}")
 
         if (Utils.getUserType() == 0) {
@@ -89,9 +101,9 @@ class ChatListFragment : BaseFragment() {
         }
 
         if (roomList.value?.isEmpty() == true) {
-            binding.tvNoData.visibility = View.VISIBLE
+            binding.tvNoData.show()
         } else {
-            binding.tvNoData.visibility = View.GONE
+            binding.tvNoData.hide()
         }
 
         binding.recyclerView.adapter = adapter

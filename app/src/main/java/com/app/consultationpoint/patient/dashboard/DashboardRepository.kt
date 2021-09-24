@@ -49,21 +49,30 @@ class DashboardRepository @Inject constructor(private val firebaseSource: Fireba
         firebaseSource.fetchMyBookings()
     }
 
-//    suspend fun fetchTodayApt(day: String) = withContext(Dispatchers.Main) {
+    //    suspend fun fetchTodayApt(day: String) = withContext(Dispatchers.Main) {
     fun fetchTodayApt(day: String) {
         Timber.d(day)
         Realm.getDefaultInstance().use { mRealm ->
             Timber.d("Function Today's apt Fetching instance")
-            val mRealmResults =
+            val mRealmResults = if (Utils.getUserType() == 0)
                 mRealm.where(AppointmentModel::class.java)
                     .equalTo("patient_id", Utils.getUserId().toLong()).and()
                     .equalTo("schedual_date", day).findAll()
+            else
+                mRealm.where(AppointmentModel::class.java)
+                    .equalTo("doctor_id", Utils.getUserId().toLong()).and()
+                    .equalTo("schedual_date", day).findAll()
+
             val list: ArrayList<AppointmentModel> =
                 mRealm.copyFromRealm(mRealmResults) as ArrayList<AppointmentModel>
 
             val docList = ArrayList<UserModel>()
             for (apt in list) {
-                val doctorId = apt.doctor_id
+                val doctorId = if (Utils.getUserType() == 0)
+                    apt.doctor_id
+                else
+                    apt.patient_id
+
                 docList.add(getDoctorDetails(doctorId))
             }
             docDetailsList.value = docList

@@ -12,6 +12,7 @@ import com.app.consultationpoint.patient.chat.room.model.ParticipantModel
 import com.app.consultationpoint.patient.chat.room.model.RoomModel
 import com.app.consultationpoint.utils.Utils
 import com.app.consultationpoint.utils.Utils.loadImage
+import com.app.consultationpoint.utils.Utils.loadImageFromCloud
 import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
 import io.realm.RealmList
@@ -55,7 +56,7 @@ class DoctorDetailsActivity : AppCompatActivity() {
         binding.tvDocName.text = docName
 //        binding.tvSpecAdr.text = model.specialization + ", " + model.city
         if (model.profile != "" && model.profile != null) {
-            binding.ivProfile.loadImage(model.profile!!)
+            binding.ivProfile.loadImageFromCloud(model.profile!!)
         }
         binding.tvYearCount.text = model.experience_yr + "+"
 

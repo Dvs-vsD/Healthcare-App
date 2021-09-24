@@ -3,16 +3,22 @@ package com.app.consultationpoint.patient.chat.chatScreen.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.RecyclerView
 import com.app.consultationpoint.databinding.RowOfOthersMsgBinding
 import com.app.consultationpoint.databinding.RowOfSelfMsgBinding
+import com.app.consultationpoint.patient.chat.chatScreen.ChatScreenViewModel
 import com.app.consultationpoint.patient.chat.chatScreen.model.MessageModel
 import com.app.consultationpoint.utils.Utils
 import com.app.consultationpoint.utils.Utils.formatTo
+import com.app.consultationpoint.utils.Utils.loadImageFromCloud
 import java.util.*
 import kotlin.collections.ArrayList
 
-class ChatAdapter(private var chatList: ArrayList<MessageModel>?) :
+class ChatAdapter(
+    private var chatList: ArrayList<MessageModel>?,
+    private var viewModel: ChatScreenViewModel
+) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val userId = Utils.getUserId().toLong()
@@ -60,6 +66,9 @@ class ChatAdapter(private var chatList: ArrayList<MessageModel>?) :
             binding.tvMsg.text = item.content
             val date = Date(item.created_at)
             binding.tvTime.text = date.formatTo("h:mm a")
+            val profile = Utils.getUserProfile()
+            if (profile.isNotEmpty())
+                binding.ivProfile.loadImageFromCloud(profile)
         }
     }
 
@@ -69,6 +78,10 @@ class ChatAdapter(private var chatList: ArrayList<MessageModel>?) :
             binding.tvMsg.text = item.content
             val date = Date(item.created_at)
             binding.tvTime.text = date.formatTo("h:mm a")
+            val userDetails = viewModel.getDoctorDetails(item.sender_id)
+            if (userDetails.profile != null && userDetails.profile!!.isNotEmpty()) {
+                binding.ivProfile.loadImageFromCloud(userDetails.profile!!)
+            }
         }
     }
 }

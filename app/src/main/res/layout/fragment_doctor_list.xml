@@ -72,6 +72,21 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@id/pullToRefresh"/>
 
+        <TextView
+            android:id="@+id/tvNoData"
+            style="@style/st_tv_small.bold_gray"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_16sdp"
+            android:layout_centerInParent="true"
+            android:text="@string/tv_no_data_found"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/etSearch"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
+
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/pullToRefresh"
             android:layout_width="0dp"

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_gray"
+    android:background="@color/bg_gray_200"
     android:focusable="true"
     android:focusableInTouchMode="true"
     tools:context=".patient.appointment.bookAppointment.ChooseTimeActivity">
@@ -51,12 +51,13 @@
         android:layout_height="0dp"
         android:layout_marginTop="@dimen/_16sdp"
         android:scrollbars="none"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@id/guidelineRight"
         app:layout_constraintStart_toStartOf="@id/guidelineLeft"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvHeading">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/clTakeApt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -66,9 +67,26 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/background_with_radius_24"
                 android:backgroundTint="@color/white"
+                android:duplicateParentState="true"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvAptDetail"
+                style="@style/st_tv_normal.bold"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:background="@drawable/background_with_radius_12"
+                android:gravity="center_vertical"
+                android:padding="@dimen/_16sdp"
+                android:text="Appointment Date: "
+                android:lineSpacingExtra="@dimen/_8sdp"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/calenderView" />
 
             <TextView
                 android:id="@+id/tvTimePicker"
@@ -77,50 +95,62 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_10sdp"
                 android:background="@drawable/background_with_radius_12"
-                android:padding="@dimen/_12sdp"
-                android:gravity="center_vertical"
-                android:text="@string/tv_select_appointment_time"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/calenderView"
-                app:drawableStartCompat="@drawable/ic_baseline_access_time_24"
                 android:drawablePadding="@dimen/_8sdp"
-                app:drawableTint="@color/blue"/>
+                android:duplicateParentState="true"
+                android:gravity="center_vertical"
+                android:padding="@dimen/_12sdp"
+                android:text="@string/tv_select_appointment_time"
+                app:drawableStartCompat="@drawable/ic_baseline_access_time_24"
+                app:drawableTint="@color/blue"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvAptDetail" />
 
-
-            <EditText
-                android:id="@+id/etTitle"
-                style="@style/st_et_style"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilTitle"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_12sdp"
-                android:background="@drawable/background_with_radius_12"
-                android:hint="@string/tv_appointment_title"
-                android:textSize="@dimen/_12ssp"
-                android:importantForAutofill="no"
-                android:inputType="text"
-                android:maxLines="1"
-                android:padding="@dimen/_12sdp"
+                android:duplicateParentState="true"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvTimePicker" />
+                app:layout_constraintTop_toBottomOf="@+id/tvTimePicker">
 
-            <EditText
-                android:id="@+id/etDisc"
-                style="@style/st_et_style"
+                <EditText
+                    android:id="@+id/etTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/tv_appointment_title"
+                    android:importantForAutofill="no"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:textSize="@dimen/_12ssp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilDesc"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_12sdp"
-                android:background="@drawable/background_with_radius_12"
-                android:hint="@string/tv_appointment_description"
-                android:importantForAutofill="no"
-                android:textSize="@dimen/_12ssp"
-                android:inputType="textMultiLine"
-                android:padding="@dimen/_12sdp"
-                android:maxLines="6"
+                android:duplicateParentState="true"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/etTitle" />
+                app:layout_constraintTop_toBottomOf="@+id/tilTitle">
+
+                <EditText
+                    android:id="@+id/etDisc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/tv_appointment_description"
+                    android:importantForAutofill="no"
+                    android:inputType="textMultiLine"
+                    android:maxLines="6"
+                    android:textSize="@dimen/_12ssp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
 
             <Button
                 android:id="@+id/btnBookAppt"
@@ -129,6 +159,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="@dimen/_16sdp"
                 android:background="@drawable/background_with_radius_12"
+                android:duplicateParentState="true"
                 android:padding="@dimen/_8sdp"
                 android:text="@string/btn_book_appointment"
                 android:textColor="@color/white"
@@ -136,7 +167,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/etDisc" />
+                app:layout_constraintTop_toBottomOf="@id/tilDesc" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

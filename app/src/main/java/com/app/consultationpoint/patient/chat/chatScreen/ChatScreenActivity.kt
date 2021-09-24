@@ -19,6 +19,7 @@ import com.app.consultationpoint.patient.chat.chatScreen.model.MessageModel
 import com.app.consultationpoint.patient.chat.roomInfo.RoomInfoActivity
 import com.app.consultationpoint.utils.Utils
 import com.app.consultationpoint.utils.Utils.loadImage
+import com.app.consultationpoint.utils.Utils.loadImageFromCloud
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
@@ -30,6 +31,7 @@ class ChatScreenActivity : AppCompatActivity() {
     private var userId: Long = 0
     private var docId: Long = 0
     private var userName: String = ""
+    private var profile: String = ""
     private val msgModel = MessageModel()
     private var chatAdapter: ChatAdapter? = null
     private var linearLayoutManager: LinearLayoutManager? = null
@@ -66,6 +68,7 @@ class ChatScreenActivity : AppCompatActivity() {
         userId = Utils.getUserId().toLong()
         val docDetails = viewModel.getDoctorDetails(docId)
         userName = docDetails.first_name + " " + docDetails.last_name
+        profile = docDetails.profile?:""
         binding.tvUserName.text = userName
 
         Timber.d("From tvUserName %s", binding.tvUserName.text.toString())
@@ -74,7 +77,7 @@ class ChatScreenActivity : AppCompatActivity() {
 
         val profile = docDetails.profile
         if (profile != null && profile != "" && profile != "null") {
-            binding.ivProfile.loadImage(profile)
+            binding.ivProfile.loadImageFromCloud(profile)
         }
 
         binding.recyclerView.setHasFixedSize(true)
@@ -109,7 +112,7 @@ class ChatScreenActivity : AppCompatActivity() {
         binding.recyclerView.setHasFixedSize(true)
         binding.recyclerView.layoutManager = linearLayoutManager
         val msgList: ArrayList<MessageModel>? = viewModel.getMessages().value
-        chatAdapter = ChatAdapter(msgList)
+        chatAdapter = ChatAdapter(msgList, viewModel)
         binding.recyclerView.adapter = chatAdapter
 
         binding.recyclerView.addOnLayoutChangeListener { _, _, _, _, bottom, _, _, _, oldBottom ->
@@ -139,6 +142,7 @@ class ChatScreenActivity : AppCompatActivity() {
         val intent = Intent(this, RoomInfoActivity::class.java)
         intent.putExtra("room_id", roomId)
         intent.putExtra("userName", userName)
+        intent.putExtra("profile", profile)
         val pairs = arrayOf(
             Pair<View, String>(binding.ivProfile, getString(R.string.imageTransition)),
             Pair<View, String>(binding.tvUserName, getString(R.string.nameTransition))

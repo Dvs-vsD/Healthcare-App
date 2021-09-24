@@ -91,6 +91,7 @@ class RegisterActivity : AppCompatActivity() {
                 userModel.email = userEmail
                 userModel.password = userPassword
                 userModel.gender = -1
+                userModel.device_type = 1
 
                 viewModel.signUp(userModel)
             } else {
@@ -136,5 +137,4 @@ class RegisterActivity : AppCompatActivity() {
             }
         }
     }
-
 }

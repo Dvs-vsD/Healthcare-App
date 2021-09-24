@@ -26,11 +26,12 @@
         style="@style/st_tv_normal.bold"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_12sdp"
+        android:paddingVertical="@dimen/_12sdp"
         android:text="October"
         app:layout_constraintEnd_toEndOf="@id/guidelineRight"
         app:layout_constraintStart_toStartOf="@id/guidelineLeft"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/recyclerView"
         />
 
     <androidx.recyclerview.widget.RecyclerView

@@ -14,7 +14,6 @@ import com.app.consultationpoint.R
 import com.app.consultationpoint.databinding.FragmentCalenderBinding
 import com.app.consultationpoint.patient.appointment.allAppointments.AllAppointmentsActivity
 import com.app.consultationpoint.patient.dashboard.DashboardViewModel
-import com.app.consultationpoint.utils.Utils
 import com.app.consultationpoint.utils.Utils.formatTo
 import com.michalsvec.singlerowcalendar.calendar.CalendarChangesObserver
 import com.michalsvec.singlerowcalendar.calendar.CalendarViewManager
@@ -23,8 +22,6 @@ import com.michalsvec.singlerowcalendar.selection.CalendarSelectionManager
 import com.michalsvec.singlerowcalendar.utils.DateUtils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.calender_item.view.*
-import org.koin.androidx.viewmodel.ext.android.viewModel
-import timber.log.Timber
 import java.util.*
 
 private const val ARG_PARAM1 = "param1"
@@ -87,14 +84,10 @@ class CalenderFragment : Fragment() {
                 date: Date,
                 isSelected: Boolean
             ): Int {
-                return if (position < currentDtPos)
-                    R.layout.disabled_calender_item
-                else {
-                    if (isSelected) {
-                        R.layout.selected_calender_item
-                    } else
-                        R.layout.calender_item
-                }
+                return if (isSelected)
+                    R.layout.selected_calender_item
+                else
+                    R.layout.calender_item
             }
 
             override fun bindDataToCalendarView(
@@ -119,7 +112,7 @@ class CalenderFragment : Fragment() {
 
         binding.singleRowCalendar.calendarSelectionManager = object : CalendarSelectionManager {
             override fun canBeItemSelected(position: Int, date: Date): Boolean {
-                return position >= currentDtPos
+                return true
             }
         }
 

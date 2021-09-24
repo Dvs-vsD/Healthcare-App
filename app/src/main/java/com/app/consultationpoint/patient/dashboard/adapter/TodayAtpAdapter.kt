@@ -2,15 +2,21 @@ package com.app.consultationpoint.patient.dashboard.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.app.consultationpoint.databinding.RowOfTodayAptBinding
 import com.app.consultationpoint.general.model.UserModel
+import com.app.consultationpoint.patient.appointment.bookAppointment.ChooseTimeActivity
 import com.app.consultationpoint.patient.appointment.model.AppointmentModel
+import com.app.consultationpoint.utils.Utils
 import com.app.consultationpoint.utils.Utils.formatTo
+import com.app.consultationpoint.utils.Utils.hide
 import com.app.consultationpoint.utils.Utils.loadImage
+import com.app.consultationpoint.utils.Utils.loadImageFromCloud
+import com.app.consultationpoint.utils.Utils.show
 import com.app.consultationpoint.utils.Utils.toDate
 
 class TodayAtpAdapter(
@@ -34,12 +40,18 @@ class TodayAtpAdapter(
                     adapterPosition
                 )?.last_name
 //            binding.tvSpecAdr.text = doctorDetails.specialization + ", " + doctorDetails.city
+            if (Utils.getUserType() == 0)
+                binding.tvSpecAdr.show()
+            else
+                binding.tvSpecAdr.hide()
+
             if (doctorDetails.value?.get(adapterPosition)?.profile != "" && doctorDetails.value?.get(
                     adapterPosition
                 )?.profile != "null"
             ) {
                 doctorDetails.value?.get(adapterPosition)?.profile?.let {
-                    binding.ivProfile.loadImage(it)
+                    if (it.isNotEmpty())
+                        binding.ivProfile.loadImageFromCloud(it)
                 }
             }
             binding.tvAvailableText.text =
@@ -47,6 +59,12 @@ class TodayAtpAdapter(
                     ?.formatTo(
                         "dd/MM/yyyy"
                     ) + " at " + item.schedual_time
+
+            binding.clDayApt.setOnClickListener {
+                val intent = Intent(context, ChooseTimeActivity::class.java)
+                intent.putExtra("appointment_model", item)
+                context.startActivity(intent)
+            }
         }
     }
 

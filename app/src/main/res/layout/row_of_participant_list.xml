@@ -11,6 +11,8 @@
         android:layout_height="@dimen/_30sdp"
         android:layout_marginVertical="@dimen/_8sdp"
         android:src="@drawable/default_user"
+        android:scaleType="centerCrop"
+        android:elevation="@dimen/_4sdp"
         app:civ_border="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -9,9 +9,13 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.app.consultationpoint.BaseFragment
+import com.app.consultationpoint.R
 import com.app.consultationpoint.databinding.FragmentDoctorListBinding
 import com.app.consultationpoint.general.model.UserModel
 import com.app.consultationpoint.patient.doctor.adapter.DoctorAdapter
+import com.app.consultationpoint.utils.Utils
+import com.app.consultationpoint.utils.Utils.hide
+import com.app.consultationpoint.utils.Utils.show
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
@@ -47,6 +51,11 @@ class DoctorListFragment : BaseFragment() {
 //                adapterDoctor?.notifyItemRangeInserted(0,it.size)
                 adapterDoctor?.setDataList(listUser)
 //                adapterDoctor?.notifyDataSetChanged()
+
+                if (it.isNotEmpty())
+                    binding.tvNoData.hide()
+                else
+                    binding.tvNoData.show()
             }
 
             if (binding.pullToRefresh.isRefreshing)
@@ -65,6 +74,11 @@ class DoctorListFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        if (Utils.getUserType() == 0)
+            binding.etSearch.hint = getString(R.string.et_hint_search_doctor)
+        else
+            binding.etSearch.hint = getString(R.string.et_hint_search_patient)
+
         viewModel.fetchDocFromRDB()
         viewModel.fetchDocFromFB(1)
 
@@ -72,7 +86,7 @@ class DoctorListFragment : BaseFragment() {
             listUser = ArrayList()
 
         listUser = viewModel.getDoctorList().value
-        adapterDoctor = DoctorAdapter(listUser, activity)
+        adapterDoctor = DoctorAdapter(listUser, activity, viewModel)
 
         binding.recyclerView.layoutManager = GridLayoutManager(activity, 2)
         binding.recyclerView.setHasFixedSize(true)

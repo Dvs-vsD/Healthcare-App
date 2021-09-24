@@ -13,13 +13,13 @@ open class UserModel: RealmObject() {
     var last_name: String = ""
     var email: String = ""
     var mobile: String = ""
-    var gender: Int = 0 //0-Male 1-Female 2-Other
+    var gender: Int = 0 //0-Male  1-Female  2-Other
     var dob: String = ""
 
     //new added 1 fields
     var profile: String? = ""
 
-    var user_type_id: Int = 0 //0-Patient 1-Doctor 2-Staff 3-Laboratory
+    var user_type_id: Int = 0 //0-Patient  1-Doctor  2-Staff  3-Laboratory
     var user_status: String = ""
     var is_deleted: Boolean = false
     var is_verified: Boolean = false
@@ -32,5 +32,5 @@ open class UserModel: RealmObject() {
     var payment_id: String = ""
     var payment_detail: String = ""
 
-    //1 - android
+    var device_type: Int = 1 //0 - ios  1 - android
 }

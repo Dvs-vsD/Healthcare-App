@@ -5,11 +5,15 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.Intent
+import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
+import com.app.consultationpoint.GlideApp
 import com.app.consultationpoint.R
 import com.app.consultationpoint.databinding.ActivityUpdateProfileBinding
 import com.app.consultationpoint.general.model.UserModel
@@ -17,21 +21,28 @@ import com.app.consultationpoint.patient.userProfile.model.AddressModel
 import com.app.consultationpoint.utils.Const.REQUEST_CODE
 import com.app.consultationpoint.utils.Utils
 import com.app.consultationpoint.utils.Utils.formatTo
+import com.app.consultationpoint.utils.Utils.loadImage
+import com.app.consultationpoint.utils.Utils.loadImageFromCloud
 import com.bumptech.glide.Glide
+import com.firebase.ui.storage.images.FirebaseImageLoader
+import com.google.android.gms.tasks.Task
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 import java.util.*
 
 @AndroidEntryPoint
 class UptPntProfileActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityUpdateProfileBinding
-    private var profile: String? = ""
     private val viewModel by viewModels<UserViewModel>()
+    private var profileURL: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,13 +51,12 @@ class UptPntProfileActivity : AppCompatActivity() {
 
         viewModel.getProfileUptStatus().observe(this, {
             Utils.dismissProgressDialog()
-            /*if (it.startsWith("url")) {
-                profile = it.substring(3, it.length)
-                Timber.d("Profile Url: %s",profile)
-                binding.ivProfile.loadImage(profile?:"")
-            } else */if (it == "profile upload failed") {
-            Toast.makeText(this, "Failed: Please reselect image", Toast.LENGTH_LONG).show()
-        }
+            if (it.startsWith("url")) {
+                profileURL = it.substring(3, it.length)
+                binding.ivProfile.loadImageFromCloud(profileURL?:"")
+            } else if (it == "profile upload failed") {
+                Toast.makeText(this, "Failed: Please reselect image", Toast.LENGTH_LONG).show()
+            }
             if (it == "Profile Updated") {
                 val intent = Intent()
                 setResult(RESULT_OK, intent)
@@ -69,6 +79,10 @@ class UptPntProfileActivity : AppCompatActivity() {
 
     @SuppressLint("TimberArgCount")
     private fun inThis() {
+        val profile = Utils.getUserProfile()
+        if (profile.isNotEmpty())
+            binding.ivProfile.loadImageFromCloud(profile)
+
         binding.etUserName.setText(Utils.getUserName())
         binding.etFirstName.setText(Utils.getFirstName())
         binding.etLastName.setText(Utils.getLastName())
@@ -102,24 +116,11 @@ class UptPntProfileActivity : AppCompatActivity() {
         }
 
         binding.ivChoosePic.setOnClickListener {
-            Dexter.withContext(this)
-                .withPermissions(
-                    Manifest.permission.CAMERA,
-                    Manifest.permission.READ_EXTERNAL_STORAGE
-                ).withListener(object : MultiplePermissionsListener {
-                    override fun onPermissionsChecked(report: MultiplePermissionsReport?) {
-                        if (report?.areAllPermissionsGranted() == true) {
-                            chooseImage()
-                        }
-                    }
+            checkPermissions()
+        }
 
-                    override fun onPermissionRationaleShouldBeShown(
-                        p0: MutableList<PermissionRequest>?,
-                        token: PermissionToken?
-                    ) {
-                        token?.continuePermissionRequest()
-                    }
-                }).check()
+        binding.ivProfile.setOnClickListener {
+            checkPermissions()
         }
 
         binding.etDob.setOnClickListener {
@@ -164,7 +165,7 @@ class UptPntProfileActivity : AppCompatActivity() {
                 model.first_name = firstName
                 model.last_name = lastName
                 model.mobile = phnNo
-                model.profile = profile
+                model.profile = profileURL?:""
                 model.gender = gender
                 model.dob = dob
                 model.user_type_id = Utils.getUserType()
@@ -195,6 +196,27 @@ class UptPntProfileActivity : AppCompatActivity() {
         }
     }
 
+    private fun checkPermissions() {
+        Dexter.withContext(this)
+            .withPermissions(
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ).withListener(object : MultiplePermissionsListener {
+                override fun onPermissionsChecked(report: MultiplePermissionsReport?) {
+                    if (report?.areAllPermissionsGranted() == true) {
+                        chooseImage()
+                    }
+                }
+
+                override fun onPermissionRationaleShouldBeShown(
+                    p0: MutableList<PermissionRequest>?,
+                    token: PermissionToken?
+                ) {
+                    token?.continuePermissionRequest()
+                }
+            }).check()
+    }
+
     private fun datePickerDialog() {
         val cal = Calendar.getInstance()
         val cYear = cal.get(Calendar.YEAR)
@@ -214,9 +236,9 @@ class UptPntProfileActivity : AppCompatActivity() {
     }
 
     private fun chooseImage() {
-        val picImage = Intent()
-        picImage.type = "image/*"
-        picImage.action = Intent.ACTION_GET_CONTENT
+        val picImage = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+//        picImage.type = "image/*"
+//        picImage.action = Intent.ACTION_PICK
         startActivityForResult(
             Intent.createChooser(picImage, "Select Profile Pic..."),
             REQUEST_CODE
@@ -226,11 +248,16 @@ class UptPntProfileActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_CODE) {
-            if (resultCode == Activity.RESULT_OK && data != null && data.data != null) {
-                val profileUri = data.data
-                if (profileUri != null) {
-                    val ref = viewModel.uploadProfile(profileUri)
-                    Glide.with(this).load(ref).into(binding.ivProfile)
+            if (resultCode == Activity.RESULT_OK) {
+                val uri = data?.data
+
+                if (uri != null) {
+                    val bitmap = BitmapFactory.decodeStream(contentResolver.openInputStream(uri))
+                    val profilePic = Utils.getImageUri(this, bitmap)
+                    Utils.showProgressDialog(this)
+                    if (profilePic != null) {
+                        viewModel.uploadProfile(profilePic)
+                    }
                 } else
                     Toast.makeText(this, "Image Not selected: Please Reselect", Toast.LENGTH_SHORT)
                         .show()

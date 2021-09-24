@@ -13,6 +13,8 @@ import com.app.consultationpoint.patient.chat.room.model.RoomModel
 import com.app.consultationpoint.utils.Utils
 import com.app.consultationpoint.utils.Utils.formatTo
 import com.app.consultationpoint.utils.Utils.loadImage
+import com.app.consultationpoint.utils.Utils.loadImageFromCloud
+import com.app.consultationpoint.utils.Utils.show
 import java.util.*
 
 class RoomListAdapter(
@@ -36,9 +38,17 @@ class RoomListAdapter(
             for ((index, user) in pArray.withIndex()) {
                 if (user.toString() != Utils.getUserId()) {
                     val userDetails = viewModel.getUserDetails(user)
-                    if (pArray.size <= 2)
+                    if (pArray.size <= 2) {
+                        if (userDetails.profile != null && userDetails.profile != "")
+                            binding.ivProfile.loadImageFromCloud(userDetails.profile!!)
                         name = userDetails.first_name + " " + userDetails.last_name
+                    }
                     else {
+                        val profile = item.photo
+                        if (profile != null && profile.isNotEmpty()) {
+                            binding.ivProfile.loadImageFromCloud(profile)
+                        }
+
                         name += if (index == pArray.size - 1)
                             userDetails.first_name + " " + userDetails.last_name
                         else
@@ -47,15 +57,11 @@ class RoomListAdapter(
                 }
             }
 
-            val profile = item.photo
-            if (profile != null && profile.isNotEmpty()) {
-                binding.ivProfile.loadImage(profile)
-            }
             binding.tvDocName.text = name
 
             if (item.last_message != null) {
                 val lastMsg = item.last_message
-                binding.tvLastMsg.visibility = View.VISIBLE
+                binding.tvLastMsg.show()
                 binding.tvLastMsg.text = lastMsg?.content
                 val time = lastMsg?.let { Date(it.created_at) }
                 binding.tvLastMsgTime.text = time?.formatTo("h:mm a")

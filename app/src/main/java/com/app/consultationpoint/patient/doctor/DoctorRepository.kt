@@ -6,6 +6,7 @@ import com.app.consultationpoint.firebase.FirebaseSource
 import com.app.consultationpoint.general.model.UserModel
 import com.app.consultationpoint.patient.chat.room.model.ParticipantModel
 import com.app.consultationpoint.patient.chat.room.model.RoomModel
+import com.app.consultationpoint.utils.Utils
 import io.realm.Case
 import io.realm.Realm
 import kotlinx.coroutines.Dispatchers
@@ -23,7 +24,11 @@ class DoctorRepository @Inject constructor(private val firebaseSource: FirebaseS
     suspend fun fetchDocFromRDB() = withContext(Dispatchers.Main) {
         Realm.getDefaultInstance().use { mRealm ->
             Timber.d("Doctor list Fetching instance")
-            val usertype = 1
+
+            val usertype = if (Utils.getUserType() == 0)
+                1
+            else
+                0
 
             val mRealmResult =
                 mRealm.where(UserModel::class.java).equalTo("user_type_id", usertype).findAll()
@@ -51,9 +56,14 @@ class DoctorRepository @Inject constructor(private val firebaseSource: FirebaseS
         Realm.getDefaultInstance().use { mRealm ->
             Timber.d("search doctor (in doctor repo) Fetching instance")
 
+            val usertype = if (Utils.getUserType() == 0)
+                1
+            else
+                0
+
             val results =
-                mRealm.where(UserModel::class.java).contains("first_name", str, Case.INSENSITIVE)
-                    .or().contains("last_name", str, Case.INSENSITIVE).findAll()
+                mRealm.where(UserModel::class.java).equalTo("user_type_id", usertype).and().contains("first_name", str, Case.INSENSITIVE)
+                    .or().equalTo("user_type_id", usertype).and().contains("last_name", str, Case.INSENSITIVE).findAll()
             if (results.isNotEmpty()) {
                 val list: ArrayList<UserModel> = ArrayList()
                 list.addAll(results)
@@ -70,23 +80,24 @@ class DoctorRepository @Inject constructor(private val firebaseSource: FirebaseS
 
     // chat Functionality
 
-    suspend fun checkRoomAvailability(senderId: Long, receiverId: Long): Long = withContext(Dispatchers.Main) {
-        var participant: ParticipantModel? = null
+    suspend fun checkRoomAvailability(senderId: Long, receiverId: Long): Long =
+        withContext(Dispatchers.Main) {
+            var participant: ParticipantModel? = null
 
-        Realm.getDefaultInstance().use { mRealm ->
-            Timber.d("Check room availability instance")
-            val results = mRealm.where(ParticipantModel::class.java)
-                .equalTo("added_by_id", senderId).and().equalTo("user_id", receiverId)
-                .or()
-                .equalTo("added_by_id", receiverId).and().equalTo("user_id", senderId)
-                .findFirst()
-            if (results != null)
-                participant = mRealm.copyFromRealm(results)
-            Timber.d("Open Instance at %s", System.currentTimeMillis().toString())
+            Realm.getDefaultInstance().use { mRealm ->
+                Timber.d("Check room availability instance")
+                val results = mRealm.where(ParticipantModel::class.java)
+                    .equalTo("added_by_id", senderId).and().equalTo("user_id", receiverId)
+                    .or()
+                    .equalTo("added_by_id", receiverId).and().equalTo("user_id", senderId)
+                    .findFirst()
+                if (results != null)
+                    participant = mRealm.copyFromRealm(results)
+                Timber.d("Open Instance at %s", System.currentTimeMillis().toString())
+            }
+
+            return@withContext participant?.room_id ?: 0
         }
-
-        return@withContext participant?.room_id ?: 0
-    }
 
     suspend fun createChatRoom(model: RoomModel, senderId: Long, receiverId: Long) {
         firebaseSource.createChatRoom(model, senderId, receiverId)

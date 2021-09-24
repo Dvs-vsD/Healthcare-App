@@ -6,6 +6,7 @@ import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,7 +17,10 @@ import com.app.consultationpoint.databinding.FragmentDashboardBinding
 import com.app.consultationpoint.patient.dashboard.adapter.SpecialistAdapter
 import com.app.consultationpoint.patient.dashboard.adapter.TodayAtpAdapter
 import com.app.consultationpoint.patient.doctor.DoctorListFragment
+import com.app.consultationpoint.utils.Utils
 import com.app.consultationpoint.utils.Utils.formatTo
+import com.app.consultationpoint.utils.Utils.hide
+import com.app.consultationpoint.utils.Utils.show
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_bottom_navigation.*
 import kotlinx.android.synthetic.main.header_layout.view.*
@@ -41,9 +45,9 @@ class DashboardFragment : BaseFragment() {
 
         viewModel.getTodayAptList().observe(this, {
             if (it.isEmpty()) {
-                binding.tvNoData.visibility = View.VISIBLE
+                binding.tvNoData.show()
             } else {
-                binding.tvNoData.visibility = View.GONE
+                binding.tvNoData.hide()
             }
             if (adapterTodayApt != null) {
                 Timber.d("notified")
@@ -85,11 +89,20 @@ class DashboardFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        if (Utils.getUserType() == 0) {
+            binding.tvText.text = getString(R.string.tv_let_s_find_your_doctor)
+            binding.tvSearch.text = getString(R.string.et_hint_search_doctor)
+            viewModel.fetchDocFromFB(1)
+        } else {
+            binding.tvText.text = "Let's manage your patients"
+            binding.tvSearch.text = getString(R.string.et_hint_search_patient)
+            binding.tvSearch.setTextColor(ContextCompat.getColor(requireContext(), R.color.clr_tv_light_gray))
+        }
+
         binding.tvSearch.setOnClickListener {
             mFragmentNavigation.pushFragment(DoctorListFragment.newInstance(1))
         }
 
-        viewModel.fetchDocFromFB(1)
         viewModel.fetchAllMyBookings()
 
         val fragmentCalender = CalenderFragment()

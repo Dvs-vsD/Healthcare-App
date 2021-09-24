@@ -52,9 +52,9 @@ class RoomRepository @Inject constructor(private val firebaseSource: FirebaseSou
             val mRealmResults = mRealm.where(RoomModel::class.java)
                 .equalTo("created_by_id", Utils.getUserId().toLong()).and()
                 .contains("name", str, Case.INSENSITIVE).findAll()
-            val list = ArrayList<RoomModel?>()
+            val list: ArrayList<RoomModel?> = mRealm.copyFromRealm(mRealmResults) as ArrayList<RoomModel?>
             roomList.value?.clear()
-            list.addAll(mRealmResults)
+//            list.addAll(mRealmResults)
             roomList.value = list
             Timber.d("Open Instance at %s", System.currentTimeMillis().toString())
         }

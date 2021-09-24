@@ -44,6 +44,8 @@
             android:layout_width="@dimen/_32sdp"
             android:layout_height="@dimen/_32sdp"
             android:layout_marginEnd="@dimen/_8sdp"
+            android:scaleType="centerCrop"
+            android:elevation="@dimen/_4sdp"
             android:transitionName="imageTransition"
             android:src="@drawable/default_user"
             app:civ_border="false" />

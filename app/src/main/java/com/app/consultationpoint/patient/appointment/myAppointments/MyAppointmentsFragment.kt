@@ -8,6 +8,9 @@ import com.app.consultationpoint.BaseFragment
 import com.app.consultationpoint.databinding.FragmentMyAppointmentsBinding
 import com.app.consultationpoint.patient.appointment.adapter.MonthlyAptAdapter
 import com.app.consultationpoint.patient.doctor.DoctorListFragment
+import com.app.consultationpoint.utils.Utils
+import com.app.consultationpoint.utils.Utils.hide
+import com.app.consultationpoint.utils.Utils.show
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_bottom_navigation.*
 import kotlinx.android.synthetic.main.fragment_dashboard.*
@@ -36,9 +39,9 @@ class MyAppointmentsFragment : BaseFragment() {
                     Timber.d("Apt list notified")
                     adapter?.setList(list)
                     if (list.isNotEmpty()) {
-                        binding.tvNoData.visibility = View.GONE
+                        binding.tvNoData.hide()
                     } else {
-                        binding.tvNoData.visibility = View.VISIBLE
+                        binding.tvNoData.show()
                     }
                 }
 
@@ -67,6 +70,11 @@ class MyAppointmentsFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        if (Utils.getUserType() == 0)
+            binding.fab.show()
+        else
+            binding.fab.hide()
+
         viewModel.fetchAptFromFirebase()
 
         viewModel.fetchAptFromRealm()
@@ -76,15 +84,15 @@ class MyAppointmentsFragment : BaseFragment() {
         adapter = monthlyApt?.let { list ->
             MonthlyAptAdapter(
                 list,
-                this@MyAppointmentsFragment,
+                requireContext(),
                 viewModel
             )
         }
 
         if (monthlyApt?.isEmpty() == true) {
-            binding.tvNoData.visibility = View.VISIBLE
+            binding.tvNoData.show()
         } else {
-            binding.tvNoData.visibility = View.GONE
+            binding.tvNoData.hide()
         }
 
         binding.recyclerView.setHasFixedSize(true)

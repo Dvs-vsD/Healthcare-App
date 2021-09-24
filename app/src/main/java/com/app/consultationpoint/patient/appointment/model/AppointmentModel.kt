@@ -2,9 +2,9 @@ package com.app.consultationpoint.patient.appointment.model
 
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
-import java.util.*
+import java.io.Serializable
 
-open class AppointmentModel: RealmObject() {
+open class AppointmentModel: RealmObject(), Serializable {
     @PrimaryKey
     var appointment_id: Long = 0
     var created_by: Long = 0

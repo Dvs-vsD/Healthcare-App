@@ -8,6 +8,7 @@ import com.app.consultationpoint.databinding.ActivityRoomInfoBinding
 import com.app.consultationpoint.patient.chat.roomInfo.adapter.ParticipantAdapter
 import com.app.consultationpoint.utils.Utils
 import com.app.consultationpoint.utils.Utils.formatTo
+import com.app.consultationpoint.utils.Utils.loadImageFromCloud
 import com.app.consultationpoint.utils.Utils.toDate
 import dagger.hilt.android.AndroidEntryPoint
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -51,6 +52,11 @@ class RoomInfoActivity : AppCompatActivity() {
         userName = intent.getStringExtra("userName") ?: ""
 
         binding.tvUserName.text = userName
+
+        val profile = intent.getStringExtra("profile")
+        if (profile != null && profile != "") {
+            binding.ivProfile.loadImageFromCloud(profile)
+        }
 
         binding.ivBack.setOnClickListener { onBackPressed() }
 

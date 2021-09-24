@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.app.consultationpoint.firebase.FirebaseSource
 import com.app.consultationpoint.general.model.UserModel
 import com.app.consultationpoint.patient.appointment.model.AppointmentModel
+import com.app.consultationpoint.utils.Utils
 import io.realm.Realm
 import io.realm.Sort
 import kotlinx.coroutines.Dispatchers
@@ -48,8 +49,13 @@ class AllAptRepository @Inject constructor(private val firebaseSource: FirebaseS
             val list = mRealm.copyFromRealm(mRealmResults) as ArrayList<AppointmentModel>
 
             val docList = ArrayList<UserModel>()
+
             for (apt in list) {
-                val doctorId = apt.doctor_id
+                val doctorId = if (Utils.getUserType() == 0)
+                    apt.doctor_id
+                else
+                    apt.patient_id
+
                 docList.add(getDoctorDetails(doctorId))
             }
             docDetailsList.value = docList

@@ -12,6 +12,8 @@
         android:layout_width="@dimen/_24sdp"
         android:layout_height="@dimen/_24sdp"
         android:src="@drawable/default_user"
+        android:scaleType="centerCrop"
+        android:elevation="@dimen/_2sdp"
         app:civ_border="false"
         app:layout_constraintBottom_toBottomOf="@id/tvMsg"
         app:layout_constraintStart_toStartOf="parent"

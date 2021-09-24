@@ -17,7 +17,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageReference
 import io.realm.Realm
 import io.realm.RealmList
 import kotlinx.coroutines.Dispatchers
@@ -72,7 +71,8 @@ class FirebaseSource @Inject constructor() {
             model.gender = snapshot.getLong("gender")?.toInt() ?: -1
         model.dob = snapshot.getString("dob") ?: ""
         //new added field
-        model.profile = snapshot.getString("profile") ?: ""
+        if (snapshot.getString("profile") != null)
+            model.profile = snapshot.getString("profile") ?: ""
 
         model.user_type_id = snapshot.getLong("user_type_id")?.toInt() ?: 0
         model.user_status = snapshot.getString("user_status") ?: ""
@@ -99,36 +99,43 @@ class FirebaseSource @Inject constructor() {
             database.collection("Appointments")
                 .whereEqualTo("doctor_id", Utils.getUserId().toLong())
 
-        ref.get().addOnSuccessListener {
+        ref.addSnapshotListener { snapshot, e ->
 
-            for (snapshot in it) {
-                val model = AppointmentModel()
-                model.appointment_id = snapshot.getLong("appointment_id") ?: 0
-                model.doctor_id = snapshot.getLong("doctor_id") ?: 0
-                model.patient_id = snapshot.getLong("patient_id") ?: 0
+            if (e != null) {
+                Timber.d("Failed to Fetch Rooms")
+                return@addSnapshotListener
+            }
 
-                if (Utils.getUserType() == 1) {
-                    database.collection("Users").document(model.patient_id.toString())
-                        .get().addOnSuccessListener { document ->
-                            val user = getUser(document)
-                            Realm.getDefaultInstance().use { mRealm ->
-                                mRealm.executeTransaction {
-                                    mRealm.insertOrUpdate(user)
+            if (snapshot != null) {
+                for (results in snapshot.documentChanges) {
+                    val model = AppointmentModel()
+                    model.appointment_id = results.document.data["appointment_id"].toString().toLong()
+                    model.doctor_id = results.document.data["doctor_id"].toString().toLong()
+                    model.patient_id = results.document.data["patient_id"].toString().toLong()
+
+                    if (Utils.getUserType() == 1) {
+                        database.collection("Users").document(model.patient_id.toString())
+                            .get().addOnSuccessListener { document ->
+                                val user = getUser(document)
+                                Realm.getDefaultInstance().use { mRealm ->
+                                    mRealm.executeTransaction {
+                                        mRealm.insertOrUpdate(user)
+                                    }
                                 }
                             }
-                        }
+                    }
+
+                    model.schedual_date = results.document.data["schedual_date"].toString()
+
+                    model.schedual_time = results.document.data["schedual_time"].toString()
+                    model.title = results.document.data["title"].toString()
+                    model.note = results.document.data["note"].toString()
+                    model.created_at = results.document.data["created_at"].toString().toLong()
+                    model.created_by = results.document.data["created_by"].toString().toLong()
+                    model.updated_at = results.document.data["updated_at"].toString().toLong()
+
+                    bookingList.add(model)
                 }
-
-                model.schedual_date = snapshot.getString("schedual_date") ?: ""
-
-                model.schedual_time = snapshot.getString("schedual_time") ?: ""
-                model.title = snapshot.getString("title") ?: ""
-                model.note = snapshot.getString("note") ?: ""
-                model.created_at = snapshot.getLong("created_at") ?: 0
-                model.created_by = snapshot.getLong("created_by") ?: 0
-                model.updated_at = snapshot.getLong("updated_at") ?: 0
-
-                bookingList.add(model)
             }
             Realm.getDefaultInstance().use { mRealm ->
                 Timber.d("MyBookings Fetching instance")
@@ -146,7 +153,6 @@ class FirebaseSource @Inject constructor() {
     suspend fun signUp(model: UserModel) = withContext(Dispatchers.Main) {
         firebaseAuth.createUserWithEmailAndPassword(model.email, model.password)
             .addOnSuccessListener {
-//                val userId = firebaseAuth.currentUser?.uid
                 model.id = System.currentTimeMillis()
                 model.doc_id = System.currentTimeMillis()
                 model.user_token = "" + System.currentTimeMillis()
@@ -154,7 +160,7 @@ class FirebaseSource @Inject constructor() {
                 model.updated_at = System.currentTimeMillis()
 
                 database.collection("Users")
-                    .document(System.currentTimeMillis().toString()).set(model)
+                    .document(model.id.toString()).set(model)
 
                 ConsultationApp.shPref.edit().putString(Const.USER_ID, model.id.toString()).apply()
                 ConsultationApp.shPref.edit().putString(Const.FIRST_NAME, model.first_name).apply()
@@ -223,6 +229,10 @@ class FirebaseSource @Inject constructor() {
                             Const.DOB, snapshot.getString("dob") ?: ""
                         ).apply()
 
+                        ConsultationApp.shPref.edit().putString(
+                            Const.USER_PROFILE, snapshot.getString("profile") ?: ""
+                        ).apply()
+
                         database.collection("Addresses").document(userId).get()
                             .addOnSuccessListener { address ->
 
@@ -253,6 +263,9 @@ class FirebaseSource @Inject constructor() {
                         status.value = ""
                     }
                 }
+            }.addOnFailureListener {
+                status.value = "Error: User Not Found !!!"
+                status.value = ""
             }
         }
             .addOnFailureListener {
@@ -268,10 +281,6 @@ class FirebaseSource @Inject constructor() {
     }
 
     fun bookAppointment(model: AppointmentModel) {
-        model.appointment_id = System.currentTimeMillis()
-        model.created_at = System.currentTimeMillis()
-        model.updated_at = System.currentTimeMillis()
-
         database.collection("Appointments").document(model.appointment_id.toString()).set(model)
     }
 
@@ -431,6 +440,8 @@ class FirebaseSource @Inject constructor() {
             }
     }
 
+    //Attention: This is checking rooms created only from Patient-------------------
+
     suspend fun createChatRoom(model: RoomModel, senderId: Long, receiverId: Long) =
         withContext(Dispatchers.IO) {
             database.collection("Rooms").whereEqualTo("created_by_id", senderId)
@@ -547,24 +558,19 @@ class FirebaseSource @Inject constructor() {
         }
     }
 
-    fun uploadProfile(path: Uri): StorageReference {
+    fun uploadProfile(path: Uri) {
         val storageRef =
             FirebaseStorage.getInstance().reference
-                .child("images/" + Utils.getUserId() + ".jpg")
+                .child("profile/" + Utils.getUserId() + "_${System.currentTimeMillis()}" + ".jpg")
 
         storageRef.putFile(path)
             .addOnSuccessListener {
-                storageRef.downloadUrl.addOnCompleteListener {
-                    val url = it.result
-                    Timber.d(url.toString())
-                    status.value = "url$url"
-                    status.value = ""
-                }
+                status.value = "url$storageRef"
+                status.value = ""
             }
             .addOnFailureListener {
                 status.value = "profile upload failed"
                 status.value = ""
             }
-        return storageRef
     }
 }
