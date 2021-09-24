@@ -68,7 +68,7 @@ class ChooseTimeActivity : AppCompatActivity() {
 
         val today = calender.timeInMillis
 
-        selectedDate = if (apt_model?.schedual_date == "")
+        selectedDate = if (apt_model == null)
             SimpleDateFormat("yyyy-MM-dd").format(calender.time)
         else
             apt_model?.schedual_date
