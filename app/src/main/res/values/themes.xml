@@ -134,7 +134,12 @@
 
     <style name="st_et_style">
         <item name="fontFamily">@font/nunito_regular</item>
-        <item name="android:layout_marginTop">@dimen/_16sdp</item>
+    </style>
+
+    <style name="st_rb_style">
+        <item name="android:fontFamily">@font/nunito_regular</item>
+        <item name="android:padding">@dimen/_8sdp</item>
+        <item name="android:buttonTint">@color/blue</item>
     </style>
 
 </resources>

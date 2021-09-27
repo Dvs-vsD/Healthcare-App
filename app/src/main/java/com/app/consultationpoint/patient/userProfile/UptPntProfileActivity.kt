@@ -6,14 +6,12 @@ import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.graphics.BitmapFactory
-import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
-import com.app.consultationpoint.GlideApp
 import com.app.consultationpoint.R
 import com.app.consultationpoint.databinding.ActivityUpdateProfileBinding
 import com.app.consultationpoint.general.model.UserModel
@@ -21,20 +19,14 @@ import com.app.consultationpoint.patient.userProfile.model.AddressModel
 import com.app.consultationpoint.utils.Const.REQUEST_CODE
 import com.app.consultationpoint.utils.Utils
 import com.app.consultationpoint.utils.Utils.formatTo
-import com.app.consultationpoint.utils.Utils.loadImage
 import com.app.consultationpoint.utils.Utils.loadImageFromCloud
-import com.bumptech.glide.Glide
-import com.firebase.ui.storage.images.FirebaseImageLoader
-import com.google.android.gms.tasks.Task
-import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageReference
+import com.app.consultationpoint.utils.Utils.loadImageFromCloudWithProgress
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import dagger.hilt.android.AndroidEntryPoint
-import timber.log.Timber
 import java.util.*
 
 @AndroidEntryPoint
@@ -42,7 +34,7 @@ class UptPntProfileActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityUpdateProfileBinding
     private val viewModel by viewModels<UserViewModel>()
-    private var profileURL: String? = null
+    private var profileURL: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,7 +45,7 @@ class UptPntProfileActivity : AppCompatActivity() {
             Utils.dismissProgressDialog()
             if (it.startsWith("url")) {
                 profileURL = it.substring(3, it.length)
-                binding.ivProfile.loadImageFromCloud(profileURL?:"")
+                binding.ivProfile.loadImageFromCloudWithProgress(profileURL, binding.progressBar)
             } else if (it == "profile upload failed") {
                 Toast.makeText(this, "Failed: Please reselect image", Toast.LENGTH_LONG).show()
             }
@@ -79,9 +71,10 @@ class UptPntProfileActivity : AppCompatActivity() {
 
     @SuppressLint("TimberArgCount")
     private fun inThis() {
-        val profile = Utils.getUserProfile()
-        if (profile.isNotEmpty())
-            binding.ivProfile.loadImageFromCloud(profile)
+
+        profileURL = Utils.getUserProfile()
+        if (profileURL.isNotEmpty())
+            binding.ivProfile.loadImageFromCloud(profileURL)
 
         binding.etUserName.setText(Utils.getUserName())
         binding.etFirstName.setText(Utils.getFirstName())
@@ -165,7 +158,7 @@ class UptPntProfileActivity : AppCompatActivity() {
                 model.first_name = firstName
                 model.last_name = lastName
                 model.mobile = phnNo
-                model.profile = profileURL?:""
+                model.profile = profileURL ?: ""
                 model.gender = gender
                 model.dob = dob
                 model.user_type_id = Utils.getUserType()

@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/clProfile"
-    android:background = "@color/bg_gray"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/bg_gray"
     tools:context=".patient.userProfile.UserProfileActivity">
 
     <androidx.constraintlayout.widget.Guideline
@@ -76,6 +76,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:elevation="@dimen/_2sdp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/ivProfile"
+        app:layout_constraintEnd_toEndOf="@id/ivProfile"
+        app:layout_constraintStart_toStartOf="@id/ivProfile"
+        app:layout_constraintTop_toTopOf="@id/ivProfile" />
+
     <ImageView
         android:id="@+id/ivChoosePic"
         android:layout_width="@dimen/_30sdp"
@@ -109,10 +120,9 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilUserName"
-                style="@style/st_et_style"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="0dp"
                 android:hint="@string/hint_username"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -120,9 +130,9 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etUserName"
+                    style="@style/st_et_style"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
                     android:importantForAutofill="no"
                     android:inputType="text" />
 
@@ -130,9 +140,10 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilFirstName"
-                style="@style/st_et_style"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_8sdp"
                 android:hint="@string/hint_first_name"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -140,9 +151,9 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etFirstName"
+                    style="@style/st_et_style"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
                     android:importantForAutofill="no"
                     android:inputType="text" />
 
@@ -150,9 +161,10 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilLastName"
-                style="@style/st_et_style"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_8sdp"
                 android:hint="@string/hint_last_name"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -160,9 +172,9 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etLastName"
+                    style="@style/st_et_style"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
                     android:importantForAutofill="no"
                     android:inputType="text" />
 
@@ -170,9 +182,10 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilPhnNo"
-                style="@style/st_et_style"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_8sdp"
                 android:hint="@string/hint_phone_number"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -180,9 +193,9 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etPhnNo"
+                    style="@style/st_et_style"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
                     android:importantForAutofill="no"
                     android:inputType="number"
                     android:maxLength="10" />
@@ -191,9 +204,11 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilEmail"
-                style="@style/st_et_style"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_8sdp"
+                android:focusable="false"
                 android:hint="@string/hint_email"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -201,11 +216,11 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etEmail"
+                    style="@style/st_et_style"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
-                    android:importantForAutofill="no"
-                    android:editable="false"/>
+                    android:editable="false"
+                    android:importantForAutofill="no" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -232,33 +247,33 @@
 
                 <RadioButton
                     android:id="@+id/rbMale"
+                    style="@style/st_rb_style"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/_8sdp"
                     android:text="@string/rb_male" />
 
                 <RadioButton
                     android:id="@+id/rbFemale"
+                    style="@style/st_rb_style"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/_8sdp"
                     android:text="@string/rb_female" />
 
                 <RadioButton
                     android:id="@+id/rbOther"
+                    style="@style/st_rb_style"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/_8sdp"
                     android:text="@string/rb_other" />
 
             </RadioGroup>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilDob"
-                style="@style/st_et_style"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="0dp"
+                android:layout_marginTop="@dimen/_8sdp"
                 android:hint="@string/hint_date_of_birth"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -266,9 +281,9 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etDob"
+                    style="@style/st_et_style"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
                     android:clickable="false"
                     android:cursorVisible="false"
                     android:focusable="false"
@@ -276,11 +291,13 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
+
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilAddress"
-                style="@style/st_et_style"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_8sdp"
                 android:hint="@string/hint_address"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -288,9 +305,9 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etAddress"
+                    style="@style/st_et_style"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
                     android:importantForAutofill="no"
                     android:inputType="text" />
 
@@ -298,9 +315,10 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilPinCode"
-                style="@style/st_et_style"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_8sdp"
                 android:hint="@string/hint_pin_code"
                 app:errorIconDrawable="@null"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -309,20 +327,21 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etPinCode"
+                    style="@style/st_et_style"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
                     android:importantForAutofill="no"
                     android:inputType="number"
-                    android:maxLength="6"/>
+                    android:maxLength="6" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilCity"
-                style="@style/st_et_style"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_8sdp"
                 android:hint="@string/hint_city"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -330,9 +349,9 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etCity"
+                    style="@style/st_et_style"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
                     android:importantForAutofill="no"
                     android:inputType="text" />
 
@@ -340,9 +359,10 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilState"
-                style="@style/st_et_style"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_8sdp"
                 android:hint="@string/hint_state"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -350,9 +370,9 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etState"
+                    style="@style/st_et_style"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
                     android:importantForAutofill="no"
                     android:inputType="text" />
 
@@ -360,9 +380,10 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilCountry"
-                style="@style/st_et_style"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_8sdp"
                 android:hint="@string/hint_country"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -370,9 +391,9 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etCountry"
+                    style="@style/st_et_style"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
                     android:importantForAutofill="no"
                     android:inputType="text" />
 
@@ -386,11 +407,10 @@
                 android:background="@drawable/background_with_radius_12"
                 android:text="@string/btn_save"
                 android:textAllCaps="false"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tilCountry"
                 app:layout_constraintBottom_toBottomOf="parent"
-                />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tilCountry" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

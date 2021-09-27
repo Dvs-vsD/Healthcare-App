@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.app.consultationpoint.R
 import com.app.consultationpoint.databinding.ActivityChooseTimeBinding
+import com.app.consultationpoint.general.model.UserModel
 import com.app.consultationpoint.patient.appointment.model.AppointmentModel
 import com.app.consultationpoint.patient.appointment.myAppointments.MyAptViewModel
 import com.app.consultationpoint.patient.bottomNavigation.BottomNavigationActivity
@@ -19,6 +20,7 @@ import com.app.consultationpoint.patient.chat.room.model.RoomModel
 import com.app.consultationpoint.utils.Utils
 import com.app.consultationpoint.utils.Utils.formatTo
 import com.app.consultationpoint.utils.Utils.hide
+import com.app.consultationpoint.utils.Utils.loadImageFromCloud
 import com.app.consultationpoint.utils.Utils.show
 import dagger.hilt.android.AndroidEntryPoint
 import io.realm.RealmList
@@ -82,16 +84,18 @@ class ChooseTimeActivity : AppCompatActivity() {
 
             if (calender.timeInMillis < today) {
                 binding.calenderView.hide()
-                binding.tvAptDetail.show()
-                if (Utils.getUserType() == 0) {
-                    val user = myAptViewModel.getDoctorDetails(apt_model!!.doctor_id)
-                    binding.tvAptDetail.text =
-                        "Doctor Name: ${user.first_name} ${user.last_name} \nDate: ${calender.time.formatTo("dd,MMMM yyyy")}"
+                binding.llAptDetail.show()
+
+                val user: UserModel = if (Utils.getUserType() == 0) {
+                    myAptViewModel.getDoctorDetails(apt_model!!.doctor_id)
                 } else {
-                    val user = myAptViewModel.getDoctorDetails(apt_model!!.patient_id)
-                    binding.tvAptDetail.text =
-                        "Patient Name: ${user.first_name} ${user.last_name} \nDate: ${calender.time.formatTo("dd, MMMM yyyy")}"
+                    myAptViewModel.getDoctorDetails(apt_model!!.patient_id)
                 }
+                binding.tvName.text =
+                    "${user.first_name} ${user.last_name}"
+                binding.tvDate.text = calender.time.formatTo("dd, MMMM yyyy")
+                binding.ivProfile.loadImageFromCloud(user.profile ?: "")
+
                 binding.etTitle.isFocusable = false
                 binding.etTitle.isFocusableInTouchMode = false
                 binding.etDisc.isFocusable = false
@@ -104,7 +108,7 @@ class ChooseTimeActivity : AppCompatActivity() {
                 binding.calenderView.minDate = today
                 binding.calenderView.show()
                 binding.btnBookAppt.show()
-                binding.tvAptDetail.hide()
+                binding.llAptDetail.hide()
             }
 
             binding.etTitle.setText(apt_model!!.title)

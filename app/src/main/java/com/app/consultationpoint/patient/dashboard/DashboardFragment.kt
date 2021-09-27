@@ -52,8 +52,6 @@ class DashboardFragment : BaseFragment() {
             if (adapterTodayApt != null) {
                 Timber.d("notified")
                 adapterTodayApt?.setList(it)
-//                adapterTodayApt?.notifyItemRangeInserted(0,it.size)
-//                adapterTodayApt?.notifyDataSetChanged()
             }
         })
 

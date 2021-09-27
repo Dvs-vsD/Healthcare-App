@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.net.Uri
@@ -11,6 +12,7 @@ import android.os.Build
 import android.provider.MediaStore
 import android.view.View
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import cc.cloudist.acplibrary.ACProgressConstant
@@ -19,6 +21,10 @@ import com.app.consultationpoint.ConsultationApp
 import com.app.consultationpoint.GlideApp
 import com.app.consultationpoint.R
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
@@ -26,15 +32,48 @@ import java.io.ByteArrayOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
 
+
 object Utils {
 
     fun ImageView.loadImage(url: String) {
-        Glide.with(this).load(url).placeholder(R.drawable.default_user).into(this)
+        Glide.with(this).load(url).placeholder(R.drawable.progress_animation)
+            .error(R.drawable.error).into(this)
     }
 
     fun ImageView.loadImageFromCloud(url: String) {
         val ref: StorageReference = FirebaseStorage.getInstance().getReferenceFromUrl(url)
-        GlideApp.with(this).load(ref).placeholder(R.drawable.default_user).into(this)
+        GlideApp.with(this).load(ref).placeholder(R.drawable.default_user)
+            .error(R.drawable.error).into(this)
+    }
+
+    fun ImageView.loadImageFromCloudWithProgress(url: String, progressBar: ProgressBar) {
+        progressBar.show()
+
+        val ref: StorageReference = FirebaseStorage.getInstance().getReferenceFromUrl(url)
+        GlideApp.with(this).load(ref).placeholder(R.drawable.default_user)
+            .error(R.drawable.error)
+            .listener(object : RequestListener<Drawable> {
+                override fun onLoadFailed(
+                    e: GlideException?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    progressBar.hide()
+                    return false
+                }
+
+                override fun onResourceReady(
+                    resource: Drawable?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    dataSource: DataSource?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    progressBar.hide()
+                    return false
+                }
+            }).into(this)
     }
 
     fun String.toDate(

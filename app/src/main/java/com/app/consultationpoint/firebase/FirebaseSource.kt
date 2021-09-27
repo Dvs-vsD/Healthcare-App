@@ -125,6 +125,8 @@ class FirebaseSource @Inject constructor() {
                             }
                     }
 
+                    Thread.sleep(1000)
+
                     model.schedual_date = results.document.data["schedual_date"].toString()
 
                     model.schedual_time = results.document.data["schedual_time"].toString()
@@ -370,6 +372,7 @@ class FirebaseSource @Inject constructor() {
                             participantArray.add(memberList[index].toString().toLong())
                         }
 
+                        Thread.sleep(500)
                         room.user_ids_participants = participantArray
 
                         val participants: RealmList<ParticipantModel> = RealmList()

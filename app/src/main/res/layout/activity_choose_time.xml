@@ -72,21 +72,49 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/tvAptDetail"
-                style="@style/st_tv_normal.bold"
+            <RelativeLayout
+                android:id="@+id/llAptDetail"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_10sdp"
                 android:background="@drawable/background_with_radius_12"
-                android:gravity="center_vertical"
                 android:padding="@dimen/_16sdp"
-                android:text="Appointment Date: "
-                android:lineSpacingExtra="@dimen/_8sdp"
-                android:visibility="gone"
+                android:visibility="visible"
+                android:gravity="center"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/calenderView" />
+                app:layout_constraintTop_toBottomOf="@id/calenderView">
+
+                <TextView
+                    android:id="@+id/tvName"
+                    style="@style/st_tv_normal.bold"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toStartOf="@id/ivProfile"
+                    android:text="Doctor" />
+
+                <TextView
+                    android:id="@+id/tvDate"
+                    style="@style/st_tv_small.light_gray"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tvName"
+                    android:layout_marginTop="@dimen/_6sdp"
+                    android:layout_toStartOf="@id/ivProfile"
+                    android:text="24,sept 2021" />
+
+                <com.mikhaellopez.circularimageview.CircularImageView
+                    android:id="@+id/ivProfile"
+                    android:layout_width="@dimen/_40sdp"
+                    android:layout_height="@dimen/_40sdp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:elevation="@dimen/_4sdp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/default_user"
+                    app:civ_border="false" />
+
+            </RelativeLayout>
 
             <TextView
                 android:id="@+id/tvTimePicker"
@@ -104,7 +132,7 @@
                 app:drawableTint="@color/blue"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvAptDetail" />
+                app:layout_constraintTop_toBottomOf="@id/llAptDetail" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilTitle"
