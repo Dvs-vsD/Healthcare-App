@@ -59,9 +59,10 @@
     <string name="rb_patient">Patient</string>
     <string name="tv_are_you_a_patient_or_doctor">Are you a Patient or Doctor ?</string>
     <string name="hint_city">City</string>
-    <string name="hint_experience_years">Experience* (Years)</string>
+    <string name="hint_experience_years">Experience (Years)</string>
     <string name="hint_about_your_self">About your self (like services you provide)</string>
-    <string name="hint_specialization">Specialization*</string>
+    <string name="hint_about">About</string>
+    <string name="hint_specialization">Specialization</string>
     <string name="degrees">Degrees*</string>
     <string name="cb_mbbs">MBBS</string>
     <string name="cb_md">MD</string>
@@ -88,7 +89,8 @@
     <string name="tv_view_all">view all</string>
     <string name="tv_hello">Hello,</string>
     <string name="tv_personal_info">Personal Information :</string>
-    <string name="tv_residence">Residence  :</string>
+    <string name="tv_residence">Residence :</string>
+    <string name="tv_professional_detail">Professional Details :</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="tv_participants">Participants</string>
@@ -103,4 +105,7 @@
     <string name="tv_storage_your_nmedical_records">Storage Your\nMedical Records</string>
     <string name="tv_personalized_consultation">Personalized consultation\nand Care</string>
     <string name="btn_get_started">Get Started</string>
+
+    <string name="select">Select…</string>
+
 </resources>

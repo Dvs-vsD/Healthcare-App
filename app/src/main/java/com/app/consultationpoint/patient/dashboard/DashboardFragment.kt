@@ -120,7 +120,7 @@ class DashboardFragment : BaseFragment() {
 
         adapterTodayApt = activity?.let { context ->
             TodayAtpAdapter(
-                viewModel.getTodayAptList().value, context, viewModel.getAPtDoctorList()
+                viewModel.getTodayAptList().value, context, viewModel.getAPtDoctorList(), viewModel
             )
         }
         binding.recyclerView.itemAnimator = null

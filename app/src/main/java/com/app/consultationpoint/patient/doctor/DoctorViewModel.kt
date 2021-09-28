@@ -60,4 +60,12 @@ class DoctorViewModel @Inject constructor(private val repository: DoctorReposito
     fun getStatus(): LiveData<String> {
         return repository.getStatus()
     }
+
+    fun getSpecializationName(id: Int): String {
+        return repository.getSpecializationName(id)
+    }
+
+    fun getPatientCount(doc_id: Long) {
+        repository.getPatientCount(doc_id)
+    }
 }

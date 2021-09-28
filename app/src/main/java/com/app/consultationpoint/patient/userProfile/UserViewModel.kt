@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.app.consultationpoint.general.model.UserModel
+import com.app.consultationpoint.patient.dashboard.model.SpecialistModel
 import com.app.consultationpoint.patient.userProfile.model.AddressModel
 import com.app.consultationpoint.patient.userProfile.model.PostalDataModel
 import com.google.firebase.storage.FirebaseStorage
@@ -36,5 +37,13 @@ class UserViewModel @Inject constructor(private val repository: UserRepository):
 
     fun getPostalData(): LiveData<PostalDataModel> {
         return repository.getPostalData()
+    }
+
+    fun getSpecialistArray(): ArrayList<SpecialistModel> {
+        return repository.getSpecialistArray()
+    }
+
+    fun getSpecializationName(id: Int): String {
+        return repository.getSpecializationName(id)
     }
 }

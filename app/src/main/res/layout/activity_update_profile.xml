@@ -291,6 +291,83 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
+            <androidx.constraintlayout.widget.Group
+                android:id="@+id/professionalDetailsGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:constraint_referenced_ids="llSpSpecialist, tilExperience, tilAbout"
+                />
+
+            <LinearLayout
+                android:id="@+id/llSpSpecialist"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_8sdp"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tilDob">
+
+                <TextView
+                    style="@style/st_tv_small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/hint_specialization"/>
+
+                <Spinner
+                    android:id="@+id/spSpecialist"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/border_radius_8"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:gravity="center"
+                    />
+
+            </LinearLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilExperience"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_8sdp"
+                android:hint="@string/hint_experience_years"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/llSpSpecialist">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etExperience"
+                    style="@style/st_et_style"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:importantForAutofill="no"
+                    android:maxLength="3"
+                    android:inputType="numberDecimal" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilAbout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_8sdp"
+                android:hint="@string/hint_about_your_self"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tilExperience">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etAbout"
+                    style="@style/st_et_style"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:importantForAutofill="no"
+                    android:inputType="textMultiLine"
+                    android:maxLines="6"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilAddress"
@@ -301,7 +378,7 @@
                 android:hint="@string/hint_address"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tilDob">
+                app:layout_constraintTop_toBottomOf="@+id/tilAbout">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etAddress"

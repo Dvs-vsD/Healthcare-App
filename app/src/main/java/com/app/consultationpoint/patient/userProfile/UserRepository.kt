@@ -6,14 +6,16 @@ import androidx.lifecycle.MutableLiveData
 import com.app.consultationpoint.firebase.FirebaseSource
 import com.app.consultationpoint.general.model.UserModel
 import com.app.consultationpoint.network.RetrofitClient
+import com.app.consultationpoint.patient.dashboard.model.SpecialistModel
 import com.app.consultationpoint.patient.userProfile.model.AddressModel
 import com.app.consultationpoint.patient.userProfile.model.PostalDataModel
 import com.app.consultationpoint.patient.userProfile.model.PostalModel
-import com.google.firebase.storage.StorageReference
+import io.realm.Realm
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import timber.log.Timber
+import java.util.ArrayList
 import javax.inject.Inject
 
 class UserRepository @Inject constructor(private var firebaseSource: FirebaseSource) {
@@ -68,5 +70,16 @@ class UserRepository @Inject constructor(private var firebaseSource: FirebaseSou
 
     fun getPostalData(): LiveData<PostalDataModel> {
         return postalDataModel
+    }
+
+    fun getSpecialistArray(): ArrayList<SpecialistModel> {
+        Realm.getDefaultInstance().use { mRealm ->
+            val mRealmResults = mRealm.where(SpecialistModel::class.java).findAll()
+            return mRealm.copyFromRealm(mRealmResults) as ArrayList<SpecialistModel>
+        }
+    }
+
+    fun getSpecializationName(id: Int): String {
+        return firebaseSource.getSpecializationName(id)
     }
 }

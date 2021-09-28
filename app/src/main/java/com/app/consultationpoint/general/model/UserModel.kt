@@ -27,7 +27,7 @@ open class UserModel: RealmObject() {
     var updated_at: Long = 0
     var user_token: String = ""
     var about_info: String = ""
-    var specialist_id: String = ""
+    var specialist_id: Int = 0
     var experience_yr: String = ""
     var payment_id: String = ""
     var payment_detail: String = ""

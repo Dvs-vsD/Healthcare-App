@@ -210,4 +210,8 @@ class DashboardRepository @Inject constructor(private val firebaseSource: Fireba
     suspend fun fetchDoctorsFromFB(type_id: Int) {
         firebaseSource.fetchDocFromFB(type_id)
     }
+
+    fun getSpecializationName(specialistId: Int): String {
+        return firebaseSource.getSpecializationName(specialistId)
+    }
 }

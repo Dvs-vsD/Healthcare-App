@@ -177,6 +177,18 @@ object Utils {
         return ConsultationApp.shPref.getString(Const.DOB, "") ?: ""
     }
 
+    fun getSpecialistID(): Int {
+        return ConsultationApp.shPref.getInt(Const.SPECIALIST_ID, 0)
+    }
+
+    fun getExperienceYears(): String {
+        return ConsultationApp.shPref.getString(Const.EXPERIENCE_YEAR, "") ?: ""
+    }
+
+    fun getAboutInfo(): String {
+        return ConsultationApp.shPref.getString(Const.ABOUT, "") ?: ""
+    }
+
     fun getUserAdr(): String {
         return ConsultationApp.shPref.getString(Const.ADDRESS, "") ?: ""
     }

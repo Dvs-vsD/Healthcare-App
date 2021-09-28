@@ -11,7 +11,9 @@ import com.app.consultationpoint.R
 import com.app.consultationpoint.databinding.ActivityUserProfileBinding
 import com.app.consultationpoint.general.LoginActivity
 import com.app.consultationpoint.utils.Utils
+import com.app.consultationpoint.utils.Utils.hide
 import com.app.consultationpoint.utils.Utils.loadImageFromCloud
+import com.app.consultationpoint.utils.Utils.show
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import okhttp3.internal.Util
@@ -35,6 +37,11 @@ class UserProfileActivity : AppCompatActivity() {
     private fun inThis() {
 
         binding.ivBack.setOnClickListener { onBackPressed() }
+
+        if(Utils.getUserType() == 0)
+            binding.professionalDetailsGroup.hide()
+        else
+            binding.professionalDetailsGroup.show()
 
         getProfileDetails()
 
@@ -92,6 +99,21 @@ class UserProfileActivity : AppCompatActivity() {
         if (dob != "") {
             binding.tvDob.text = dob
         }
+
+        val specialistId = Utils.getSpecialistID()
+        if (specialistId != 0) {
+            val name = viewModel.getSpecializationName(specialistId)
+            if (name != "")
+                binding.tvSpecialization.text = name
+        }
+
+        val experience = Utils.getExperienceYears()
+        if (experience != "")
+            binding.tvExperience.text = experience
+
+        val about = Utils.getAboutInfo()
+        if (about != "")
+            binding.tvAboutInfo.text = about
 
         val adr = Utils.getUserAdr()
         if (adr != "") {

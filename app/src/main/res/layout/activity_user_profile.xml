@@ -54,9 +54,9 @@
         android:layout_width="@dimen/_60sdp"
         android:layout_height="@dimen/_60sdp"
         android:layout_marginTop="@dimen/_16sdp"
+        android:elevation="@dimen/_4sdp"
         android:scaleType="centerCrop"
         android:src="@drawable/default_user"
-        android:elevation="@dimen/_4sdp"
         app:civ_border="false"
         app:layout_constraintEnd_toEndOf="@id/guidelineRight"
         app:layout_constraintHorizontal_bias="0"
@@ -290,6 +290,98 @@
                 app:layout_constraintStart_toStartOf="@id/tvDobHint"
                 app:layout_constraintTop_toBottomOf="@+id/tvDobHint" />
 
+            <androidx.constraintlayout.widget.Group
+                android:id="@+id/professionalDetailsGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:constraint_referenced_ids="tvProfessionalDetail, tvSpecializationHint, tvSpecialization, tvExperienceHint, tvExperience, tvAboutInfoHint, tvAboutInfo"
+                />
+
+            <TextView
+                android:id="@+id/tvProfessionalDetail"
+                style="@style/st_tv_normal.bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_24sdp"
+                android:text="@string/tv_professional_detail"
+                android:textColor="@color/blue"
+                app:layout_constraintBottom_toTopOf="@id/tvSpecializationHint"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvPhnNo" />
+
+            <TextView
+                android:id="@+id/tvSpecializationHint"
+                style="@style/st_tv_extra_small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_16sdp"
+                android:text="@string/hint_specialization"
+                app:layout_constraintBottom_toTopOf="@+id/tvSpecialization"
+                app:layout_constraintEnd_toEndOf="@id/guidelineMiddle"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvProfessionalDetail" />
+
+            <TextView
+                android:id="@+id/tvSpecialization"
+                style="@style/st_tv_normal.bold"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_8sdp"
+                android:text="@string/place_holder"
+                app:layout_constraintEnd_toEndOf="@id/guidelineMiddle"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvSpecializationHint" />
+
+            <TextView
+                android:id="@+id/tvExperienceHint"
+                style="@style/st_tv_extra_small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_16sdp"
+                android:text="@string/hint_experience_years"
+                app:layout_constraintBottom_toTopOf="@id/tvExperience"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toStartOf="@id/guidelineMiddle"
+                app:layout_constraintTop_toTopOf="@id/tvSpecializationHint" />
+
+            <TextView
+                android:id="@+id/tvExperience"
+                style="@style/st_tv_normal.bold"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/place_holder"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/tvExperienceHint"
+                app:layout_constraintTop_toBottomOf="@+id/tvExperienceHint" />
+
+            <TextView
+                android:id="@+id/tvAboutInfoHint"
+                style="@style/st_tv_extra_small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_8sdp"
+                android:text="@string/hint_about"
+                app:layout_constraintBottom_toTopOf="@id/tvAboutInfo"
+                app:layout_constraintEnd_toEndOf="@id/guidelineMiddle"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvSpecialization" />
+
+            <TextView
+                android:id="@+id/tvAboutInfo"
+                style="@style/st_tv_small.bold"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_8sdp"
+                android:text="@string/place_holder"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvAboutInfoHint" />
+
             <TextView
                 android:id="@+id/tvResidence"
                 style="@style/st_tv_normal.bold"
@@ -302,7 +394,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvPhnNo" />
+                app:layout_constraintTop_toBottomOf="@id/tvAboutInfo" />
 
             <TextView
                 android:id="@+id/tvAddressHint"

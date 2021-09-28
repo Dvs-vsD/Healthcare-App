@@ -11,12 +11,9 @@ import com.app.consultationpoint.patient.chat.chatScreen.ChatScreenActivity
 import com.app.consultationpoint.patient.chat.room.model.ParticipantModel
 import com.app.consultationpoint.patient.chat.room.model.RoomModel
 import com.app.consultationpoint.utils.Utils
-import com.app.consultationpoint.utils.Utils.loadImage
 import com.app.consultationpoint.utils.Utils.loadImageFromCloud
-import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
 import io.realm.RealmList
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -28,6 +25,7 @@ class DoctorDetailsActivity : AppCompatActivity() {
     private var docId: Long = 0
     private var userId: Long = 0
 
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDoctorDetailsBinding.inflate(layoutInflater)
@@ -36,6 +34,13 @@ class DoctorDetailsActivity : AppCompatActivity() {
         viewModel.getStatus().observe(this, {
             if (userId != 0L && it.isNotEmpty() && room != null) {
                 viewModel.createChatRoom(room!!, userId, docId)
+            }
+
+            if (it.isNotEmpty() && it.startsWith("count")) {
+                val count = it.substring(5, it.length)
+                Timber.d("FirebaseSource $count")
+                if (count.isNotEmpty())
+                    binding.tvPatientCount.text = "$count+"
             }
         })
 
@@ -58,7 +63,17 @@ class DoctorDetailsActivity : AppCompatActivity() {
         if (model.profile != "" && model.profile != null) {
             binding.ivProfile.loadImageFromCloud(model.profile!!)
         }
-        binding.tvYearCount.text = model.experience_yr + "+"
+        if (model.specialist_id != 0)
+            binding.tvSpecAdr.text = viewModel.getSpecializationName(model.specialist_id)
+        else
+            binding.tvSpecAdr.text = ""
+
+        if (model.experience_yr.isNotEmpty())
+            binding.tvYearCount.text = model.experience_yr + "yrs+"
+        else
+            binding.tvYearCount.text = "0yrs+"
+
+        viewModel.getPatientCount(docId)
 
         if (model.about_info != "") {
             binding.tvAbout.text = model.about_info
@@ -86,7 +101,7 @@ class DoctorDetailsActivity : AppCompatActivity() {
                 intent.putExtra("room_id", roomId)
                 startActivity(intent)
             } else {
-                createRoom(docId,docName,userId)
+                createRoom(docId, docName, userId)
                 intent.putExtra("room_id", room?.room_id)
                 startActivity(intent)
             }
@@ -104,7 +119,7 @@ class DoctorDetailsActivity : AppCompatActivity() {
 
         val sender = ParticipantModel()
         sender.paticipant_id = System.currentTimeMillis()
-        sender.room_id = room?.room_id?:0
+        sender.room_id = room?.room_id ?: 0
         sender.user_id = userId
         sender.added_by_id = userId
         sender.updated_at = System.currentTimeMillis()
@@ -114,7 +129,7 @@ class DoctorDetailsActivity : AppCompatActivity() {
 
         val receiver = ParticipantModel()
         receiver.paticipant_id = System.currentTimeMillis()
-        receiver.room_id = room?.room_id?:0
+        receiver.room_id = room?.room_id ?: 0
         receiver.user_id = docId
         receiver.added_by_id = userId
         receiver.updated_at = System.currentTimeMillis()

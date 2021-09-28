@@ -11,18 +11,20 @@ import com.app.consultationpoint.databinding.RowOfTodayAptBinding
 import com.app.consultationpoint.general.model.UserModel
 import com.app.consultationpoint.patient.appointment.bookAppointment.ChooseTimeActivity
 import com.app.consultationpoint.patient.appointment.model.AppointmentModel
+import com.app.consultationpoint.patient.dashboard.DashboardViewModel
 import com.app.consultationpoint.utils.Utils
 import com.app.consultationpoint.utils.Utils.formatTo
 import com.app.consultationpoint.utils.Utils.hide
-import com.app.consultationpoint.utils.Utils.loadImage
 import com.app.consultationpoint.utils.Utils.loadImageFromCloud
 import com.app.consultationpoint.utils.Utils.show
 import com.app.consultationpoint.utils.Utils.toDate
+import org.koin.core.parameter.parametersOf
 
 class TodayAtpAdapter(
     private var list: ArrayList<AppointmentModel>?,
     private val context: Context,
-    private val doctorDetails: LiveData<ArrayList<UserModel>>
+    private val doctorDetails: LiveData<ArrayList<UserModel>>,
+    private val viewModel: DashboardViewModel
 ) : RecyclerView.Adapter<TodayAtpAdapter.MyViewHolder>() {
 
 
@@ -39,11 +41,15 @@ class TodayAtpAdapter(
                 doctorDetails.value?.get(adapterPosition)?.first_name + " " + doctorDetails.value?.get(
                     adapterPosition
                 )?.last_name
-//            binding.tvSpecAdr.text = doctorDetails.specialization + ", " + doctorDetails.city
-            if (Utils.getUserType() == 0)
+
+            if (Utils.getUserType() == 0) {
                 binding.tvSpecAdr.show()
-            else
+                binding.tvSpecAdr.text = viewModel.getSpecializationName(doctorDetails.value?.get(adapterPosition)?.specialist_id?:0)
+            } else {
                 binding.tvSpecAdr.hide()
+                binding.tvSpecAdr.text = ""
+            }
+
 
             if (doctorDetails.value?.get(adapterPosition)?.profile != "" && doctorDetails.value?.get(
                     adapterPosition

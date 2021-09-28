@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.app.consultationpoint.R
 import com.app.consultationpoint.databinding.ActivityAllAppointmentsBinding
+import com.app.consultationpoint.patient.dashboard.DashboardViewModel
 import com.app.consultationpoint.patient.dashboard.adapter.TodayAtpAdapter
 import com.app.consultationpoint.utils.Utils.formatTo
 import com.app.consultationpoint.utils.Utils.hide
@@ -25,6 +26,7 @@ class AllAppointmentsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAllAppointmentsBinding
     private val viewModel by viewModels<AllAptViewModel>()
+    private val dashboardViewModel by viewModels<DashboardViewModel>()
     private var dayAptAdapter: TodayAtpAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,7 +72,7 @@ class AllAppointmentsActivity : AppCompatActivity() {
 
         viewModel.getAptForThisDay(today.formatTo("yyyy-MM-dd"))
 
-        dayAptAdapter = TodayAtpAdapter(viewModel.getOneDayApt().value, this, viewModel.getAptDoctorList())
+        dayAptAdapter = TodayAtpAdapter(viewModel.getOneDayApt().value, this, viewModel.getAptDoctorList(), dashboardViewModel)
         binding.recyclerView.setHasFixedSize(true)
         binding.recyclerView.adapter = dayAptAdapter
 

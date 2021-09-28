@@ -17,6 +17,9 @@ object Const {
     const val USER_TYPE: String = "user_type"
     const val USER_NAME: String = "user_name"
     const val DOB: String = "dob"
+    const val SPECIALIST_ID: String = "specialist_id"
+    const val EXPERIENCE_YEAR: String = "experiece_year"
+    const val ABOUT: String = "about"
     const val GENDER: String = "gender"
     const val REQUEST_CODE: Int = 100
 }

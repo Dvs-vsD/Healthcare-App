@@ -106,4 +106,12 @@ class DoctorRepository @Inject constructor(private val firebaseSource: FirebaseS
     fun getStatus(): LiveData<String> {
         return firebaseSource.getStatus()
     }
+
+    fun getSpecializationName(id: Int): String {
+        return firebaseSource.getSpecializationName(id)
+    }
+
+    fun getPatientCount(docId: Long) {
+        firebaseSource.getPatientCount(docId)
+    }
 }

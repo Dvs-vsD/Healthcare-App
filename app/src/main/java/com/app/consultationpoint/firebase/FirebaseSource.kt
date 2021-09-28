@@ -82,7 +82,7 @@ class FirebaseSource @Inject constructor() {
         model.updated_at = snapshot.getLong("updated_at") ?: 0
         model.user_token = snapshot.getString("user_token") ?: ""
         model.about_info = snapshot.getString("about_info") ?: ""
-        model.specialist_id = snapshot.getString("specialist_id") ?: ""
+        model.specialist_id = snapshot.getLong("specialist_id")?.toInt() ?: 0
         model.experience_yr = snapshot.getString("experience_yr") ?: ""
         model.payment_id = snapshot.getString("payment_id") ?: ""
         model.payment_detail = snapshot.getString("payment_detail") ?: ""
@@ -109,7 +109,8 @@ class FirebaseSource @Inject constructor() {
             if (snapshot != null) {
                 for (results in snapshot.documentChanges) {
                     val model = AppointmentModel()
-                    model.appointment_id = results.document.data["appointment_id"].toString().toLong()
+                    model.appointment_id =
+                        results.document.data["appointment_id"].toString().toLong()
                     model.doctor_id = results.document.data["doctor_id"].toString().toLong()
                     model.patient_id = results.document.data["patient_id"].toString().toLong()
 
@@ -231,6 +232,18 @@ class FirebaseSource @Inject constructor() {
                             Const.DOB, snapshot.getString("dob") ?: ""
                         ).apply()
 
+                        ConsultationApp.shPref.edit().putInt(
+                            Const.SPECIALIST_ID, snapshot.getLong("specialist_id")?.toInt() ?: 0
+                        ).apply()
+
+                        ConsultationApp.shPref.edit().putString(
+                            Const.EXPERIENCE_YEAR, snapshot.getString("experience_yr") ?: ""
+                        ).apply()
+
+                        ConsultationApp.shPref.edit().putString(
+                            Const.ABOUT, snapshot.getString("about_info") ?: ""
+                        ).apply()
+
                         ConsultationApp.shPref.edit().putString(
                             Const.USER_PROFILE, snapshot.getString("profile") ?: ""
                         ).apply()
@@ -299,6 +312,10 @@ class FirebaseSource @Inject constructor() {
             ConsultationApp.shPref.edit().putString(Const.PHN_NO, model.mobile).apply()
             ConsultationApp.shPref.edit().putInt(Const.GENDER, model.gender).apply()
             ConsultationApp.shPref.edit().putString(Const.DOB, model.dob).apply()
+            ConsultationApp.shPref.edit().putInt(Const.SPECIALIST_ID, model.specialist_id).apply()
+            ConsultationApp.shPref.edit().putString(Const.EXPERIENCE_YEAR, model.experience_yr)
+                .apply()
+            ConsultationApp.shPref.edit().putString(Const.ABOUT, model.about_info).apply()
             ConsultationApp.shPref.edit().putString(Const.ADDRESS, adrModel.address).apply()
             ConsultationApp.shPref.edit().putString(Const.CITY, adrModel.city).apply()
             ConsultationApp.shPref.edit().putString(Const.STATE, adrModel.state).apply()
@@ -575,5 +592,29 @@ class FirebaseSource @Inject constructor() {
                 status.value = "profile upload failed"
                 status.value = ""
             }
+    }
+
+    fun getSpecializationName(id: Int): String {
+        Realm.getDefaultInstance().use { mRealm ->
+            val mRealmResults =
+                mRealm.where(SpecialistModel::class.java).equalTo("id", id).findFirst()
+            return mRealmResults?.name ?: ""
+        }
+    }
+
+    fun getPatientCount(docId: Long) {
+        database.collection("Appointments").whereEqualTo("doctor_id", docId).get()
+            .addOnSuccessListener {
+                var count = 0
+                for (document in it.documents) {
+                    count += 1
+                    status.value = "count$count"
+                    status.value = ""
+                }
+
+            }.addOnFailureListener {
+            status.value = "count" + 0
+            status.value = ""
+        }
     }
 }

@@ -8,6 +8,7 @@ import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.provider.MediaStore
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -19,15 +20,19 @@ import com.app.consultationpoint.patient.userProfile.model.AddressModel
 import com.app.consultationpoint.utils.Const.REQUEST_CODE
 import com.app.consultationpoint.utils.Utils
 import com.app.consultationpoint.utils.Utils.formatTo
+import com.app.consultationpoint.utils.Utils.hide
 import com.app.consultationpoint.utils.Utils.loadImageFromCloud
 import com.app.consultationpoint.utils.Utils.loadImageFromCloudWithProgress
+import com.app.consultationpoint.utils.Utils.show
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import dagger.hilt.android.AndroidEntryPoint
+import okhttp3.internal.Util
 import java.util.*
+import kotlin.collections.ArrayList
 
 @AndroidEntryPoint
 class UptPntProfileActivity : AppCompatActivity() {
@@ -76,6 +81,11 @@ class UptPntProfileActivity : AppCompatActivity() {
         if (profileURL.isNotEmpty())
             binding.ivProfile.loadImageFromCloud(profileURL)
 
+        if(Utils.getUserType() == 0)
+            binding.professionalDetailsGroup.hide()
+        else
+            binding.professionalDetailsGroup.show()
+
         binding.etUserName.setText(Utils.getUserName())
         binding.etFirstName.setText(Utils.getFirstName())
         binding.etLastName.setText(Utils.getLastName())
@@ -89,6 +99,26 @@ class UptPntProfileActivity : AppCompatActivity() {
         }
 
         binding.etDob.setText(Utils.getDOB())
+
+        val specialistArray = viewModel.getSpecialistArray()
+        val spNameList: ArrayList<String> = ArrayList()
+
+        spNameList.add(0,getString(R.string.select))
+
+        for ((index,item) in specialistArray.withIndex()) {
+            spNameList.add(index + 1 ,item.name)
+        }
+
+        binding.spSpecialist.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, spNameList)
+
+        val spId = Utils.getSpecialistID()
+        if (spId != 0) {
+            binding.spSpecialist.setSelection(spId)
+        }
+
+        binding.etExperience.setText(Utils.getExperienceYears())
+        binding.etAbout.setText(Utils.getAboutInfo())
+
         binding.etAddress.setText(Utils.getUserAdr())
         binding.etCity.setText(Utils.getCity())
         binding.etState.setText(Utils.getState())
@@ -125,6 +155,7 @@ class UptPntProfileActivity : AppCompatActivity() {
         }
 
         binding.btnSave.setOnClickListener {
+
             val userName = binding.etUserName.text?.trim().toString()
             val firstName = binding.etFirstName.text?.trim().toString()
             val lastName = binding.etLastName.text?.trim().toString()
@@ -137,6 +168,14 @@ class UptPntProfileActivity : AppCompatActivity() {
                 R.id.rbOther -> gender = 2
             }
             val dob = binding.etDob.text?.trim().toString()
+            //Professional detail
+            var specialist_id = 0
+            if (binding.spSpecialist.selectedItemPosition != 0) {
+                val spPosition = binding.spSpecialist.selectedItemPosition - 1
+                specialist_id = specialistArray[spPosition].id
+            }
+            val experience = binding.etExperience.text?.trim().toString()
+            val about = binding.etAbout.text?.trim().toString()
 
             // Address
             val address = binding.etAddress.text?.trim().toString()
@@ -161,6 +200,11 @@ class UptPntProfileActivity : AppCompatActivity() {
                 model.profile = profileURL ?: ""
                 model.gender = gender
                 model.dob = dob
+
+                model.specialist_id = specialist_id
+                model.experience_yr = experience
+                model.about_info = about
+
                 model.user_type_id = Utils.getUserType()
                 model.created_at = userId
                 model.updated_at = System.currentTimeMillis()

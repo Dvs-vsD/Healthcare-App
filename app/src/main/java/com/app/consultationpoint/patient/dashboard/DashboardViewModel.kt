@@ -75,4 +75,8 @@ class DashboardViewModel @Inject constructor(private val repository: DashboardRe
             repository.fetchDoctorsFromFB(type_id)
         }
     }
+
+    fun getSpecializationName(specialistId: Int): String {
+        return repository.getSpecializationName(specialistId)
+    }
 }

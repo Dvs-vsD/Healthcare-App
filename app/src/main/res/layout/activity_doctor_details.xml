@@ -7,7 +7,6 @@
     android:background="@color/bg_gray"
     tools:context=".patient.doctor.DoctorDetailsActivity">
 
-
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineLeft"
         android:layout_width="wrap_content"
@@ -123,13 +122,12 @@
                 <TextView
                     android:id="@+id/tvPatientCount"
                     style="@style/st_tv_large.bold"
-                    android:layout_below="@id/tvPatientsText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:textColor="@color/yellow"
-                    android:text="500+"
-                    />
+                    android:layout_below="@id/tvPatientsText"
+                    android:layout_centerHorizontal="true"
+                    android:text="0+"
+                    android:textColor="@color/yellow" />
 
             </RelativeLayout>
 
@@ -168,13 +166,12 @@
                 <TextView
                     android:id="@+id/tvYearCount"
                     style="@style/st_tv_large.bold"
-                    android:layout_below="@id/tvExperienceText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:textColor="@color/pink"
-                    android:text="10yrs+"
-                    />
+                    android:layout_below="@id/tvExperienceText"
+                    android:layout_centerHorizontal="true"
+                    android:text="0yrs+"
+                    android:textColor="@color/pink" />
 
             </RelativeLayout>
 
