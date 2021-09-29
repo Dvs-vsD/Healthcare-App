@@ -96,7 +96,7 @@ class RoomListAdapter(
         holder.itemView.setOnClickListener {
             val intent = Intent(context, ChatScreenActivity::class.java)
             intent.putExtra("room_id", list[position]?.room_id)
-            intent.putExtra("doctor_id", doctorId)
+            intent.putExtra("receiver_id", doctorId)
             context.startActivity(intent)
         }
     }

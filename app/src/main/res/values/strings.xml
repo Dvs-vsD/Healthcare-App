@@ -107,5 +107,6 @@
     <string name="btn_get_started">Get Started</string>
 
     <string name="select">Select…</string>
+    <string name="tv_contact_details">Contact Details :</string>
 
 </resources>

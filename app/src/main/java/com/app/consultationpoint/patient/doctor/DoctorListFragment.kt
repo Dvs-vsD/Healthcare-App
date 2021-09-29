@@ -1,5 +1,6 @@
 package com.app.consultationpoint.patient.doctor
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.view.LayoutInflater
@@ -12,22 +13,29 @@ import com.app.consultationpoint.BaseFragment
 import com.app.consultationpoint.R
 import com.app.consultationpoint.databinding.FragmentDoctorListBinding
 import com.app.consultationpoint.general.model.UserModel
+import com.app.consultationpoint.patient.chat.chatScreen.ChatScreenActivity
+import com.app.consultationpoint.patient.chat.room.model.ParticipantModel
+import com.app.consultationpoint.patient.chat.room.model.RoomModel
 import com.app.consultationpoint.patient.doctor.adapter.DoctorAdapter
 import com.app.consultationpoint.utils.Utils
 import com.app.consultationpoint.utils.Utils.hide
 import com.app.consultationpoint.utils.Utils.show
+import com.app.consultationpoint.utils.Utils.showToast
 import dagger.hilt.android.AndroidEntryPoint
+import io.realm.RealmList
 import timber.log.Timber
 
 private const val ARG_PARAM1 = "param1"
 
 @AndroidEntryPoint
-class DoctorListFragment : BaseFragment() {
+class DoctorListFragment : BaseFragment(), DoctorAdapter.OnButtonChatCLick {
     private var param1: String? = null
     private lateinit var binding: FragmentDoctorListBinding
     private var adapterDoctor: DoctorAdapter? = null
     private val viewModel: DoctorViewModel by viewModels()
     private var listUser: ArrayList<UserModel>? = null
+    private var room: RoomModel? = null
+    private var receiver_id: Long = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,11 +44,18 @@ class DoctorListFragment : BaseFragment() {
         }
 
         viewModel.getStatus().observe(this, {
+            Utils.dismissProgressDialog()
             if (it == "Doctor List Updated" && adapterDoctor != null) {
                 Timber.d("Adapter notified by the init doctor list realm")
                 Handler().post {
                     viewModel.fetchDocFromRDB()
                 }
+            }
+
+            if (it.isNotEmpty() && it == "Room Created Successfully" && room != null) {
+                goToChatScreen(room!!.room_id, receiver_id)
+            } else if (it.startsWith("Failed to create chat room")) {
+                activity?.showToast("Something went wrong!!! Try again")
             }
         })
 
@@ -48,9 +63,7 @@ class DoctorListFragment : BaseFragment() {
             if (adapterDoctor != null) {
                 listUser = it
                 Timber.d("doctor list changed #Size : ${listUser?.size}")
-//                adapterDoctor?.notifyItemRangeInserted(0,it.size)
                 adapterDoctor?.setDataList(listUser)
-//                adapterDoctor?.notifyDataSetChanged()
 
                 if (it.isNotEmpty())
                     binding.tvNoData.hide()
@@ -86,7 +99,7 @@ class DoctorListFragment : BaseFragment() {
             listUser = ArrayList()
 
         listUser = viewModel.getDoctorList().value
-        adapterDoctor = DoctorAdapter(listUser, activity, viewModel)
+        adapterDoctor = DoctorAdapter(listUser, activity, viewModel, this@DoctorListFragment)
 
         binding.recyclerView.layoutManager = GridLayoutManager(activity, 2)
         binding.recyclerView.setHasFixedSize(true)
@@ -114,5 +127,70 @@ class DoctorListFragment : BaseFragment() {
                     putString(ARG_PARAM1, param1.toString())
                 }
             }
+    }
+
+    override fun onChatBtnClick(receiver_id: Long) {
+        Utils.showProgressDialog(requireActivity())
+        val roomId = viewModel.checkRoomAvailability(Utils.getUserId().toLong(), receiver_id)
+        if (roomId != 0L) {
+            Utils.dismissProgressDialog()
+            Timber.d("From Realm")
+            goToChatScreen(roomId, receiver_id)
+        } else {
+            createChatRoom(receiver_id, Utils.getFirstName() + " " + Utils.getLastName(), Utils.getUserId().toLong())
+        }
+    }
+
+    private fun goToChatScreen(room_id: Long, receiver_id: Long) {
+        val intent = Intent(activity, ChatScreenActivity::class.java)
+        intent.putExtra("receiver_id", receiver_id)
+        intent.putExtra("room_id", room_id)
+        startActivity(intent)
+    }
+
+    private fun createChatRoom(receiver_id: Long, docName: String, sender_id: Long) {
+        room = RoomModel()
+
+        room?.room_id = System.currentTimeMillis()
+        room?.room_type = 1
+        room?.created_by_id = sender_id
+        room?.name = docName
+
+        val sender = ParticipantModel()
+        sender.paticipant_id = System.currentTimeMillis()
+        sender.room_id = room?.room_id ?: 0
+        sender.user_id = sender_id
+        sender.added_by_id = sender_id
+        sender.updated_at = System.currentTimeMillis()
+        sender.is_deleted = false
+
+        Thread.sleep(1)
+
+        val receiver = ParticipantModel()
+        receiver.paticipant_id = System.currentTimeMillis()
+        receiver.room_id = room?.room_id ?: 0
+        receiver.user_id = receiver_id
+        receiver.added_by_id = sender_id
+        receiver.updated_at = System.currentTimeMillis()
+        receiver.is_deleted = false
+
+        val participantIdList = RealmList<Long>()
+        participantIdList.add(sender.user_id)
+        participantIdList.add(receiver.user_id)
+
+        room?.user_ids_participants = participantIdList
+
+        val list = RealmList<ParticipantModel>()
+        list.add(sender)
+        list.add(receiver)
+
+        room?.list_participants = list
+        room?.updated_at = System.currentTimeMillis()
+        room?.created_at = System.currentTimeMillis()
+        room?.is_req_accept_block = 0
+        room?.is_deleted = false
+
+        if (room != null)
+            viewModel.createChatRoom(room!!)
     }
 }

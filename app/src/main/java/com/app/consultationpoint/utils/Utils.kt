@@ -1,7 +1,9 @@
 package com.app.consultationpoint.utils
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
@@ -20,12 +22,14 @@ import cc.cloudist.acplibrary.ACProgressFlower
 import com.app.consultationpoint.ConsultationApp
 import com.app.consultationpoint.GlideApp
 import com.app.consultationpoint.R
+import com.app.consultationpoint.general.LoginActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.google.android.material.textfield.TextInputLayout
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import java.io.ByteArrayOutputStream
@@ -276,5 +280,25 @@ object Utils {
             null
         )
         return Uri.parse(path)
+    }
+
+    fun logoutConformationDialog(context: Context) {
+        AlertDialog.Builder(context)
+            .setTitle("Are you sure you want to logout?")
+            .setPositiveButton("Yes") { dialog, _ ->
+
+                FirebaseAuth.getInstance().signOut()
+                ConsultationApp.shPref.edit().clear().apply()
+
+                val intent = Intent(context, LoginActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                context.startActivity(intent)
+
+                dialog.dismiss()
+            }
+            .setNegativeButton("No") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
     }
 }

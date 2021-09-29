@@ -15,15 +15,14 @@ import com.app.consultationpoint.general.model.UserModel
 import com.app.consultationpoint.patient.appointment.model.AppointmentModel
 import com.app.consultationpoint.patient.appointment.myAppointments.MyAptViewModel
 import com.app.consultationpoint.patient.bottomNavigation.BottomNavigationActivity
-import com.app.consultationpoint.patient.chat.room.model.ParticipantModel
-import com.app.consultationpoint.patient.chat.room.model.RoomModel
 import com.app.consultationpoint.utils.Utils
 import com.app.consultationpoint.utils.Utils.formatTo
 import com.app.consultationpoint.utils.Utils.hide
 import com.app.consultationpoint.utils.Utils.loadImageFromCloud
 import com.app.consultationpoint.utils.Utils.show
+import com.app.consultationpoint.utils.Utils.showToast
 import dagger.hilt.android.AndroidEntryPoint
-import io.realm.RealmList
+import kotlinx.android.synthetic.main.activity_choose_time.*
 import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
@@ -34,14 +33,13 @@ class ChooseTimeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityChooseTimeBinding
     private var doctor_id: Long? = 0
     private var userId: Long? = 0
-    private var docName: String? = ""
     private var selectedTime: String? = ""
     private var selectedDate: String? = ""
-    private var room: RoomModel? = null
     private val viewModel by viewModels<BookAptViewModel>()
     private val myAptViewModel by viewModels<MyAptViewModel>()
     private var apt_model: AppointmentModel? = null
     private val calender = Calendar.getInstance()
+    private var isUpdate: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,8 +47,21 @@ class ChooseTimeActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         viewModel.getStatus().observe(this, {
-            if (it.isNotEmpty() && room != null && doctor_id != 0L) {
-                createChatRoom(doctor_id ?: 0, docName ?: "", userId ?: 0)
+            Utils.dismissProgressDialog()
+            if (it.isNotEmpty() && it == "Appointment booked") {
+                myAptViewModel.fetchAptFromRealm()
+                if (isUpdate)
+                    this@ChooseTimeActivity.showToast("Your appointment updated successfully !!!")
+                else
+                    this@ChooseTimeActivity.showToast("Your appointment booked successfully !!!")
+
+                val intent = Intent(this, BottomNavigationActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
+                finish()
+
+            } else if (it.startsWith("Booking Failed")) {
+                this@ChooseTimeActivity.showToast(it)
             }
         })
 
@@ -63,6 +74,7 @@ class ChooseTimeActivity : AppCompatActivity() {
     private fun inThis() {
 
         apt_model = intent.getSerializableExtra("appointment_model") as AppointmentModel?
+        isUpdate = intent.getBooleanExtra("isUpdate", false)
 
         doctor_id = apt_model?.doctor_id ?: intent.getLongExtra("doctor_id", 0)
 
@@ -75,6 +87,16 @@ class ChooseTimeActivity : AppCompatActivity() {
         else
             apt_model?.schedual_date
 
+        if (Utils.getUserType() == 0) {
+            binding.tvUserType.text = "Doctor"
+            val docDetail: UserModel = myAptViewModel.getDoctorDetails(doctor_id ?: 0)
+
+            setNameProfile(docDetail)
+            setSpecialization(docDetail)
+        } else {
+            binding.tvUserType.text = "Patient"
+        }
+
         if (apt_model != null) {
             selectedDate?.substring(0, 4)?.toInt()?.let { calender.set(Calendar.YEAR, it) }
             selectedDate?.substring(5, 7)?.toInt()?.let { calender.set(Calendar.MONTH, it - 1) }
@@ -82,33 +104,35 @@ class ChooseTimeActivity : AppCompatActivity() {
                 ?.let { calender.set(Calendar.DAY_OF_MONTH, it) }
             binding.calenderView.date = calender.timeInMillis
 
+            val user: UserModel = if (Utils.getUserType() == 0) {
+                myAptViewModel.getDoctorDetails(apt_model!!.doctor_id)
+            } else {
+                myAptViewModel.getDoctorDetails(apt_model!!.patient_id)
+            }
+            setNameProfile(user)
+            setSpecialization(user)
+
             if (calender.timeInMillis < today) {
                 binding.calenderView.hide()
-                binding.llAptDetail.show()
 
-                val user: UserModel = if (Utils.getUserType() == 0) {
-                    myAptViewModel.getDoctorDetails(apt_model!!.doctor_id)
-                } else {
-                    myAptViewModel.getDoctorDetails(apt_model!!.patient_id)
-                }
-                binding.tvName.text =
-                    "${user.first_name} ${user.last_name}"
-                binding.tvDate.text = calender.time.formatTo("dd, MMMM yyyy")
-                binding.ivProfile.loadImageFromCloud(user.profile ?: "")
+                binding.tvDate.show()
+                binding.tvDate.text = "on "+calender.time.formatTo("dd, MMMM yyyy")
 
                 binding.etTitle.isFocusable = false
                 binding.etTitle.isFocusableInTouchMode = false
                 binding.etDisc.isFocusable = false
                 binding.etDisc.isFocusableInTouchMode = false
-//                window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
                 binding.btnBookAppt.hide()
             } else {
-//                window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
                 listenClick()
+                if (Utils.getUserType() == 0) {
+                    setSpecialization(user)
+                } else
+                    binding.tvDate.hide()
+
                 binding.calenderView.minDate = today
                 binding.calenderView.show()
                 binding.btnBookAppt.show()
-                binding.llAptDetail.hide()
             }
 
             binding.etTitle.setText(apt_model!!.title)
@@ -124,6 +148,26 @@ class ChooseTimeActivity : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
+    private fun setNameProfile(user: UserModel) {
+        if (user.profile != null && user.profile!!.isNotEmpty())
+            binding.ivProfile.loadImageFromCloud(user.profile!!)
+
+        binding.tvName.text =
+            "${user.first_name} ${user.last_name}"
+    }
+
+    private fun setSpecialization(user: UserModel) {
+        val specialization = viewModel.getSpecializationName(user.specialist_id)
+        if (specialization.isNotEmpty()) {
+            binding.tvDate.show()
+            binding.tvDate.text = specialization
+        } else {
+            binding.tvDate.hide()
+        }
+    }
+
+    @SuppressLint("SimpleDateFormat")
     private fun listenClick() {
         binding.calenderView.setOnDateChangeListener { _, year, month, dayOfMonth ->
             calender.set(Calendar.YEAR, year)
@@ -168,19 +212,7 @@ class ChooseTimeActivity : AppCompatActivity() {
 
                     viewModel.bookAppointment(model)
 
-                    Toast.makeText(this, "Your Appointment booked!!!", Toast.LENGTH_SHORT).show()
-
-                    if (apt_model == null) {
-                        val docDetails = viewModel.getDoctorDetails(doctor_id ?: 0)
-                        docName = docDetails.first_name + " " + docDetails.last_name
-                        createChatRoom(doctor_id ?: 0, docName ?: "", userId ?: 0)
-                    }
-
-                    myAptViewModel.fetchAptFromRealm()
-
-                    val intent = Intent(this, BottomNavigationActivity::class.java)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-                    startActivity(intent)
+                    Utils.showProgressDialog(this)
 
                 } else {
                     Toast.makeText(this, "Please Enter Appointment title", Toast.LENGTH_SHORT)
@@ -190,53 +222,6 @@ class ChooseTimeActivity : AppCompatActivity() {
                 Toast.makeText(this, "Please Select Time slot", Toast.LENGTH_SHORT).show()
             }
         }
-    }
-
-    private fun createChatRoom(doctorId: Long, docName: String, userId: Long) {
-
-        room = RoomModel()
-
-        room?.room_id = System.currentTimeMillis()
-        room?.room_type = 1
-        room?.created_by_id = userId
-        room?.name = docName
-
-        val sender = ParticipantModel()
-        sender.paticipant_id = System.currentTimeMillis()
-        sender.room_id = room?.room_id ?: 0
-        sender.user_id = userId
-        sender.added_by_id = userId
-        sender.updated_at = System.currentTimeMillis()
-        sender.is_deleted = false
-
-        Thread.sleep(1)
-
-        val receiver = ParticipantModel()
-        receiver.paticipant_id = System.currentTimeMillis()
-        receiver.room_id = room?.room_id ?: 0
-        receiver.user_id = doctorId
-        receiver.added_by_id = userId
-        receiver.updated_at = System.currentTimeMillis()
-        receiver.is_deleted = false
-
-        val participantIdList = RealmList<Long>()
-        participantIdList.add(sender.user_id)
-        participantIdList.add(receiver.user_id)
-
-        room?.user_ids_participants = participantIdList
-
-        val list = RealmList<ParticipantModel>()
-        list.add(sender)
-        list.add(receiver)
-
-        room?.list_participants = list
-        room?.updated_at = System.currentTimeMillis()
-        room?.created_at = System.currentTimeMillis()
-        room?.is_req_accept_block = 0
-        room?.is_deleted = false
-
-        if (room != null)
-            viewModel.createChatRoom(room!!, userId, doctorId)
     }
 
     @SuppressLint("SetTextI18n", "SimpleDateFormat")

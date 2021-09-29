@@ -44,6 +44,7 @@ class AptDetailsAdapter(
             binding.clRowAppointment.setOnClickListener {
                 val intent = Intent(context, ChooseTimeActivity::class.java)
                 intent.putExtra("appointment_model", item)
+                intent.putExtra("isUpdate", true)
                 context.startActivity(intent)
             }
         }

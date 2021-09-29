@@ -15,7 +15,6 @@ import androidx.fragment.app.Fragment
 import com.app.consultationpoint.BaseFragment
 import com.app.consultationpoint.R
 import com.app.consultationpoint.databinding.ActivityBottomNavigationBinding
-import com.app.consultationpoint.general.LoginActivity
 import com.app.consultationpoint.notification.RemainderBroadcast
 import com.app.consultationpoint.patient.appointment.myAppointments.MyAppointmentsFragment
 import com.app.consultationpoint.patient.chat.room.ChatListFragment
@@ -239,10 +238,7 @@ class BottomNavigationActivity(override val numberOfRootFragments: Int = 4) : Ap
             R.id.botNavDoctor -> fragNavController.switchTab(1)
             R.id.botNavChat -> fragNavController.switchTab(2)
             R.id.botNavApt -> fragNavController.switchTab(3)
-            R.id.menu_logout -> {
-                viewModel.logout()
-                goToLoginScreen()
-            }
+            R.id.menu_logout -> Utils.logoutConformationDialog(this)
         }
 
         if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
@@ -273,12 +269,6 @@ class BottomNavigationActivity(override val numberOfRootFragments: Int = 4) : Ap
             }
         }
         fragNavController.pushFragment(fragment, options.build())
-    }
-
-    private fun goToLoginScreen() {
-        val intent = Intent(this, LoginActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-        startActivity(intent)
     }
 
     override fun onFragmentTransaction(

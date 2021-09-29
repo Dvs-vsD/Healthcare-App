@@ -6,6 +6,7 @@ import com.app.consultationpoint.firebase.FirebaseSource
 import com.app.consultationpoint.general.model.UserModel
 import com.app.consultationpoint.patient.chat.room.model.ParticipantModel
 import com.app.consultationpoint.patient.chat.room.model.RoomModel
+import com.app.consultationpoint.patient.userProfile.model.AddressModel
 import com.app.consultationpoint.utils.Utils
 import io.realm.Case
 import io.realm.Realm
@@ -99,8 +100,8 @@ class DoctorRepository @Inject constructor(private val firebaseSource: FirebaseS
             return@withContext participant?.room_id ?: 0
         }
 
-    suspend fun createChatRoom(model: RoomModel, senderId: Long, receiverId: Long) {
-        firebaseSource.createChatRoom(model, senderId, receiverId)
+    suspend fun createChatRoom(model: RoomModel) {
+        firebaseSource.createChatRoom(model)
     }
 
     fun getStatus(): LiveData<String> {
@@ -113,5 +114,18 @@ class DoctorRepository @Inject constructor(private val firebaseSource: FirebaseS
 
     fun getPatientCount(docId: Long) {
         firebaseSource.getPatientCount(docId)
+    }
+
+    fun getAddress(docId: Long): AddressModel {
+
+        Realm.getDefaultInstance().use { mRealm ->
+            var model = AddressModel()
+
+            val mRealmResult = mRealm.where(AddressModel::class.java).equalTo("user_id", docId).findFirst()
+            if (mRealmResult != null) {
+                model = mRealm.copyFromRealm(mRealmResult) as AddressModel
+            }
+            return model
+        }
     }
 }

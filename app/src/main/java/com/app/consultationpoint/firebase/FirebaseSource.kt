@@ -75,6 +75,29 @@ class FirebaseSource @Inject constructor() {
             model.profile = snapshot.getString("profile") ?: ""
 
         model.user_type_id = snapshot.getLong("user_type_id")?.toInt() ?: 0
+
+        if (snapshot.getLong("user_type_id")?.toInt() == 1) {
+            database.collection("Addresses").document(model.id.toString()).get()
+                .addOnSuccessListener { adr ->
+                    val adrModel = AddressModel()
+                    adrModel.user_id = adr.getLong("user_id") ?: 0
+                    adrModel.address = adr.getString("address") ?: ""
+                    adrModel.city = adr.getString("city") ?: ""
+                    adrModel.state = adr.getString("state") ?: ""
+                    adrModel.country = adr.getString("country") ?: ""
+                    adrModel.pincode = adr.getLong("pincode")?.toInt() ?: 0
+                    adrModel.created_at = adr.getLong("created_at") ?: 0
+                    adrModel.updated_at = adr.getLong("updated_at") ?: 0
+                    adrModel.to_deleted = adr.getBoolean("to_deleted") ?: false
+
+                    Realm.getDefaultInstance().use { mRealm ->
+                        mRealm.executeTransaction {
+                            mRealm.insertOrUpdate(adrModel)
+                        }
+                    }
+                }
+        }
+
         model.user_status = snapshot.getString("user_status") ?: ""
         model.is_deleted = snapshot.getBoolean("is_deleted") ?: false
         model.is_verified = snapshot.getBoolean("is_veryfied") ?: false
@@ -126,7 +149,7 @@ class FirebaseSource @Inject constructor() {
                             }
                     }
 
-                    Thread.sleep(1000)
+                    Thread.sleep(800)
 
                     model.schedual_date = results.document.data["schedual_date"].toString()
 
@@ -291,12 +314,18 @@ class FirebaseSource @Inject constructor() {
 
     fun logOut() {
         firebaseAuth.signOut()
-        status.value = ""
         ConsultationApp.shPref.edit().clear().apply()
     }
 
     fun bookAppointment(model: AppointmentModel) {
         database.collection("Appointments").document(model.appointment_id.toString()).set(model)
+            .addOnSuccessListener {
+                status.value = "Appointment booked"
+                status.value = ""
+            }.addOnFailureListener { e ->
+                status.value = "Booking Failed: ${e.message}"
+                status.value = ""
+            }
     }
 
     fun updateProfile(model: UserModel, adrModel: AddressModel) {
@@ -331,17 +360,18 @@ class FirebaseSource @Inject constructor() {
     }
 
     fun getUserDetails(docId: Long): UserModel {
-        var model = UserModel()
 
         Realm.getDefaultInstance().use { mRealm ->
+            var model = UserModel()
+
             Timber.d("Doctor Details Fetching instance")
             val result = mRealm.where(UserModel::class.java).equalTo("id", docId).findFirst()
             if (result != null)
                 model = mRealm.copyFromRealm(result) as UserModel
             Timber.d("Open Instance att %s", System.currentTimeMillis().toString())
-        }
 
-        return model
+            return model
+        }
     }
 
     // chat functionality
@@ -376,7 +406,8 @@ class FirebaseSource @Inject constructor() {
 
                         for (index in 0 until memberList.size) {
                             if (memberList[index].toString() != Utils.getUserId()) {
-                                database.collection("Users").document(memberList[index].toString())
+                                database.collection("Users")
+                                    .document(memberList[index].toString())
                                     .get().addOnSuccessListener { document ->
                                         val model = getUser(document)
                                         Realm.getDefaultInstance().use { mRealm ->
@@ -389,7 +420,8 @@ class FirebaseSource @Inject constructor() {
                             participantArray.add(memberList[index].toString().toLong())
                         }
 
-                        Thread.sleep(500)
+                        Thread.sleep(600)
+
                         room.user_ids_participants = participantArray
 
                         val participants: RealmList<ParticipantModel> = RealmList()
@@ -462,36 +494,27 @@ class FirebaseSource @Inject constructor() {
 
     //Attention: This is checking rooms created only from Patient-------------------
 
-    suspend fun createChatRoom(model: RoomModel, senderId: Long, receiverId: Long) =
+    suspend fun createChatRoom(model: RoomModel) =
         withContext(Dispatchers.IO) {
-            database.collection("Rooms").whereEqualTo("created_by_id", senderId)
+            /*database.collection("Rooms").whereEqualTo("created_by_id", senderId)
                 .whereArrayContains("user_ids_participants", receiverId).get()
                 .addOnSuccessListener {
-//                for (result in it.documents) {
-//                    val array: List<Map<String, String>> =
-//                        result.get("list_participants") as List<Map<String, String>>
-//                    for (participant in array) {
-//                        if ((participant["user_id"].toString() == receiverId.toString()
-//                                    && participant["added_by_id"].toString() == senderId.toString())
-//                            || (participant["user_id"].toString() == senderId.toString()
-//                                    && participant["added_by_id"].toString() == receiverId.toString())
-//                        ) {
-//                            return@addOnSuccessListener
-//                        }
-//                    }
-//                }
-                    if (it.isEmpty) {
-                        database.collection("Rooms").document(model.room_id.toString()).set(model)
-                            .addOnFailureListener { error ->
-                                status.value = error.message
-                                status.value = ""
-                            }
-                        Timber.d("room added to firebase")
-                    }
-                }.addOnFailureListener { e ->
-                    status.value = e.message
+                    if (it.isEmpty) {*/
+            database.collection("Rooms").document(model.room_id.toString()).set(model)
+                .addOnSuccessListener {
+                    status.value = "Room Created Successfully"
                     status.value = ""
                 }
+                .addOnFailureListener { error ->
+                    status.value = "Failed to create chat room: " + error.message
+                    status.value = ""
+                }
+            Timber.d("room added to firebase")
+            /*}
+        }.addOnFailureListener { e ->
+            status.value = e.message
+            status.value = ""
+        }*/
         }
 
     fun sendMessage(msgModel: MessageModel) {
@@ -613,8 +636,8 @@ class FirebaseSource @Inject constructor() {
                 }
 
             }.addOnFailureListener {
-            status.value = "count" + 0
-            status.value = ""
-        }
+                status.value = "count" + 0
+                status.value = ""
+            }
     }
 }

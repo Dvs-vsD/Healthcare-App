@@ -78,12 +78,12 @@
             android:id="@+id/ivProfile"
             android:layout_width="@dimen/_40sdp"
             android:layout_height="@dimen/_40sdp"
-            android:src="@drawable/default_user"
-            app:civ_border="false"
-            android:scaleType="centerCrop"
-            android:elevation="@dimen/_4sdp"
             android:layout_marginTop="@dimen/_2sdp"
             android:layout_marginEnd="@dimen/_1sdp"
+            android:elevation="@dimen/_4sdp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/default_user"
+            app:civ_border="false"
             app:layout_constraintBottom_toBottomOf="@id/tvSpecAdr"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/tvDocName"
@@ -93,22 +93,21 @@
             android:id="@+id/cvServedPatients"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/_16sdp"
+            android:layout_marginStart="@dimen/_1sdp"
+            android:layout_marginEnd="@dimen/_8sdp"
             android:backgroundTint="@color/white"
             app:cardCornerRadius="@dimen/_8sdp"
-            android:layout_marginVertical="@dimen/_16sdp"
-            android:layout_marginEnd="@dimen/_8sdp"
-            android:layout_marginStart="@dimen/_1sdp"
             app:layout_constraintBottom_toTopOf="@id/btnBookAppt"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/cvExperience"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvSpecAdr">
 
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginVertical="@dimen/_12sdp"
-                >
+                android:layout_marginVertical="@dimen/_12sdp">
 
                 <TextView
                     android:id="@+id/tvPatientsText"
@@ -116,8 +115,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="@string/tv_patients"
-                    />
+                    android:text="@string/bn_appointments" />
 
                 <TextView
                     android:id="@+id/tvPatientCount"
@@ -126,7 +124,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tvPatientsText"
                     android:layout_centerHorizontal="true"
-                    android:text="0+"
+                    android:text="0 +"
                     android:textColor="@color/yellow" />
 
             </RelativeLayout>
@@ -137,22 +135,21 @@
             android:id="@+id/cvExperience"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/white"
-            app:cardCornerRadius="@dimen/_8sdp"
             android:layout_marginVertical="@dimen/_16sdp"
             android:layout_marginStart="@dimen/_8sdp"
             android:layout_marginEnd="@dimen/_1sdp"
+            android:backgroundTint="@color/white"
+            app:cardCornerRadius="@dimen/_8sdp"
             app:layout_constraintBottom_toTopOf="@id/btnBookAppt"
-            app:layout_constraintStart_toEndOf="@id/cvServedPatients"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/cvServedPatients"
             app:layout_constraintTop_toBottomOf="@id/tvSpecAdr">
 
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginVertical="@dimen/_12sdp"
-                >
+                android:layout_marginVertical="@dimen/_12sdp">
 
                 <TextView
                     android:id="@+id/tvExperienceText"
@@ -160,8 +157,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="@string/tv_experience"
-                    />
+                    android:text="@string/tv_experience" />
 
                 <TextView
                     android:id="@+id/tvYearCount"
@@ -170,7 +166,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tvExperienceText"
                     android:layout_centerHorizontal="true"
-                    android:text="0yrs+"
+                    android:text="0 yrs+"
                     android:textColor="@color/pink" />
 
             </RelativeLayout>
@@ -182,6 +178,7 @@
             style="@style/st_btn_style"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/_12sdp"
             android:background="@drawable/background_with_radius_12"
             android:padding="@dimen/_8sdp"
             android:text="@string/btn_book_appointment"
@@ -190,7 +187,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/cvChat"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginEnd="@dimen/_12sdp"
             app:layout_constraintTop_toBottomOf="@id/cvServedPatients" />
 
         <androidx.cardview.widget.CardView
@@ -198,60 +194,272 @@
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_margin="@dimen/_1sdp"
-            app:layout_constraintStart_toEndOf="@id/btnBookAppt"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/btnBookAppt"
-            app:layout_constraintBottom_toBottomOf="@id/btnBookAppt"
             app:cardCornerRadius="@dimen/_12sdp"
-            >
+            app:layout_constraintBottom_toBottomOf="@id/btnBookAppt"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/btnBookAppt"
+            app:layout_constraintTop_toTopOf="@id/btnBookAppt">
 
             <ImageView
                 android:layout_width="@dimen/_15sdp"
                 android:layout_height="@dimen/_15sdp"
                 android:layout_margin="@dimen/_12sdp"
-                android:src="@drawable/chat"
                 android:contentDescription="@string/contentDescription"
-                app:tint="@color/green"
-                />
+                android:src="@drawable/chat"
+                app:tint="@color/green" />
 
         </androidx.cardview.widget.CardView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="@id/guidelineLeft"
-        app:layout_constraintEnd_toEndOf="@id/guidelineRight"
-        app:layout_constraintTop_toBottomOf="@id/clDoctorDetails"
+        android:layout_height="0dp"
         android:layout_marginTop="@dimen/_16sdp"
-        android:padding="@dimen/_16sdp"
-        android:background="@drawable/background_with_radius_24"
-        >
+        app:layout_constraintEnd_toEndOf="@id/guidelineRight"
+        app:layout_constraintStart_toStartOf="@id/guidelineLeft"
+        app:layout_constraintTop_toBottomOf="@id/clDoctorDetails"
+        app:layout_constraintBottom_toBottomOf="parent">
 
-        <TextView
-            android:id="@+id/tv_about_doctor_text"
-            android:layout_width="0dp"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/clAbout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/st_tv_normal.bold"
-            android:text="@string/tv_about_doctor"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            />
+            android:background="@drawable/background_with_radius_24"
+            android:padding="@dimen/_16sdp">
 
-        <TextView
-            android:id="@+id/tvAbout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            style="@style/st_tv_small.bold_gray"
-            android:text="@string/tv_dummy_text"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_about_doctor_text"
-            android:layout_marginTop="@dimen/_4sdp"
-            />
+            <TextView
+                android:id="@+id/tv_about_doctor_text"
+                style="@style/st_tv_normal.bold"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/tv_about_doctor"
+                android:textColor="@color/blue"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:id="@+id/tvAbout"
+                style="@style/st_tv_small.bold"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_4sdp"
+                android:text="@string/tv_dummy_text"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_about_doctor_text" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guidelineMiddle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.5" />
+
+            <TextView
+                android:id="@+id/tvContactDetails"
+                style="@style/st_tv_normal.bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_16sdp"
+                android:text="@string/tv_contact_details"
+                android:textColor="@color/blue"
+                app:layout_constraintBottom_toTopOf="@id/tvPhoneHint"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvAbout" />
+
+            <TextView
+                android:id="@+id/tvPhoneHint"
+                style="@style/st_tv_extra_small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_8sdp"
+                android:text="@string/hint_phone_number"
+                app:layout_constraintBottom_toTopOf="@id/tvPhone"
+                app:layout_constraintEnd_toEndOf="@id/guidelineMiddle"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvContactDetails" />
+
+            <TextView
+                android:id="@+id/tvPhone"
+                style="@style/st_tv_small.bold"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_8sdp"
+                android:text="@string/place_holder"
+                app:layout_constraintEnd_toStartOf="@id/cvCall"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvPhoneHint" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cvCall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_1sdp"
+                app:cardCornerRadius="@dimen/_12sdp"
+                app:layout_constraintBottom_toBottomOf="@id/tvPhone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/tvPhone"
+                app:layout_constraintTop_toTopOf="@id/tvPhoneHint">
+
+                <ImageView
+                    android:layout_width="@dimen/_20sdp"
+                    android:layout_height="@dimen/_20sdp"
+                    android:layout_margin="@dimen/_10sdp"
+                    android:contentDescription="@string/contentDescription"
+                    android:src="@drawable/ic_baseline_call_24"
+                    app:tint="@color/green" />
+
+            </androidx.cardview.widget.CardView>
+
+            <TextView
+                android:id="@+id/tvEmailHint"
+                style="@style/st_tv_extra_small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_8sdp"
+                android:text="@string/hint_email"
+                app:layout_constraintBottom_toTopOf="@id/tvEmail"
+                app:layout_constraintEnd_toEndOf="@id/guidelineMiddle"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvPhone" />
+
+            <TextView
+                android:id="@+id/tvEmail"
+                style="@style/st_tv_small.bold"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_8sdp"
+                android:text="@string/place_holder"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvEmailHint" />
+
+            <TextView
+                android:id="@+id/tvAddressHint"
+                style="@style/st_tv_extra_small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_8sdp"
+                android:text="@string/hint_address"
+                app:layout_constraintBottom_toTopOf="@id/tvAddress"
+                app:layout_constraintEnd_toEndOf="@id/guidelineMiddle"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvEmail" />
+
+            <TextView
+                android:id="@+id/tvAddress"
+                style="@style/st_tv_small.bold"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_8sdp"
+                android:text="@string/place_holder"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvAddressHint" />
+
+            <TextView
+                android:id="@+id/tvCityHint"
+                style="@style/st_tv_extra_small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_16sdp"
+                android:text="@string/hint_city"
+                app:layout_constraintBottom_toTopOf="@id/tvCity"
+                app:layout_constraintEnd_toEndOf="@id/guidelineMiddle"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvAddress" />
+
+            <TextView
+                android:id="@+id/tvCity"
+                style="@style/st_tv_small.bold"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_8sdp"
+                android:text="@string/place_holder"
+                app:layout_constraintEnd_toEndOf="@id/guidelineMiddle"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvCityHint" />
+
+            <TextView
+                android:id="@+id/tvStateHint"
+                style="@style/st_tv_extra_small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_16sdp"
+                android:text="@string/hint_state"
+                app:layout_constraintBottom_toTopOf="@id/tvState"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toStartOf="@id/guidelineMiddle"
+                app:layout_constraintTop_toTopOf="@id/tvCityHint" />
+
+            <TextView
+                android:id="@+id/tvState"
+                style="@style/st_tv_small.bold"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/place_holder"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/tvStateHint"
+                app:layout_constraintTop_toBottomOf="@+id/tvStateHint" />
+
+            <TextView
+                android:id="@+id/tvCountryHint"
+                style="@style/st_tv_extra_small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_16sdp"
+                android:text="@string/hint_country"
+                app:layout_constraintBottom_toTopOf="@id/tvCountry"
+                app:layout_constraintEnd_toEndOf="@id/guidelineMiddle"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvCity" />
+
+            <TextView
+                android:id="@+id/tvCountry"
+                style="@style/st_tv_small.bold"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_8sdp"
+                android:text="@string/place_holder"
+                app:layout_constraintEnd_toEndOf="@id/guidelineMiddle"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvCountryHint" />
+
+            <TextView
+                android:id="@+id/tvPinCodeHint"
+                style="@style/st_tv_extra_small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_16sdp"
+                android:text="@string/hint_pin_code"
+                app:layout_constraintBottom_toTopOf="@id/tvPinCode"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toStartOf="@id/guidelineMiddle"
+                app:layout_constraintTop_toTopOf="@id/tvCountryHint" />
+
+            <TextView
+                android:id="@+id/tvPinCode"
+                style="@style/st_tv_small.bold"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/place_holder"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/tvPinCodeHint"
+                app:layout_constraintTop_toBottomOf="@+id/tvPinCodeHint" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

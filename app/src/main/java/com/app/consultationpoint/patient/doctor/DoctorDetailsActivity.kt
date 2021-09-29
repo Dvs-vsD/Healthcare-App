@@ -2,6 +2,7 @@ package com.app.consultationpoint.patient.doctor
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -11,7 +12,9 @@ import com.app.consultationpoint.patient.chat.chatScreen.ChatScreenActivity
 import com.app.consultationpoint.patient.chat.room.model.ParticipantModel
 import com.app.consultationpoint.patient.chat.room.model.RoomModel
 import com.app.consultationpoint.utils.Utils
+import com.app.consultationpoint.utils.Utils.hide
 import com.app.consultationpoint.utils.Utils.loadImageFromCloud
+import com.app.consultationpoint.utils.Utils.showToast
 import dagger.hilt.android.AndroidEntryPoint
 import io.realm.RealmList
 import timber.log.Timber
@@ -32,15 +35,20 @@ class DoctorDetailsActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         viewModel.getStatus().observe(this, {
-            if (userId != 0L && it.isNotEmpty() && room != null) {
-                viewModel.createChatRoom(room!!, userId, docId)
+            Utils.dismissProgressDialog()
+            if (it.isNotEmpty() && it == "Room Created Successfully" && room != null) {
+                goToChatScreen(room!!.room_id)
+            } else if (it.startsWith("Failed to create chat room")) {
+                this@DoctorDetailsActivity.showToast("Something went wrong!!! Try again")
             }
 
             if (it.isNotEmpty() && it.startsWith("count")) {
                 val count = it.substring(5, it.length)
                 Timber.d("FirebaseSource $count")
-                if (count.isNotEmpty())
-                    binding.tvPatientCount.text = "$count+"
+                if (count.isNotEmpty() && count != "0")
+                    binding.tvPatientCount.text = "$count +"
+                else
+                    binding.tvPatientCount.text = "--"
             }
         })
 
@@ -69,9 +77,9 @@ class DoctorDetailsActivity : AppCompatActivity() {
             binding.tvSpecAdr.text = ""
 
         if (model.experience_yr.isNotEmpty())
-            binding.tvYearCount.text = model.experience_yr + "yrs+"
+            binding.tvYearCount.text = model.experience_yr + " yrs+"
         else
-            binding.tvYearCount.text = "0yrs+"
+            binding.tvYearCount.text = "--"
 
         viewModel.getPatientCount(docId)
 
@@ -81,31 +89,92 @@ class DoctorDetailsActivity : AppCompatActivity() {
             binding.tvAbout.text = "Not yet added"
         }
 
+        if (model.mobile.isNotEmpty()) {
+            binding.tvPhone.text = model.mobile
+        } else {
+            binding.cvCall.hide()
+            binding.tvPhone.hide()
+            binding.tvPhoneHint.hide()
+        }
+        if (model.email.isNotEmpty()) {
+            binding.tvEmail.text = model.email
+        } else {
+            binding.tvEmail.hide()
+            binding.tvEmailHint.hide()
+        }
+
+        val adrModel = viewModel.getAddress(docId)
+
+        val adr = adrModel.address
+        if (adr != "") {
+            binding.tvAddress.text = adr
+        } else {
+            binding.tvAddress.hide()
+            binding.tvAddressHint.hide()
+        }
+
+        val city = adrModel.city
+        if (city != "")
+            binding.tvCity.text = city
+        else {
+            binding.tvCity.hide()
+            binding.tvCityHint.hide()
+        }
+
+        val state = adrModel.state
+        if (state != "")
+            binding.tvState.text = state
+        else {
+            binding.tvState.hide()
+            binding.tvStateHint.hide()
+        }
+
+        val country = adrModel.country
+        if (country != "")
+            binding.tvCountry.text = country
+        else {
+            binding.tvCountry.hide()
+            binding.tvCountryHint.hide()
+        }
+
+        val pinCode = adrModel.pincode
+        if (pinCode != 0)
+            binding.tvPinCode.text = pinCode.toString()
+        else {
+            binding.tvPinCode.hide()
+            binding.tvPinCodeHint.hide()
+        }
+
+        binding.cvCall.setOnClickListener {
+            startActivity(Intent(Intent.ACTION_DIAL, Uri.parse("tel:${model.mobile}")))
+        }
 
         binding.btnBookAppt.setOnClickListener {
             val intent = Intent(this, ChooseTimeActivity::class.java)
             intent.putExtra("doctor_id", docId)
+            intent.putExtra("isUpdate", false)
             startActivity(intent)
         }
 
         binding.cvChat.setOnClickListener {
-
+            Utils.showProgressDialog(this)
             userId = Utils.getUserId().toLong()
             val roomId = viewModel.checkRoomAvailability(userId, docId)
-
-            val intent = Intent(this, ChatScreenActivity::class.java)
-            intent.putExtra("doctor_id", docId)
-
             if (roomId != 0L) {
+                Utils.dismissProgressDialog()
                 Timber.d("From Realm")
-                intent.putExtra("room_id", roomId)
-                startActivity(intent)
+                goToChatScreen(roomId)
             } else {
                 createRoom(docId, docName, userId)
-                intent.putExtra("room_id", room?.room_id)
-                startActivity(intent)
             }
         }
+    }
+
+    private fun goToChatScreen(room_id: Long) {
+        val intent = Intent(this, ChatScreenActivity::class.java)
+        intent.putExtra("receiver_id", docId)
+        intent.putExtra("room_id", room_id)
+        startActivity(intent)
     }
 
     private fun createRoom(docId: Long, docName: String, userId: Long) {
@@ -152,7 +221,7 @@ class DoctorDetailsActivity : AppCompatActivity() {
         room?.is_deleted = false
 
         if (room != null) {
-            viewModel.createChatRoom(room!!, userId, docId)
+            viewModel.createChatRoom(room!!)
         }
     }
 }

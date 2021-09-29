@@ -64,7 +64,7 @@ class ChatScreenActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     private fun inThis() {
         roomId = intent.getLongExtra("room_id", 0)
-        docId = intent.getLongExtra("doctor_id", 0)
+        docId = intent.getLongExtra("receiver_id", 0)
         userId = Utils.getUserId().toLong()
         val docDetails = viewModel.getDoctorDetails(docId)
         userName = docDetails.first_name + " " + docDetails.last_name

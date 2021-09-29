@@ -24,13 +24,17 @@ class BookAptViewModel @Inject constructor(private val repository: BookAptReposi
         return repository.getDoctorDetails(doctorId)
     }
 
-    fun createChatRoom(room: RoomModel, userId: Long, doctorId: Long) {
+    /*fun createChatRoom(room: RoomModel, userId: Long, doctorId: Long) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.createChatRoom(room, userId, doctorId)
         }
-    }
+    }*/
 
     fun getStatus(): LiveData<String> {
         return repository.getStatus()
+    }
+
+    fun getSpecializationName(specialistId: Int): String {
+        return repository.getSpecializationName(specialistId)
     }
 }

@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.consultationpoint.general.model.UserModel
 import com.app.consultationpoint.patient.chat.room.model.RoomModel
+import com.app.consultationpoint.patient.userProfile.model.AddressModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -51,9 +52,9 @@ class DoctorViewModel @Inject constructor(private val repository: DoctorReposito
     }
 
 
-    fun createChatRoom(model: RoomModel, senderId: Long, receiverId: Long) {
+    fun createChatRoom(model: RoomModel) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.createChatRoom(model, senderId, receiverId)
+            repository.createChatRoom(model)
         }
     }
 
@@ -67,5 +68,9 @@ class DoctorViewModel @Inject constructor(private val repository: DoctorReposito
 
     fun getPatientCount(doc_id: Long) {
         repository.getPatientCount(doc_id)
+    }
+
+    fun getAddress(docId: Long): AddressModel {
+        return repository.getAddress(docId)
     }
 }

@@ -50,7 +50,6 @@ class DashboardFragment : BaseFragment() {
                 binding.tvNoData.hide()
             }
             if (adapterTodayApt != null) {
-                Timber.d("notified")
                 adapterTodayApt?.setList(it)
             }
         })

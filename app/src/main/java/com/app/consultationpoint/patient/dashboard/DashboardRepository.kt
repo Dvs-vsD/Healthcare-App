@@ -89,7 +89,10 @@ class DashboardRepository @Inject constructor(private val firebaseSource: Fireba
                 docList.clear()
                 docDetailsList.value?.clear()
                 for (apt in newList) {
-                    val doctorId = apt.doctor_id
+                    val doctorId = if (Utils.getUserType() == 0)
+                        apt.doctor_id
+                    else
+                        apt.patient_id
                     docList.add(getDoctorDetails(doctorId))
                 }
                 docDetailsList.value = docList
