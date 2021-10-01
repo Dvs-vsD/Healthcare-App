@@ -1,9 +1,11 @@
 package com.app.consultationpoint.patient.doctor.adapter
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.app.consultationpoint.R
@@ -23,17 +25,11 @@ import io.realm.RealmList
 import timber.log.Timber
 
 class DoctorAdapter(
-    list2: ArrayList<UserModel>?,
-    private val activity: FragmentActivity?,
+    private var list: ArrayList<UserModel>?,
+    private val context: Context,
     private val viewModel: DoctorViewModel,
     private val listener: OnButtonChatCLick
 ) : RecyclerView.Adapter<DoctorAdapter.MyViewHolder>() {
-
-    private var list: ArrayList<UserModel>? = null
-
-    init {
-        list = list2
-    }
 
     fun setDataList(dataList: ArrayList<UserModel>?) {
         list = dataList
@@ -44,8 +40,10 @@ class DoctorAdapter(
         RecyclerView.ViewHolder(binding.root) {
         @SuppressLint("SetTextI18n", "BinaryOperationInTimber")
         fun bind(item: UserModel) {
-            if (item.profile != "" && item.profile != "null" && item.profile != null) {
-                activity?.let { binding.ivProfile.loadImageFromCloud(item.profile!!) }
+            if (item.profile != null && item.profile != "") {
+                binding.ivProfile.loadImageFromCloud(item.profile!!)
+            } else {
+                binding.ivProfile.setImageDrawable(ContextCompat.getDrawable(context,R.drawable.default_user))
             }
             Timber.d(item.first_name + " " + item.doc_id)
             binding.tvDocName.text = "${item.first_name} ${item.last_name}"
@@ -59,25 +57,25 @@ class DoctorAdapter(
                 else
                     binding.tvSpecAdr.text = ""
 
-                binding.btnTakeAppointment.text = activity?.getString(R.string.btn_appointment)
+                binding.btnTakeAppointment.text = context.getString(R.string.btn_appointment)
             } else {
                 binding.tvSpecAdr.hide()
-                binding.btnTakeAppointment.text = activity?.getString(R.string.bn_chat)
+                binding.btnTakeAppointment.text = context.getString(R.string.bn_chat)
                 roomId = viewModel.checkRoomAvailability(Utils.getUserId().toLong(), item.id)
             }
 
             binding.btnTakeAppointment.setOnClickListener {
                 if (Utils.getUserType() == 0) {
-                    val intent = Intent(activity, ChooseTimeActivity::class.java)
-                    intent.putExtra("doctor_id", item.doc_id)
+                    val intent = Intent(context, ChooseTimeActivity::class.java)
+                    intent.putExtra("user_id", item.doc_id)
                     intent.putExtra("isUpdate", false)
-                    activity?.startActivity(intent)
+                    context.startActivity(intent)
                 } else {
                     if (roomId != 0L) {
-                        val intent = Intent(activity, ChatScreenActivity::class.java)
+                        val intent = Intent(context, ChatScreenActivity::class.java)
                         intent.putExtra("receiver_id", item.id)
                         intent.putExtra("room_id", roomId)
-                        activity?.startActivity(intent)
+                        context.startActivity(intent)
                     } else {
                         listener.onChatBtnClick(item.id)
                     }
@@ -95,12 +93,10 @@ class DoctorAdapter(
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         list?.get(position)?.let { holder.bind(it) }
         holder.itemView.setOnClickListener {
-            if (Utils.getUserType() == 0) {
-                val intent = Intent(activity, DoctorDetailsActivity::class.java)
+                val intent = Intent(context, DoctorDetailsActivity::class.java)
                 Timber.d("user id %s", list?.get(position)?.id)
-                intent.putExtra("doctor_id", list?.get(position)?.id)
-                activity?.startActivity(intent)
-            }
+                intent.putExtra("user_id", list?.get(position)?.id)
+                context.startActivity(intent)
         }
     }
 

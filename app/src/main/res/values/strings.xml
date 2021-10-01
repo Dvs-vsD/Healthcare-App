@@ -108,5 +108,7 @@
 
     <string name="select">Select…</string>
     <string name="tv_contact_details">Contact Details :</string>
+    <string name="tv_you_have_appointments_with">You have appointments with</string>
+    <string name="tv_appointment_count">Appointment count…</string>
 
 </resources>

@@ -18,18 +18,21 @@ import com.app.consultationpoint.utils.Utils.hide
 import com.app.consultationpoint.utils.Utils.loadImageFromCloud
 import com.app.consultationpoint.utils.Utils.show
 import com.app.consultationpoint.utils.Utils.toDate
-import org.koin.core.parameter.parametersOf
 
 class TodayAtpAdapter(
     private var list: ArrayList<AppointmentModel>?,
     private val context: Context,
-    private val doctorDetails: LiveData<ArrayList<UserModel>>,
+    private var doctorDetails: ArrayList<UserModel>?,
     private val viewModel: DashboardViewModel
 ) : RecyclerView.Adapter<TodayAtpAdapter.MyViewHolder>() {
 
 
-    fun setList(it: ArrayList<AppointmentModel>?) {
+    fun setList(
+        it: ArrayList<AppointmentModel>?,
+        aPtDoctorList: ArrayList<UserModel>?
+    ) {
         list = it
+        doctorDetails = aPtDoctorList
         notifyDataSetChanged()
     }
 
@@ -38,24 +41,24 @@ class TodayAtpAdapter(
         @SuppressLint("SetTextI18n")
         fun bind(item: AppointmentModel) {
             binding.tvDocName.text =
-                doctorDetails.value?.get(adapterPosition)?.first_name + " " + doctorDetails.value?.get(
+                doctorDetails?.get(adapterPosition)?.first_name + " " + doctorDetails?.get(
                     adapterPosition
                 )?.last_name
 
             if (Utils.getUserType() == 0) {
                 binding.tvSpecAdr.show()
-                binding.tvSpecAdr.text = viewModel.getSpecializationName(doctorDetails.value?.get(adapterPosition)?.specialist_id?:0)
+                binding.tvSpecAdr.text = viewModel.getSpecializationName(doctorDetails?.get(adapterPosition)?.specialist_id?:0)
             } else {
                 binding.tvSpecAdr.hide()
                 binding.tvSpecAdr.text = ""
             }
 
 
-            if (doctorDetails.value?.get(adapterPosition)?.profile != "" && doctorDetails.value?.get(
+            if (doctorDetails?.get(adapterPosition)?.profile != "" && doctorDetails?.get(
                     adapterPosition
                 )?.profile != "null"
             ) {
-                doctorDetails.value?.get(adapterPosition)?.profile?.let {
+                doctorDetails?.get(adapterPosition)?.profile?.let {
                     if (it.isNotEmpty())
                         binding.ivProfile.loadImageFromCloud(it)
                 }

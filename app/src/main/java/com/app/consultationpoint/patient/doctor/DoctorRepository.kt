@@ -35,14 +35,14 @@ class DoctorRepository @Inject constructor(private val firebaseSource: FirebaseS
                 mRealm.where(UserModel::class.java).equalTo("user_type_id", usertype).findAll()
             val dList: ArrayList<UserModel> =
                 mRealm.copyFromRealm(mRealmResult) as ArrayList<UserModel>
-            doctorList.postValue(dList)
+            doctorList.value = dList
             Timber.d("in repo %s", doctorList.value.toString())
 
             mRealmResult.addChangeListener { change ->
                 doctorList.value?.clear()
                 val list: ArrayList<UserModel> = ArrayList()
                 list.addAll(change)
-                doctorList.postValue(list)
+                doctorList.value = list
                 Timber.d("in repo change %s", doctorList.value.toString())
             }
             Timber.d("Open Instance at %s", System.currentTimeMillis().toString())
@@ -127,5 +127,13 @@ class DoctorRepository @Inject constructor(private val firebaseSource: FirebaseS
             }
             return model
         }
+    }
+
+    fun searchFromFB(text: String) {
+        firebaseSource.searchFromFB(text)
+    }
+
+    fun getMyAptCount(patientId: String, doctorId: String) {
+        firebaseSource.getMyAptCount(patientId, doctorId)
     }
 }

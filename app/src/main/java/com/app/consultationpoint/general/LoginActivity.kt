@@ -96,7 +96,7 @@ class LoginActivity : AppCompatActivity() {
     private fun startActivity() {
         val intent = Intent(this, BottomNavigationActivity::class.java)
         intent.putExtra("newUser", true)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
     }
 }

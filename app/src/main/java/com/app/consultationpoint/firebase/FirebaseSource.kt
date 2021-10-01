@@ -76,27 +76,25 @@ class FirebaseSource @Inject constructor() {
 
         model.user_type_id = snapshot.getLong("user_type_id")?.toInt() ?: 0
 
-        if (snapshot.getLong("user_type_id")?.toInt() == 1) {
-            database.collection("Addresses").document(model.id.toString()).get()
-                .addOnSuccessListener { adr ->
-                    val adrModel = AddressModel()
-                    adrModel.user_id = adr.getLong("user_id") ?: 0
-                    adrModel.address = adr.getString("address") ?: ""
-                    adrModel.city = adr.getString("city") ?: ""
-                    adrModel.state = adr.getString("state") ?: ""
-                    adrModel.country = adr.getString("country") ?: ""
-                    adrModel.pincode = adr.getLong("pincode")?.toInt() ?: 0
-                    adrModel.created_at = adr.getLong("created_at") ?: 0
-                    adrModel.updated_at = adr.getLong("updated_at") ?: 0
-                    adrModel.to_deleted = adr.getBoolean("to_deleted") ?: false
+        database.collection("Addresses").document(model.id.toString()).get()
+            .addOnSuccessListener { adr ->
+                val adrModel = AddressModel()
+                adrModel.user_id = adr.getLong("user_id") ?: 0
+                adrModel.address = adr.getString("address") ?: ""
+                adrModel.city = adr.getString("city") ?: ""
+                adrModel.state = adr.getString("state") ?: ""
+                adrModel.country = adr.getString("country") ?: ""
+                adrModel.pincode = adr.getLong("pincode")?.toInt() ?: 0
+                adrModel.created_at = adr.getLong("created_at") ?: 0
+                adrModel.updated_at = adr.getLong("updated_at") ?: 0
+                adrModel.to_deleted = adr.getBoolean("to_deleted") ?: false
 
-                    Realm.getDefaultInstance().use { mRealm ->
-                        mRealm.executeTransaction {
-                            mRealm.insertOrUpdate(adrModel)
-                        }
+                Realm.getDefaultInstance().use { mRealm ->
+                    mRealm.executeTransaction {
+                        mRealm.insertOrUpdate(adrModel)
                     }
                 }
-        }
+            }
 
         model.user_status = snapshot.getString("user_status") ?: ""
         model.is_deleted = snapshot.getBoolean("is_deleted") ?: false
@@ -124,6 +122,8 @@ class FirebaseSource @Inject constructor() {
 
         ref.addSnapshotListener { snapshot, e ->
 
+            var userList: ArrayList<String> = ArrayList()
+
             if (e != null) {
                 Timber.d("Failed to Fetch Rooms")
                 return@addSnapshotListener
@@ -138,18 +138,10 @@ class FirebaseSource @Inject constructor() {
                     model.patient_id = results.document.data["patient_id"].toString().toLong()
 
                     if (Utils.getUserType() == 1) {
-                        database.collection("Users").document(model.patient_id.toString())
-                            .get().addOnSuccessListener { document ->
-                                val user = getUser(document)
-                                Realm.getDefaultInstance().use { mRealm ->
-                                    mRealm.executeTransaction {
-                                        mRealm.insertOrUpdate(user)
-                                    }
-                                }
-                            }
+                        userList.add(model.patient_id.toString())
                     }
-
-                    Thread.sleep(800)
+                    Timber.d("outside condition check")
+//                    Thread.sleep(800)
 
                     model.schedual_date = results.document.data["schedual_date"].toString()
 
@@ -167,13 +159,44 @@ class FirebaseSource @Inject constructor() {
                 Timber.d("MyBookings Fetching instance")
 
                 mRealm.executeTransaction {
+                    Timber.d("outside data inserted into realm condition check")
                     mRealm.insertOrUpdate(bookingList)
-                    status.value = "My Apt Updated"
-                    status.value = ""
+                    if (userList.isNotEmpty()) {
+                        fetchDesiredUser(userList, "Apt")
+                    } else {
+                        status.value = "My Apt Updated"
+                        status.value = ""
+                        Timber.d("notified without new user condition check")
+                    }
                 }
                 Timber.d("Open Instance at %s", System.currentTimeMillis().toString())
             }
         }
+    }
+
+    private fun fetchDesiredUser(list: ArrayList<String>, type: String) {
+        for ((index, value) in list.withIndex())
+            database.collection("Users").document(value)
+                .get().addOnSuccessListener { document ->
+                    Timber.d("Inside success listener condition check")
+                    val user = getUser(document)
+                    Realm.getDefaultInstance().use { mRealm ->
+                        mRealm.executeTransaction {
+                            mRealm.insertOrUpdate(user)
+                            Timber.d("Inside success listener user data inserted condition check $index & ${list.size - 1}")
+                            if (index == list.size - 1) {
+                                if (type == "Apt") {
+                                    status.value = "My Apt Updated"
+                                    status.value = ""
+                                    Timber.d("notified with new user condition check")
+                                } else {
+                                    status.value = "Chat Room List Updated"
+                                    status.value = ""
+                                }
+                            }
+                        }
+                    }
+                }
     }
 
     suspend fun signUp(model: UserModel) = withContext(Dispatchers.Main) {
@@ -384,6 +407,8 @@ class FirebaseSource @Inject constructor() {
             .addSnapshotListener { snapshot, e ->
                 val roomList = ArrayList<RoomModel>()
 
+                val userList: ArrayList<String> = ArrayList()
+
                 if (e != null) {
                     Timber.d("Failed to Fetch Rooms")
                     return@addSnapshotListener
@@ -406,21 +431,10 @@ class FirebaseSource @Inject constructor() {
 
                         for (index in 0 until memberList.size) {
                             if (memberList[index].toString() != Utils.getUserId()) {
-                                database.collection("Users")
-                                    .document(memberList[index].toString())
-                                    .get().addOnSuccessListener { document ->
-                                        val model = getUser(document)
-                                        Realm.getDefaultInstance().use { mRealm ->
-                                            mRealm.executeTransaction {
-                                                mRealm.insertOrUpdate(model)
-                                            }
-                                        }
-                                    }
+                                userList.add(memberList[index].toString())
                             }
                             participantArray.add(memberList[index].toString().toLong())
                         }
-
-                        Thread.sleep(600)
 
                         room.user_ids_participants = participantArray
 
@@ -481,9 +495,13 @@ class FirebaseSource @Inject constructor() {
 
                     mRealm.executeTransaction {
                         mRealm.insertOrUpdate(roomList)
-                        status.value = "Chat Room List Updated"
-                        status.value = ""
-                        Timber.d("room added to realm %s", roomList.toString())
+                        if (userList.isNotEmpty()) {
+                            fetchDesiredUser(userList, "Room")
+                        } else {
+                            status.value = "Chat Room List Updated"
+                            status.value = ""
+                            Timber.d("room added to realm %s", roomList.toString())
+                        }
                     }
                     Timber.d("Open Instance at %s", System.currentTimeMillis().toString())
                 }
@@ -637,6 +655,55 @@ class FirebaseSource @Inject constructor() {
 
             }.addOnFailureListener {
                 status.value = "count" + 0
+                status.value = ""
+            }
+    }
+
+    fun searchFromFB(text: String) {
+        database.collection("Users").whereEqualTo("user_type_id", 0)
+            .whereIn(
+                "first_name",
+                listOf(text.lowercase(), text.replaceFirstChar(Char::uppercase), text.uppercase())
+            )
+            /*.orderBy("email")
+            .startAt(text)
+            .endAt(text + "\uf8ff")*/
+            .get()
+            .addOnSuccessListener {
+                val userList: ArrayList<UserModel> = ArrayList()
+                for (snap in it.documents) {
+//                    if (snap.getLong("user_type_id") == 0L)
+                    userList.add(getUser(snap))
+                }
+                Realm.getDefaultInstance().use { mRealm ->
+                    mRealm.executeTransaction {
+                        Timber.d("search doctor list size ${userList.size}")
+                        mRealm.insertOrUpdate(userList)
+                        status.value = "search found"
+                        status.value = ""
+                    }
+                }
+            }.addOnFailureListener {
+                Timber.d("search doctor list not found")
+                status.value = "search not found"
+                status.value = ""
+            }
+    }
+
+    fun getMyAptCount(patientId: String, doctorId: String) {
+        database.collection("Appointments")
+            .whereEqualTo("patient_id", patientId)
+            .whereEqualTo("doctor_id", doctorId)
+            .get()
+            .addOnSuccessListener {
+                var count = 0
+                for (document in it.documents) {
+                    count += 1
+                }
+                status.value = "Apt count$count"
+                status.value = ""
+            }.addOnFailureListener {
+                status.value = "Apt count0"
                 status.value = ""
             }
     }

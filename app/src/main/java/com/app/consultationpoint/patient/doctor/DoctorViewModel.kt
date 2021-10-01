@@ -32,7 +32,7 @@ class DoctorViewModel @Inject constructor(private val repository: DoctorReposito
         return repository.getDoctorList()
     }
 
-    fun searchDoctor(str: String) {
+    fun searchUser(str: String) {
         repository.searchDoctor(str)
     }
 
@@ -72,5 +72,13 @@ class DoctorViewModel @Inject constructor(private val repository: DoctorReposito
 
     fun getAddress(docId: Long): AddressModel {
         return repository.getAddress(docId)
+    }
+
+    fun searchFromFB(text: String) {
+        repository.searchFromFB(text)
+    }
+
+    fun getMyAptCount(patientId: String, doctorId: String) {
+        repository.getMyAptCount(patientId, doctorId)
     }
 }

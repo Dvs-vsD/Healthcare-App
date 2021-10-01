@@ -49,14 +49,15 @@ class ChooseTimeActivity : AppCompatActivity() {
         viewModel.getStatus().observe(this, {
             Utils.dismissProgressDialog()
             if (it.isNotEmpty() && it == "Appointment booked") {
-                myAptViewModel.fetchAptFromRealm()
+
+                val intent = Intent(this, BottomNavigationActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK
+
                 if (isUpdate)
                     this@ChooseTimeActivity.showToast("Your appointment updated successfully !!!")
                 else
                     this@ChooseTimeActivity.showToast("Your appointment booked successfully !!!")
 
-                val intent = Intent(this, BottomNavigationActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
                 finish()
 
@@ -76,7 +77,7 @@ class ChooseTimeActivity : AppCompatActivity() {
         apt_model = intent.getSerializableExtra("appointment_model") as AppointmentModel?
         isUpdate = intent.getBooleanExtra("isUpdate", false)
 
-        doctor_id = apt_model?.doctor_id ?: intent.getLongExtra("doctor_id", 0)
+        doctor_id = apt_model?.doctor_id ?: intent.getLongExtra("user_id", 0)
 
         userId = Utils.getUserId().toLong()
 
@@ -87,12 +88,12 @@ class ChooseTimeActivity : AppCompatActivity() {
         else
             apt_model?.schedual_date
 
+        val docDetail: UserModel = myAptViewModel.getDoctorDetails(doctor_id ?: 0)
+        setNameProfile(docDetail)
+        setSpecialization(docDetail)
+
         if (Utils.getUserType() == 0) {
             binding.tvUserType.text = "Doctor"
-            val docDetail: UserModel = myAptViewModel.getDoctorDetails(doctor_id ?: 0)
-
-            setNameProfile(docDetail)
-            setSpecialization(docDetail)
         } else {
             binding.tvUserType.text = "Patient"
         }

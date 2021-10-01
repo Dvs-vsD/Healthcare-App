@@ -50,7 +50,7 @@ class DashboardFragment : BaseFragment() {
                 binding.tvNoData.hide()
             }
             if (adapterTodayApt != null) {
-                adapterTodayApt?.setList(it)
+                adapterTodayApt?.setList(it, viewModel.getAPtDoctorList().value)
             }
         })
 
@@ -93,7 +93,12 @@ class DashboardFragment : BaseFragment() {
         } else {
             binding.tvText.text = "Let's manage your patients"
             binding.tvSearch.text = getString(R.string.et_hint_search_patient)
-            binding.tvSearch.setTextColor(ContextCompat.getColor(requireContext(), R.color.clr_tv_light_gray))
+            binding.tvSearch.setTextColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.clr_tv_light_gray
+                )
+            )
         }
 
         binding.tvSearch.setOnClickListener {
@@ -119,7 +124,10 @@ class DashboardFragment : BaseFragment() {
 
         adapterTodayApt = activity?.let { context ->
             TodayAtpAdapter(
-                viewModel.getTodayAptList().value, context, viewModel.getAPtDoctorList(), viewModel
+                viewModel.getTodayAptList().value,
+                context,
+                viewModel.getAPtDoctorList().value,
+                viewModel
             )
         }
         binding.recyclerView.itemAnimator = null

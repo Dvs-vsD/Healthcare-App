@@ -2,7 +2,6 @@ package com.app.consultationpoint.patient.appointment.allAppointments
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -17,7 +16,6 @@ import com.app.consultationpoint.utils.Utils.toDate
 import com.github.sundeepk.compactcalendarview.CompactCalendarView
 import com.github.sundeepk.compactcalendarview.domain.Event
 import dagger.hilt.android.AndroidEntryPoint
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 import java.util.*
 
@@ -48,7 +46,7 @@ class AllAppointmentsActivity : AppCompatActivity() {
         viewModel.getOneDayApt().observe(this, { dayApt ->
             if (dayApt.isNotEmpty() && dayAptAdapter != null) {
                 binding.recyclerView.show()
-                dayAptAdapter?.setList(dayApt)
+                dayAptAdapter?.setList(dayApt, viewModel.getAptDoctorList().value)
             } else {
                 binding.recyclerView.hide()
                 binding.tvDate.text = getString(R.string.tv_no_appointments)
@@ -72,7 +70,7 @@ class AllAppointmentsActivity : AppCompatActivity() {
 
         viewModel.getAptForThisDay(today.formatTo("yyyy-MM-dd"))
 
-        dayAptAdapter = TodayAtpAdapter(viewModel.getOneDayApt().value, this, viewModel.getAptDoctorList(), dashboardViewModel)
+        dayAptAdapter = TodayAtpAdapter(viewModel.getOneDayApt().value, this, viewModel.getAptDoctorList().value, dashboardViewModel)
         binding.recyclerView.setHasFixedSize(true)
         binding.recyclerView.adapter = dayAptAdapter
 

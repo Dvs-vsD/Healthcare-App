@@ -4,8 +4,14 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableStringBuilder
+import android.text.style.ForegroundColorSpan
+import android.text.style.RelativeSizeSpan
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import com.app.consultationpoint.R
 import com.app.consultationpoint.databinding.ActivityDoctorDetailsBinding
 import com.app.consultationpoint.patient.appointment.bookAppointment.ChooseTimeActivity
 import com.app.consultationpoint.patient.chat.chatScreen.ChatScreenActivity
@@ -14,6 +20,7 @@ import com.app.consultationpoint.patient.chat.room.model.RoomModel
 import com.app.consultationpoint.utils.Utils
 import com.app.consultationpoint.utils.Utils.hide
 import com.app.consultationpoint.utils.Utils.loadImageFromCloud
+import com.app.consultationpoint.utils.Utils.show
 import com.app.consultationpoint.utils.Utils.showToast
 import dagger.hilt.android.AndroidEntryPoint
 import io.realm.RealmList
@@ -27,6 +34,7 @@ class DoctorDetailsActivity : AppCompatActivity() {
     private var room: RoomModel? = null
     private var docId: Long = 0
     private var userId: Long = 0
+    private var name: String = ""
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,6 +58,33 @@ class DoctorDetailsActivity : AppCompatActivity() {
                 else
                     binding.tvPatientCount.text = "--"
             }
+
+            if (it.startsWith("Apt count")) {
+                val count = it.substring(9, it.length)
+                if (count.isNotEmpty()) {
+                    val spannableStringBuilder =
+                        SpannableStringBuilder("${getString(R.string.tv_you_have_appointments_with)} $name")
+                    spannableStringBuilder.setSpan(
+                        ForegroundColorSpan(ContextCompat.getColor(this, R.color.pink)),
+                        9,
+                        9,
+                        Spannable.SPAN_INCLUSIVE_INCLUSIVE
+                    )
+                    spannableStringBuilder.setSpan(
+                        RelativeSizeSpan(1.5f),
+                        9,
+                        9,
+                        Spannable.SPAN_INCLUSIVE_INCLUSIVE
+                    )
+                    spannableStringBuilder.insert(9, "$count ")
+                    binding.tvAptCountText.text = spannableStringBuilder
+                }
+
+                if (count == "0")
+                    binding.tvViewAll.hide()
+                else
+                    binding.tvViewAll.show()
+            }
         })
 
         inThis()
@@ -58,23 +93,32 @@ class DoctorDetailsActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     private fun inThis() {
 
-        docId = intent.getLongExtra("doctor_id", 0)
+        docId = intent.getLongExtra("user_id", 0)
         Timber.d("user Id %s", docId)
         val model = viewModel.getDoctorDetails(docId)
 
         binding.ivBack.setOnClickListener { onBackPressed() }
 
-        val docName = model.first_name + " " + model.last_name
+        if (model.user_type_id == 0) {
+            binding.cvServedPatients.hide()
+            binding.cvExperience.hide()
+            binding.tvAboutDoctorText.hide()
+            binding.tvAbout.hide()
+        }
 
-        binding.tvDocName.text = docName
+        name = model.first_name + " " + model.last_name
+
+        binding.tvDocName.text = name
 //        binding.tvSpecAdr.text = model.specialization + ", " + model.city
         if (model.profile != "" && model.profile != null) {
             binding.ivProfile.loadImageFromCloud(model.profile!!)
         }
         if (model.specialist_id != 0)
             binding.tvSpecAdr.text = viewModel.getSpecializationName(model.specialist_id)
-        else
-            binding.tvSpecAdr.text = ""
+        else if (model.user_type_id == 0) {
+            binding.tvSpecAdr.text = "Patient"
+        } else
+            binding.tvSpecAdr.text = "Doctor"
 
         if (model.experience_yr.isNotEmpty())
             binding.tvYearCount.text = model.experience_yr + " yrs+"
@@ -82,6 +126,11 @@ class DoctorDetailsActivity : AppCompatActivity() {
             binding.tvYearCount.text = "--"
 
         viewModel.getPatientCount(docId)
+
+        if (Utils.getUserType() == 0)
+            viewModel.getMyAptCount(Utils.getUserId(), model.id.toString())
+        else
+            viewModel.getMyAptCount(model.id.toString(), Utils.getUserId())
 
         if (model.about_info != "") {
             binding.tvAbout.text = model.about_info
@@ -150,10 +199,12 @@ class DoctorDetailsActivity : AppCompatActivity() {
         }
 
         binding.btnBookAppt.setOnClickListener {
-            val intent = Intent(this, ChooseTimeActivity::class.java)
-            intent.putExtra("doctor_id", docId)
-            intent.putExtra("isUpdate", false)
-            startActivity(intent)
+            if (Utils.getUserType() == 1) {
+                val intent = Intent(this, ChooseTimeActivity::class.java)
+                intent.putExtra("user_id", docId)
+                intent.putExtra("isUpdate", false)
+                startActivity(intent)
+            }
         }
 
         binding.cvChat.setOnClickListener {
@@ -165,7 +216,7 @@ class DoctorDetailsActivity : AppCompatActivity() {
                 Timber.d("From Realm")
                 goToChatScreen(roomId)
             } else {
-                createRoom(docId, docName, userId)
+                createRoom(docId, name, userId)
             }
         }
     }

@@ -291,7 +291,7 @@ object Utils {
                 ConsultationApp.shPref.edit().clear().apply()
 
                 val intent = Intent(context, LoginActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 context.startActivity(intent)
 
                 dialog.dismiss()

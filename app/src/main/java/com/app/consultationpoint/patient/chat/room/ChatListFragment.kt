@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.app.consultationpoint.BaseFragment
 import com.app.consultationpoint.databinding.FragmentChatListBinding
 import com.app.consultationpoint.patient.chat.room.adapter.RoomListAdapter
@@ -90,6 +91,8 @@ class ChatListFragment : BaseFragment() {
 
         viewModel.roomsFromRealm(userId)
 
+        val linearLayoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, true)
+        binding.recyclerView.layoutManager = linearLayoutManager
         binding.recyclerView.setHasFixedSize(true)
 
         val roomList: LiveData<ArrayList<RoomModel?>> = viewModel.getRoomList()

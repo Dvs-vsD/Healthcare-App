@@ -2,17 +2,17 @@ package com.app.consultationpoint.patient.chat.room.adapter
 
 import android.content.Intent
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
+import com.app.consultationpoint.R
 import com.app.consultationpoint.databinding.RowOfChatListBinding
 import com.app.consultationpoint.patient.chat.chatScreen.ChatScreenActivity
 import com.app.consultationpoint.patient.chat.room.RoomViewModel
 import com.app.consultationpoint.patient.chat.room.model.RoomModel
 import com.app.consultationpoint.utils.Utils
 import com.app.consultationpoint.utils.Utils.formatTo
-import com.app.consultationpoint.utils.Utils.loadImage
 import com.app.consultationpoint.utils.Utils.loadImageFromCloud
 import com.app.consultationpoint.utils.Utils.show
 import java.util.*
@@ -41,13 +41,25 @@ class RoomListAdapter(
                     if (pArray.size <= 2) {
                         if (userDetails.profile != null && userDetails.profile != "")
                             binding.ivProfile.loadImageFromCloud(userDetails.profile!!)
+                        else
+                            binding.ivProfile.setImageDrawable(
+                                ContextCompat.getDrawable(
+                                    context,
+                                    R.drawable.default_user
+                                )
+                            )
                         name = userDetails.first_name + " " + userDetails.last_name
-                    }
-                    else {
+                    } else {
                         val profile = item.photo
-                        if (profile != null && profile.isNotEmpty()) {
+                        if (profile != null && profile.isNotEmpty())
                             binding.ivProfile.loadImageFromCloud(profile)
-                        }
+                        else
+                            binding.ivProfile.setImageDrawable(
+                                ContextCompat.getDrawable(
+                                    context,
+                                    R.drawable.default_user
+                                )
+                            )
 
                         name += if (index == pArray.size - 1)
                             userDetails.first_name + " " + userDetails.last_name

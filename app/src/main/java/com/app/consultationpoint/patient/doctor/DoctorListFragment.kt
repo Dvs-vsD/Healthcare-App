@@ -36,6 +36,7 @@ class DoctorListFragment : BaseFragment(), DoctorAdapter.OnButtonChatCLick {
     private var listUser: ArrayList<UserModel>? = null
     private var room: RoomModel? = null
     private var receiver_id: Long = 0
+    private var searchString: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,6 +46,10 @@ class DoctorListFragment : BaseFragment(), DoctorAdapter.OnButtonChatCLick {
 
         viewModel.getStatus().observe(this, {
             Utils.dismissProgressDialog()
+
+            if (it.startsWith("search"))
+                viewModel.searchUser(searchString)
+
             if (it == "Doctor List Updated" && adapterDoctor != null) {
                 Timber.d("Adapter notified by the init doctor list realm")
                 Handler().post {
@@ -71,8 +76,11 @@ class DoctorListFragment : BaseFragment(), DoctorAdapter.OnButtonChatCLick {
                     binding.tvNoData.show()
             }
 
-            if (binding.pullToRefresh.isRefreshing)
+            if (binding.pullToRefresh.isRefreshing) {
                 binding.pullToRefresh.isRefreshing = false
+                searchString = ""
+                binding.etSearch.setText("")
+            }
         })
     }
 
@@ -99,7 +107,7 @@ class DoctorListFragment : BaseFragment(), DoctorAdapter.OnButtonChatCLick {
             listUser = ArrayList()
 
         listUser = viewModel.getDoctorList().value
-        adapterDoctor = DoctorAdapter(listUser, activity, viewModel, this@DoctorListFragment)
+        adapterDoctor = DoctorAdapter(listUser, requireContext(), viewModel, this@DoctorListFragment)
 
         binding.recyclerView.layoutManager = GridLayoutManager(activity, 2)
         binding.recyclerView.setHasFixedSize(true)
@@ -108,9 +116,14 @@ class DoctorListFragment : BaseFragment(), DoctorAdapter.OnButtonChatCLick {
 
         binding.etSearch.addTextChangedListener { text ->
             if (text?.trim().toString().isNotEmpty()) {
-                viewModel.searchDoctor(text.toString())
+                searchString = text?.trim().toString()
+                if (Utils.getUserType() == 1 && Utils.isNetworkAvailable(requireContext()))
+                    viewModel.searchFromFB(searchString)
+                else
+                    viewModel.searchUser(searchString)
             } else {
-                viewModel.searchDoctor("")
+                searchString = ""
+                viewModel.searchUser("")
             }
         }
 
@@ -131,14 +144,12 @@ class DoctorListFragment : BaseFragment(), DoctorAdapter.OnButtonChatCLick {
 
     override fun onChatBtnClick(receiver_id: Long) {
         Utils.showProgressDialog(requireActivity())
-        val roomId = viewModel.checkRoomAvailability(Utils.getUserId().toLong(), receiver_id)
-        if (roomId != 0L) {
-            Utils.dismissProgressDialog()
-            Timber.d("From Realm")
-            goToChatScreen(roomId, receiver_id)
-        } else {
-            createChatRoom(receiver_id, Utils.getFirstName() + " " + Utils.getLastName(), Utils.getUserId().toLong())
-        }
+        this.receiver_id = receiver_id
+        createChatRoom(
+            receiver_id,
+            Utils.getFirstName() + " " + Utils.getLastName(),
+            Utils.getUserId().toLong()
+        )
     }
 
     private fun goToChatScreen(room_id: Long, receiver_id: Long) {

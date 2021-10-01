@@ -61,9 +61,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Dr.Saluke"
+            app:layout_constraintBottom_toTopOf="@id/tvSpecAdr"
             app:layout_constraintEnd_toStartOf="@id/ivProfile"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@id/ivProfile" />
 
         <TextView
             android:id="@+id/tvSpecAdr"
@@ -71,6 +72,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Heart Specialist, london"
+            app:layout_constraintBottom_toBottomOf="@id/ivProfile"
+            app:layout_constraintEnd_toEndOf="@id/tvDocName"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvDocName" />
 
@@ -78,23 +81,22 @@
             android:id="@+id/ivProfile"
             android:layout_width="@dimen/_40sdp"
             android:layout_height="@dimen/_40sdp"
-            android:layout_marginTop="@dimen/_2sdp"
-            android:layout_marginEnd="@dimen/_1sdp"
             android:elevation="@dimen/_4sdp"
             android:scaleType="centerCrop"
             android:src="@drawable/default_user"
             app:civ_border="false"
-            app:layout_constraintBottom_toBottomOf="@id/tvSpecAdr"
+            app:layout_constraintBottom_toTopOf="@id/cvExperience"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/tvDocName"
-            app:layout_constraintTop_toTopOf="@id/tvDocName" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cvServedPatients"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="@dimen/_16sdp"
             android:layout_marginStart="@dimen/_1sdp"
+            android:layout_marginTop="@dimen/_16sdp"
             android:layout_marginEnd="@dimen/_8sdp"
             android:backgroundTint="@color/white"
             app:cardCornerRadius="@dimen/_8sdp"
@@ -135,15 +137,14 @@
             android:id="@+id/cvExperience"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="@dimen/_16sdp"
             android:layout_marginStart="@dimen/_8sdp"
             android:layout_marginEnd="@dimen/_1sdp"
             android:backgroundTint="@color/white"
             app:cardCornerRadius="@dimen/_8sdp"
-            app:layout_constraintBottom_toTopOf="@id/btnBookAppt"
+            app:layout_constraintBottom_toBottomOf="@id/cvServedPatients"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/cvServedPatients"
-            app:layout_constraintTop_toBottomOf="@id/tvSpecAdr">
+            app:layout_constraintTop_toTopOf="@id/cvServedPatients">
 
             <RelativeLayout
                 android:layout_width="wrap_content"
@@ -178,6 +179,7 @@
             style="@style/st_btn_style"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_16sdp"
             android:layout_marginEnd="@dimen/_12sdp"
             android:background="@drawable/background_with_radius_12"
             android:padding="@dimen/_8sdp"
@@ -216,10 +218,10 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="@dimen/_16sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@id/guidelineRight"
         app:layout_constraintStart_toStartOf="@id/guidelineLeft"
-        app:layout_constraintTop_toBottomOf="@id/clDoctorDetails"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/clDoctorDetails">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/clAbout"
@@ -229,15 +231,82 @@
             android:padding="@dimen/_16sdp">
 
             <TextView
+                android:id="@+id/tvAptCountText"
+                style="@style/st_tv_small.bold"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_16sdp"
+                android:text="@string/tv_appointment_count"
+                app:layout_constraintEnd_toStartOf="@id/tvViewAll"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvViewAll"
+                style="@style/st_tv_small.bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tvAptCountText"
+                app:layout_constraintBottom_toBottomOf="@id/tvAptCountText"
+                android:text="@string/tv_view_all"
+                android:textColor="@color/blue"
+                android:drawableTint="@color/blue"
+                app:drawableRightCompat="@drawable/ic_baseline_arrow_forward_ios_24" />
+
+            <!--<androidx.cardview.widget.CardView
+                android:id="@+id/cvAptCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_1sdp"
+                app:cardCornerRadius="@dimen/_12sdp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/tvAptCountText"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/_8sdp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvAptCount"
+                        style="@style/st_tv_large.bold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="0"
+                        android:layout_marginHorizontal="@dimen/_8sdp"
+                        android:textColor="@color/pink" />
+
+                    <TextView
+                        android:id="@+id/tvViewAll"
+                        style="@style/st_tv_extra_small.bold_gray"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:visibility="gone"
+                        android:text="@string/tv_view_all"
+                        android:textColor="@color/blue" />
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>-->
+
+            <TextView
                 android:id="@+id/tv_about_doctor_text"
                 style="@style/st_tv_normal.bold"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_16sdp"
                 android:text="@string/tv_about_doctor"
                 android:textColor="@color/blue"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@id/tvAptCountText" />
 
             <TextView
                 android:id="@+id/tvAbout"

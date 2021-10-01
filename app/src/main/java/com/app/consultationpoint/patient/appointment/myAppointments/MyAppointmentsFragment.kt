@@ -75,8 +75,6 @@ class MyAppointmentsFragment : BaseFragment() {
         else
             binding.fab.hide()
 
-        viewModel.fetchAptFromFirebase()
-
         viewModel.fetchAptFromRealm()
 
         val monthlyApt = viewModel.getMonthlyAptList().value
