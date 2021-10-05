@@ -26,6 +26,7 @@ import kotlinx.android.synthetic.main.activity_bottom_navigation.*
 import kotlinx.android.synthetic.main.header_layout.view.*
 import timber.log.Timber
 import java.util.*
+import kotlin.collections.ArrayList
 
 private const val ARG_PARAM1 = "param1"
 
@@ -105,8 +106,6 @@ class DashboardFragment : BaseFragment() {
             mFragmentNavigation.pushFragment(DoctorListFragment.newInstance(1))
         }
 
-        viewModel.fetchAllMyBookings()
-
         val fragmentCalender = CalenderFragment()
         val transaction: FragmentTransaction = childFragmentManager.beginTransaction()
         transaction.replace(R.id.llCalender, fragmentCalender)
@@ -119,17 +118,15 @@ class DashboardFragment : BaseFragment() {
             LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
 
         specialistAdapter =
-            viewModel.getSpCategoryList().value?.let { SpecialistAdapter(it, requireActivity()) }
+            SpecialistAdapter(viewModel.getSpCategoryList().value ?: ArrayList(), requireActivity())
         binding.rvHorizontal.adapter = specialistAdapter
 
-        adapterTodayApt = activity?.let { context ->
-            TodayAtpAdapter(
-                viewModel.getTodayAptList().value,
-                context,
-                viewModel.getAPtDoctorList().value,
-                viewModel
-            )
-        }
+        adapterTodayApt = TodayAtpAdapter(
+            viewModel.getTodayAptList().value ?: ArrayList(),
+            requireContext(),
+            viewModel.getAPtDoctorList().value ?: ArrayList(),
+            viewModel
+        )
         binding.recyclerView.itemAnimator = null
         binding.recyclerView.adapter = adapterTodayApt
     }

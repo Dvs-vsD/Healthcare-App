@@ -78,7 +78,7 @@ class DoctorViewModel @Inject constructor(private val repository: DoctorReposito
         repository.searchFromFB(text)
     }
 
-    fun getMyAptCount(patientId: String, doctorId: String) {
+    fun getMyAptCount(patientId: Long, doctorId: Long) {
         repository.getMyAptCount(patientId, doctorId)
     }
 }

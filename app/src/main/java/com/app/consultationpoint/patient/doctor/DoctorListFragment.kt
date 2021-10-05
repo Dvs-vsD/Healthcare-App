@@ -23,6 +23,7 @@ import com.app.consultationpoint.utils.Utils.show
 import com.app.consultationpoint.utils.Utils.showToast
 import dagger.hilt.android.AndroidEntryPoint
 import io.realm.RealmList
+import kotlinx.android.synthetic.main.fragment_my_appointments.*
 import timber.log.Timber
 
 private const val ARG_PARAM1 = "param1"
@@ -33,7 +34,7 @@ class DoctorListFragment : BaseFragment(), DoctorAdapter.OnButtonChatCLick {
     private lateinit var binding: FragmentDoctorListBinding
     private var adapterDoctor: DoctorAdapter? = null
     private val viewModel: DoctorViewModel by viewModels()
-    private var listUser: ArrayList<UserModel>? = null
+    private var listUser: ArrayList<UserModel> = ArrayList()
     private var room: RoomModel? = null
     private var receiver_id: Long = 0
     private var searchString: String = ""
@@ -103,10 +104,7 @@ class DoctorListFragment : BaseFragment(), DoctorAdapter.OnButtonChatCLick {
         viewModel.fetchDocFromRDB()
         viewModel.fetchDocFromFB(1)
 
-        if (listUser == null)
-            listUser = ArrayList()
-
-        listUser = viewModel.getDoctorList().value
+        listUser = viewModel.getDoctorList().value?:ArrayList()
         adapterDoctor = DoctorAdapter(listUser, requireContext(), viewModel, this@DoctorListFragment)
 
         binding.recyclerView.layoutManager = GridLayoutManager(activity, 2)
@@ -203,5 +201,11 @@ class DoctorListFragment : BaseFragment(), DoctorAdapter.OnButtonChatCLick {
 
         if (room != null)
             viewModel.createChatRoom(room!!)
+    }
+
+    override fun onPause() {
+        if (pullToRefresh.isRefreshing)
+            pullToRefresh.isRefreshing = false
+        super.onPause()
     }
 }

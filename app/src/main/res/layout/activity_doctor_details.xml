@@ -117,7 +117,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="@string/bn_appointments" />
+                    android:text="@string/tv_patients" />
 
                 <TextView
                     android:id="@+id/tvPatientCount"
@@ -126,7 +126,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tvPatientsText"
                     android:layout_centerHorizontal="true"
-                    android:text="0 +"
+                    android:text="@string/place_holder"
                     android:textColor="@color/yellow" />
 
             </RelativeLayout>
@@ -167,7 +167,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tvExperienceText"
                     android:layout_centerHorizontal="true"
-                    android:text="0 yrs+"
+                    android:text="@string/place_holder"
                     android:textColor="@color/pink" />
 
             </RelativeLayout>
@@ -236,7 +236,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/_16sdp"
-                android:text="@string/tv_appointment_count"
+                android:visibility="gone"
                 app:layout_constraintEnd_toStartOf="@id/tvViewAll"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -247,54 +247,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/tvAptCountText"
-                app:layout_constraintBottom_toBottomOf="@id/tvAptCountText"
+                app:drawableTint="@color/blue"
                 android:text="@string/tv_view_all"
                 android:textColor="@color/blue"
-                android:drawableTint="@color/blue"
-                app:drawableRightCompat="@drawable/ic_baseline_arrow_forward_ios_24" />
-
-            <!--<androidx.cardview.widget.CardView
-                android:id="@+id/cvAptCount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/_1sdp"
-                app:cardCornerRadius="@dimen/_12sdp"
+                android:visibility="gone"
+                app:drawableRightCompat="@drawable/ic_baseline_arrow_forward_ios_24"
+                app:layout_constraintBottom_toBottomOf="@id/tvAptCountText"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/tvAptCountText"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/_8sdp"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/tvAptCount"
-                        style="@style/st_tv_large.bold"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="0"
-                        android:layout_marginHorizontal="@dimen/_8sdp"
-                        android:textColor="@color/pink" />
-
-                    <TextView
-                        android:id="@+id/tvViewAll"
-                        style="@style/st_tv_extra_small.bold_gray"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:visibility="gone"
-                        android:text="@string/tv_view_all"
-                        android:textColor="@color/blue" />
-
-                </LinearLayout>
-
-            </androidx.cardview.widget.CardView>-->
+                app:layout_constraintTop_toTopOf="@id/tvAptCountText" />
 
             <TextView
                 android:id="@+id/tv_about_doctor_text"
@@ -530,5 +490,15 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.core.widget.NestedScrollView>
+
+    <FrameLayout
+        android:id="@+id/fragmentContainer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/_13sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/guidelineRight"
+        app:layout_constraintStart_toStartOf="@id/guidelineLeft"
+        app:layout_constraintTop_toBottomOf="@id/tvHeading" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

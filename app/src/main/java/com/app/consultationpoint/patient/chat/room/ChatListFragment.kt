@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.app.consultationpoint.BaseFragment
 import com.app.consultationpoint.databinding.FragmentChatListBinding
@@ -95,15 +94,11 @@ class ChatListFragment : BaseFragment() {
         binding.recyclerView.layoutManager = linearLayoutManager
         binding.recyclerView.setHasFixedSize(true)
 
-        val roomList: LiveData<ArrayList<RoomModel?>> = viewModel.getRoomList()
+        val roomList: ArrayList<RoomModel?> = viewModel.getRoomList().value ?: ArrayList()
 
-        adapter = activity?.let { context ->
-            roomList.value?.let { list ->
-                RoomListAdapter(list, context, viewModel)
-            }
-        }
+        adapter = RoomListAdapter(roomList, requireActivity(), viewModel)
 
-        if (roomList.value?.isEmpty() == true) {
+        if (roomList.isEmpty()) {
             binding.tvNoData.show()
         } else {
             binding.tvNoData.hide()

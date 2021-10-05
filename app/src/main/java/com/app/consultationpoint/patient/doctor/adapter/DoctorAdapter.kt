@@ -61,7 +61,6 @@ class DoctorAdapter(
             } else {
                 binding.tvSpecAdr.hide()
                 binding.btnTakeAppointment.text = context.getString(R.string.bn_chat)
-                roomId = viewModel.checkRoomAvailability(Utils.getUserId().toLong(), item.id)
             }
 
             binding.btnTakeAppointment.setOnClickListener {
@@ -71,6 +70,7 @@ class DoctorAdapter(
                     intent.putExtra("isUpdate", false)
                     context.startActivity(intent)
                 } else {
+                    roomId = viewModel.checkRoomAvailability(Utils.getUserId().toLong(), item.id)
                     if (roomId != 0L) {
                         val intent = Intent(context, ChatScreenActivity::class.java)
                         intent.putExtra("receiver_id", item.id)

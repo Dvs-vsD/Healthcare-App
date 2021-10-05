@@ -25,7 +25,11 @@ class LoginActivity : AppCompatActivity() {
         viewModel.getRegistrationStatus().observe(this, {
             Utils.dismissProgressDialog()
             if (it == "login success") {
-                startActivity()
+                val intent = Intent(this, BottomNavigationActivity::class.java)
+                intent.putExtra("newUser", true)
+//                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+                finish()
             } else if (it.startsWith("Error")) {
                 this.showToast("Error: $it")
             }
@@ -91,12 +95,5 @@ class LoginActivity : AppCompatActivity() {
             }
 
         }
-    }
-
-    private fun startActivity() {
-        val intent = Intent(this, BottomNavigationActivity::class.java)
-        intent.putExtra("newUser", true)
-        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        startActivity(intent)
     }
 }

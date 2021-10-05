@@ -29,7 +29,7 @@ class MonthlyAptAdapter(
         @SuppressLint("SetTextI18n")
         fun bind(item: MonthlyAppointments) {
             binding.tvMonthYear.text = item.month.toDate("MM")?.formatTo("MMMM") + " " + item.year
-            binding.recyclerView.adapter = AptDetailsAdapter(item.appointment, context, viewModel)
+            binding.recyclerView.adapter = AptDetailsAdapter(item.appointment?:ArrayList(), context, viewModel)
         }
     }
 

@@ -18,6 +18,7 @@ import com.github.sundeepk.compactcalendarview.domain.Event
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 import java.util.*
+import kotlin.collections.ArrayList
 
 @AndroidEntryPoint
 class AllAppointmentsActivity : AppCompatActivity() {
@@ -70,7 +71,12 @@ class AllAppointmentsActivity : AppCompatActivity() {
 
         viewModel.getAptForThisDay(today.formatTo("yyyy-MM-dd"))
 
-        dayAptAdapter = TodayAtpAdapter(viewModel.getOneDayApt().value, this, viewModel.getAptDoctorList().value, dashboardViewModel)
+        dayAptAdapter = TodayAtpAdapter(
+            viewModel.getOneDayApt().value ?: ArrayList(),
+            this,
+            viewModel.getAptDoctorList().value ?: ArrayList(),
+            dashboardViewModel
+        )
         binding.recyclerView.setHasFixedSize(true)
         binding.recyclerView.adapter = dayAptAdapter
 

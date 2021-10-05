@@ -31,8 +31,8 @@ import java.util.*
 class ChooseTimeActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityChooseTimeBinding
-    private var doctor_id: Long? = 0
-    private var userId: Long? = 0
+    private var opp_user_id: Long? = 0
+    private var myUserId: Long? = 0
     private var selectedTime: String? = ""
     private var selectedDate: String? = ""
     private val viewModel by viewModels<BookAptViewModel>()
@@ -77,9 +77,18 @@ class ChooseTimeActivity : AppCompatActivity() {
         apt_model = intent.getSerializableExtra("appointment_model") as AppointmentModel?
         isUpdate = intent.getBooleanExtra("isUpdate", false)
 
-        doctor_id = apt_model?.doctor_id ?: intent.getLongExtra("user_id", 0)
+        opp_user_id = if (apt_model != null) {
+            if (Utils.getUserType() == 0)
+                apt_model?.doctor_id
+            else
+                apt_model?.patient_id
+        } else {
+            intent.getLongExtra("user_id", 0)
+        }
 
-        userId = Utils.getUserId().toLong()
+        Timber.d("My id $myUserId and Opposite Id $opp_user_id")
+
+        myUserId = Utils.getUserId().toLong()
 
         val today = calender.timeInMillis
 
@@ -88,7 +97,7 @@ class ChooseTimeActivity : AppCompatActivity() {
         else
             apt_model?.schedual_date
 
-        val docDetail: UserModel = myAptViewModel.getDoctorDetails(doctor_id ?: 0)
+        val docDetail: UserModel = myAptViewModel.getDoctorDetails(opp_user_id ?: 0)
         setNameProfile(docDetail)
         setSpecialization(docDetail)
 
@@ -117,7 +126,7 @@ class ChooseTimeActivity : AppCompatActivity() {
                 binding.calenderView.hide()
 
                 binding.tvDate.show()
-                binding.tvDate.text = "on "+calender.time.formatTo("dd, MMMM yyyy")
+                binding.tvDate.text = "on " + calender.time.formatTo("dd, MMMM yyyy")
 
                 binding.etTitle.isFocusable = false
                 binding.etTitle.isFocusableInTouchMode = false
@@ -197,13 +206,18 @@ class ChooseTimeActivity : AppCompatActivity() {
                     if (apt_model != null) {
                         model.doctor_id = apt_model!!.doctor_id
                         model.patient_id = apt_model!!.patient_id
-                        model.created_by = apt_model!!.patient_id
+                        model.created_by = apt_model!!.created_by
                         model.appointment_id = apt_model!!.appointment_id
                         model.created_at = apt_model!!.created_at
                     } else {
-                        model.doctor_id = doctor_id ?: 0
-                        model.patient_id = userId ?: 0
-                        model.created_by = userId ?: 0
+                        if (Utils.getUserType() == 0) {
+                            model.doctor_id = opp_user_id ?: 0
+                            model.patient_id = myUserId ?: 0
+                        } else {
+                            model.doctor_id = myUserId ?: 0
+                            model.patient_id = opp_user_id ?: 0
+                        }
+                        model.created_by = myUserId ?: 0
                         model.appointment_id = System.currentTimeMillis()
                         model.created_at = System.currentTimeMillis()
                     }

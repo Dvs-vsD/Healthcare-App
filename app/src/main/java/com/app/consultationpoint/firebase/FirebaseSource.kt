@@ -25,6 +25,7 @@ import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
+import kotlin.collections.HashSet
 
 
 class FirebaseSource @Inject constructor() {
@@ -122,7 +123,7 @@ class FirebaseSource @Inject constructor() {
 
         ref.addSnapshotListener { snapshot, e ->
 
-            var userList: ArrayList<String> = ArrayList()
+            val userSet: HashSet<String> = HashSet()
 
             if (e != null) {
                 Timber.d("Failed to Fetch Rooms")
@@ -137,9 +138,9 @@ class FirebaseSource @Inject constructor() {
                     model.doctor_id = results.document.data["doctor_id"].toString().toLong()
                     model.patient_id = results.document.data["patient_id"].toString().toLong()
 
-                    if (Utils.getUserType() == 1) {
-                        userList.add(model.patient_id.toString())
-                    }
+                    userSet.add(model.patient_id.toString())
+                    userSet.add(model.doctor_id.toString())
+
                     Timber.d("outside condition check")
 //                    Thread.sleep(800)
 
@@ -161,8 +162,8 @@ class FirebaseSource @Inject constructor() {
                 mRealm.executeTransaction {
                     Timber.d("outside data inserted into realm condition check")
                     mRealm.insertOrUpdate(bookingList)
-                    if (userList.isNotEmpty()) {
-                        fetchDesiredUser(userList, "Apt")
+                    if (userSet.isNotEmpty()) {
+                        fetchDesiredUser(userSet, "Apt")
                     } else {
                         status.value = "My Apt Updated"
                         status.value = ""
@@ -174,7 +175,7 @@ class FirebaseSource @Inject constructor() {
         }
     }
 
-    private fun fetchDesiredUser(list: ArrayList<String>, type: String) {
+    private fun fetchDesiredUser(list: HashSet<String>, type: String) {
         for ((index, value) in list.withIndex())
             database.collection("Users").document(value)
                 .get().addOnSuccessListener { document ->
@@ -212,8 +213,10 @@ class FirebaseSource @Inject constructor() {
                     .document(model.id.toString()).set(model)
 
                 ConsultationApp.shPref.edit().putString(Const.USER_ID, model.id.toString()).apply()
+                ConsultationApp.shPref.edit().putString(Const.USER_NAME, model.username).apply()
                 ConsultationApp.shPref.edit().putString(Const.FIRST_NAME, model.first_name).apply()
                 ConsultationApp.shPref.edit().putString(Const.LAST_NAME, model.last_name).apply()
+                ConsultationApp.shPref.edit().putInt(Const.GENDER, model.gender).apply()
                 ConsultationApp.shPref.edit().putString(Const.USER_EMAIL, model.email).apply()
                 ConsultationApp.shPref.edit().putInt(Const.USER_TYPE, model.user_type_id).apply()
                 ConsultationApp.shPref.edit().putBoolean(Const.PREF_IS_LOGIN, true).apply()
@@ -407,7 +410,7 @@ class FirebaseSource @Inject constructor() {
             .addSnapshotListener { snapshot, e ->
                 val roomList = ArrayList<RoomModel>()
 
-                val userList: ArrayList<String> = ArrayList()
+                val userSet: HashSet<String> = HashSet()
 
                 if (e != null) {
                     Timber.d("Failed to Fetch Rooms")
@@ -431,7 +434,7 @@ class FirebaseSource @Inject constructor() {
 
                         for (index in 0 until memberList.size) {
                             if (memberList[index].toString() != Utils.getUserId()) {
-                                userList.add(memberList[index].toString())
+                                userSet.add(memberList[index].toString())
                             }
                             participantArray.add(memberList[index].toString().toLong())
                         }
@@ -495,8 +498,8 @@ class FirebaseSource @Inject constructor() {
 
                     mRealm.executeTransaction {
                         mRealm.insertOrUpdate(roomList)
-                        if (userList.isNotEmpty()) {
-                            fetchDesiredUser(userList, "Room")
+                        if (userSet.isNotEmpty()) {
+                            fetchDesiredUser(userSet, "Room")
                         } else {
                             status.value = "Chat Room List Updated"
                             status.value = ""
@@ -646,12 +649,12 @@ class FirebaseSource @Inject constructor() {
     fun getPatientCount(docId: Long) {
         database.collection("Appointments").whereEqualTo("doctor_id", docId).get()
             .addOnSuccessListener {
-                var count = 0
+                val set: HashSet<Long> = HashSet()
                 for (document in it.documents) {
-                    count += 1
-                    status.value = "count$count"
-                    status.value = ""
+                    set.add(document.getLong("patient_id") ?: 0)
                 }
+                status.value = "count${set.size}"
+                status.value = ""
 
             }.addOnFailureListener {
                 status.value = "count" + 0
@@ -690,19 +693,21 @@ class FirebaseSource @Inject constructor() {
             }
     }
 
-    fun getMyAptCount(patientId: String, doctorId: String) {
+    fun getMyAptCount(patientId: Long, doctorId: Long) {
         database.collection("Appointments")
-            .whereEqualTo("patient_id", patientId)
             .whereEqualTo("doctor_id", doctorId)
+            .whereEqualTo("patient_id", patientId)
             .get()
             .addOnSuccessListener {
                 var count = 0
                 for (document in it.documents) {
                     count += 1
+                    Timber.d("Apt in success listener $count")
                 }
                 status.value = "Apt count$count"
                 status.value = ""
             }.addOnFailureListener {
+                Timber.d("Apt in failure listener")
                 status.value = "Apt count0"
                 status.value = ""
             }

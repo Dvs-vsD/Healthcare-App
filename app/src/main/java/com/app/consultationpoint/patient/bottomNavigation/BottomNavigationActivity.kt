@@ -86,18 +86,6 @@ class BottomNavigationActivity(override val numberOfRootFragments: Int = 4) : Ap
         binding.drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
 
-        binding.navigationView.setNavigationItemSelectedListener(this)
-
-        binding.navigationView.getHeaderView(0).tvUserName.text = "Hello, ${Utils.getFirstName()}"
-
-        loadProfile()
-
-        binding.ivProfile.setOnClickListener {
-            startActivity(Intent(this, UserProfileActivity::class.java))
-        }
-
-        binding.ivBack.setOnClickListener { onBackPressed() }
-
         fragNavController.apply {
             transactionListener = this@BottomNavigationActivity
             rootFragmentListener = this@BottomNavigationActivity
@@ -133,7 +121,20 @@ class BottomNavigationActivity(override val numberOfRootFragments: Int = 4) : Ap
 
         binding.bottomNav.setOnTabSelectListener({ itemId -> bottomBarSelection(itemId) }, initial)
 
+        binding.navigationView.setNavigationItemSelectedListener(this)
+
+        binding.navigationView.getHeaderView(0).tvUserName.text = "Hello, ${Utils.getFirstName()}"
+
+        loadProfile()
+
+        binding.ivProfile.setOnClickListener {
+            startActivity(Intent(this, UserProfileActivity::class.java))
+        }
+
+        binding.ivBack.setOnClickListener { onBackPressed() }
+
         //Alarm Notification for first 5 appointments
+        viewModel.fetchAllMyBookings()
         viewModel.fetchALlAptFromRDB()
     }
 

@@ -13,7 +13,7 @@ open class UserModel: RealmObject() {
     var last_name: String = ""
     var email: String = ""
     var mobile: String = ""
-    var gender: Int = 0 //0-Male  1-Female  2-Other
+    var gender: Int = -1 //0-Male  1-Female  2-Other
     var dob: String = ""
 
     //new added 1 fields

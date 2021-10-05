@@ -15,6 +15,7 @@ import android.provider.MediaStore
 import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import cc.cloudist.acplibrary.ACProgressConstant
@@ -231,6 +232,14 @@ object Utils {
     fun setErrorFreeEdt(context: Context, textInputLayout: TextInputLayout) {
         textInputLayout.defaultHintTextColor =
             ColorStateList.valueOf(ContextCompat.getColor(context, R.color.blue))
+    }
+
+    fun setError(context: Context, textView: TextView) {
+        textView.setTextColor(ContextCompat.getColor(context, R.color.red))
+    }
+
+    fun setErrorFree(context: Context, textView: TextView) {
+        textView.setTextColor(ContextCompat.getColor(context, R.color.black))
     }
 
     fun Context.showToast(msg: String, length: Int = Toast.LENGTH_SHORT) {

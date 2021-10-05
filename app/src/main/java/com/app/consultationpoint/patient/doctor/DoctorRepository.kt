@@ -133,7 +133,7 @@ class DoctorRepository @Inject constructor(private val firebaseSource: FirebaseS
         firebaseSource.searchFromFB(text)
     }
 
-    fun getMyAptCount(patientId: String, doctorId: String) {
+    fun getMyAptCount(patientId: Long, doctorId: Long) {
         firebaseSource.getMyAptCount(patientId, doctorId)
     }
 }

@@ -78,7 +78,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintBottom_toTopOf="@+id/til_first_name"
+            app:layout_constraintBottom_toTopOf="@+id/til_user_name"
             app:layout_constraintEnd_toEndOf="@id/guidelineRight"
             app:layout_constraintStart_toStartOf="@id/guidelineLeft"
             app:layout_constraintTop_toBottomOf="@id/tvQuesPntOrDoc">
@@ -101,7 +101,7 @@
         </RadioGroup>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/til_first_name"
+            android:id="@+id/til_user_name"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -110,6 +110,29 @@
             app:layout_constraintEnd_toEndOf="@id/guidelineRight"
             app:layout_constraintStart_toStartOf="@id/guidelineLeft"
             app:layout_constraintTop_toBottomOf="@+id/rgPntOrDoc">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etUserName"
+                style="@style/st_et_style"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/hint_username"
+                android:importantForAutofill="no"
+                android:inputType="text" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_first_name"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:boxStrokeErrorColor="@color/red"
+            android:layout_marginTop="@dimen/_8sdp"
+            app:errorIconDrawable="@null"
+            app:layout_constraintEnd_toEndOf="@id/guidelineRight"
+            app:layout_constraintStart_toStartOf="@id/guidelineLeft"
+            app:layout_constraintTop_toBottomOf="@+id/til_user_name">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etFirstName"
@@ -145,17 +168,75 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
+        <TextView
+            android:id="@+id/tvGender"
+            style="@style/st_tv_small.bold"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:text="@string/tv_gender"
+            app:layout_constraintTop_toBottomOf="@+id/til_last_name"
+            app:layout_constraintBottom_toTopOf="@id/rgGender"
+            app:layout_constraintEnd_toEndOf="@id/guidelineRight"
+            app:layout_constraintStart_toStartOf="@id/guidelineLeft" />
+
+        <RadioGroup
+            android:id="@+id/rgGender"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toTopOf="@+id/tvErrorTextGender"
+            app:layout_constraintEnd_toEndOf="@id/guidelineRight"
+            app:layout_constraintStart_toStartOf="@id/guidelineLeft"
+            app:layout_constraintTop_toBottomOf="@id/tvGender">
+
+            <RadioButton
+                android:id="@+id/rbMale"
+                style="@style/st_rb_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/rb_male" />
+
+            <RadioButton
+                android:id="@+id/rbFemale"
+                style="@style/st_rb_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/rb_female" />
+
+            <RadioButton
+                android:id="@+id/rbOther"
+                style="@style/st_rb_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/rb_other" />
+
+        </RadioGroup>
+
+        <TextView
+            android:id="@+id/tvErrorTextGender"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            style="@style/st_tv_small"
+            android:textColor="@color/red"
+            android:visibility="gone"
+            android:paddingBottom="@dimen/_8sdp"
+            android:text="@string/error_text_for_gender"
+            app:layout_constraintStart_toStartOf="@id/guidelineLeft"
+            app:layout_constraintEnd_toEndOf="@id/guidelineRight"
+            app:layout_constraintTop_toBottomOf="@id/rgGender"
+            app:layout_constraintBottom_toTopOf="@id/til_email"/>
+
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/til_email"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_8sdp"
             app:boxStrokeErrorColor="@color/red"
             app:errorIconDrawable="@null"
             app:layout_constraintEnd_toEndOf="@id/guidelineRight"
             app:layout_constraintStart_toStartOf="@id/guidelineLeft"
-            app:layout_constraintTop_toBottomOf="@+id/til_last_name">
+            app:layout_constraintTop_toBottomOf="@+id/tvErrorTextGender">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etEmail"

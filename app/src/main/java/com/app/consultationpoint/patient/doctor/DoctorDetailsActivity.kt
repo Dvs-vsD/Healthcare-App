@@ -14,6 +14,7 @@ import androidx.core.content.ContextCompat
 import com.app.consultationpoint.R
 import com.app.consultationpoint.databinding.ActivityDoctorDetailsBinding
 import com.app.consultationpoint.patient.appointment.bookAppointment.ChooseTimeActivity
+import com.app.consultationpoint.patient.appointment.myAppointments.MyAppointmentsFragment
 import com.app.consultationpoint.patient.chat.chatScreen.ChatScreenActivity
 import com.app.consultationpoint.patient.chat.room.model.ParticipantModel
 import com.app.consultationpoint.patient.chat.room.model.RoomModel
@@ -55,15 +56,18 @@ class DoctorDetailsActivity : AppCompatActivity() {
                 Timber.d("FirebaseSource $count")
                 if (count.isNotEmpty() && count != "0")
                     binding.tvPatientCount.text = "$count +"
-                else
-                    binding.tvPatientCount.text = "--"
             }
 
             if (it.startsWith("Apt count")) {
                 val count = it.substring(9, it.length)
+                Timber.d("Apt $it")
                 if (count.isNotEmpty()) {
-                    val spannableStringBuilder =
+                    binding.tvAptCountText.show()
+                    val spannableStringBuilder = if (count == "1")
+                        SpannableStringBuilder("${getString(R.string.tv_you_have_appointment_with)} $name")
+                    else
                         SpannableStringBuilder("${getString(R.string.tv_you_have_appointments_with)} $name")
+
                     spannableStringBuilder.setSpan(
                         ForegroundColorSpan(ContextCompat.getColor(this, R.color.pink)),
                         9,
@@ -122,15 +126,16 @@ class DoctorDetailsActivity : AppCompatActivity() {
 
         if (model.experience_yr.isNotEmpty())
             binding.tvYearCount.text = model.experience_yr + " yrs+"
-        else
-            binding.tvYearCount.text = "--"
 
         viewModel.getPatientCount(docId)
 
-        if (Utils.getUserType() == 0)
-            viewModel.getMyAptCount(Utils.getUserId(), model.id.toString())
-        else
-            viewModel.getMyAptCount(model.id.toString(), Utils.getUserId())
+        if (Utils.getUserType() == 0) {
+            viewModel.getMyAptCount(Utils.getUserId().toLong(), model.id)
+        } else {
+            viewModel.getMyAptCount(model.id, Utils.getUserId().toLong())
+        }
+
+        Timber.d("Apt UserId ${Utils.getUserId()} oppositeId ${model.id}")
 
         if (model.about_info != "") {
             binding.tvAbout.text = model.about_info
@@ -198,13 +203,23 @@ class DoctorDetailsActivity : AppCompatActivity() {
             startActivity(Intent(Intent.ACTION_DIAL, Uri.parse("tel:${model.mobile}")))
         }
 
+        binding.tvViewAll.setOnClickListener {
+            Timber.d("CLicked")
+            val fragment = MyAppointmentsFragment()
+            val bundle = Bundle()
+            bundle.putBoolean("specificUser", true)
+            bundle.putLong("spUserId", model.id)
+            val transaction = supportFragmentManager.beginTransaction()
+            fragment.arguments = bundle
+            transaction.replace(R.id.fragmentContainer, fragment).addToBackStack("Apt Fragment")
+            transaction.commit()
+        }
+
         binding.btnBookAppt.setOnClickListener {
-            if (Utils.getUserType() == 1) {
                 val intent = Intent(this, ChooseTimeActivity::class.java)
                 intent.putExtra("user_id", docId)
                 intent.putExtra("isUpdate", false)
                 startActivity(intent)
-            }
         }
 
         binding.cvChat.setOnClickListener {

@@ -10,6 +10,8 @@ import com.app.consultationpoint.databinding.ActivityRegisterBinding
 import com.app.consultationpoint.general.model.UserModel
 import com.app.consultationpoint.patient.bottomNavigation.BottomNavigationActivity
 import com.app.consultationpoint.utils.Utils
+import com.app.consultationpoint.utils.Utils.hide
+import com.app.consultationpoint.utils.Utils.show
 import com.app.consultationpoint.utils.Utils.showToast
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -55,6 +57,14 @@ class RegisterActivity : AppCompatActivity() {
                 userModel.user_type_id = 1
         }
 
+        binding.rgGender.setOnCheckedChangeListener { _, checkedId ->
+            when(checkedId) {
+                R.id.rbMale -> userModel.gender = 0
+                R.id.rbFemale -> userModel.gender = 1
+                R.id.rbOther -> userModel.gender = 2
+            }
+        }
+
         binding.tvLogin.setOnClickListener {
             onBackPressed()
         }
@@ -66,16 +76,19 @@ class RegisterActivity : AppCompatActivity() {
 
     private fun checkValidation() {
 
+        val userName = binding.etUserName.text?.trim().toString()
         val firstName = binding.etFirstName.text?.trim().toString()
         val lastName = binding.etLastName.text?.trim().toString()
         val userEmail = binding.etEmail.text?.trim().toString()
         val userPassword = binding.etPassword.text?.trim().toString()
 
-        if (firstName.isNotEmpty() && lastName.isNotEmpty() && userEmail.isNotEmpty()
+        if (userName.isNotEmpty() && firstName.isNotEmpty() && lastName.isNotEmpty() && userModel.gender != -1 && userEmail.isNotEmpty()
             && userPassword.isNotEmpty() && userPassword.length > 7
         ) {
+            Utils.setErrorFreeEdt(this, binding.tilUserName)
             Utils.setErrorFreeEdt(this, binding.tilFirstName)
             Utils.setErrorFreeEdt(this, binding.tilLastName)
+            binding.tvErrorTextGender.hide()
             Utils.setErrorFreeEdt(this, binding.tilEmail)
             Utils.setErrorFreeEdt(this, binding.tilPassword)
             binding.tilPassword.error = ""
@@ -83,11 +96,12 @@ class RegisterActivity : AppCompatActivity() {
             Utils.showProgressDialog(this)
 
             if (Utils.isNetworkAvailable(this)) {
+                userModel.username = userName
                 userModel.first_name = firstName
                 userModel.last_name = lastName
                 userModel.email = userEmail
                 userModel.password = userPassword
-                userModel.gender = -1
+                userModel.gender = userModel.gender
                 userModel.device_type = 1
 
                 viewModel.signUp(userModel)
@@ -103,6 +117,12 @@ class RegisterActivity : AppCompatActivity() {
 
         } else {
 
+            if (userName.isEmpty()) {
+                Utils.setErrorEdt(this, binding.tilUserName)
+            } else {
+                Utils.setErrorFreeEdt(this, binding.tilUserName)
+            }
+
             if (firstName.isEmpty()) {
                 Utils.setErrorEdt(this, binding.tilFirstName)
             } else {
@@ -113,6 +133,12 @@ class RegisterActivity : AppCompatActivity() {
                 Utils.setErrorEdt(this, binding.tilLastName)
             } else {
                 Utils.setErrorFreeEdt(this, binding.tilLastName)
+            }
+
+            if (userModel.gender == -1) {
+                binding.tvErrorTextGender.show()
+            } else {
+                binding.tvErrorTextGender.hide()
             }
 
             if (userEmail.isEmpty()) {

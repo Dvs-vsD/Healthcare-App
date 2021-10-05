@@ -37,4 +37,8 @@ class MyAptViewModel @Inject constructor(private val repository: MyAptRepository
     fun getStatus(): LiveData<String> {
         return repository.getStatus()
     }
+
+    fun fYourAptWithSpecificUser(spUserId: Long) {
+        repository.fYourAptWithSpecificUser(spUserId)
+    }
 }

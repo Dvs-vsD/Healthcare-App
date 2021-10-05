@@ -86,7 +86,19 @@ class ChatScreenActivity : AppCompatActivity() {
 
         viewModel.fetchMessages(roomId)
 
-        getMessages()
+        linearLayoutManager = LinearLayoutManager(this)
+        binding.recyclerView.setHasFixedSize(true)
+        binding.recyclerView.layoutManager = linearLayoutManager
+        val msgList: ArrayList<MessageModel> = viewModel.getMessages().value?:ArrayList()
+        chatAdapter = ChatAdapter(msgList, viewModel)
+        binding.recyclerView.adapter = chatAdapter
+
+        binding.recyclerView.addOnLayoutChangeListener { _, _, _, _, bottom, _, _, _, oldBottom ->
+            if (bottom < oldBottom)
+                linearLayoutManager?.smoothScrollToPosition(
+                    binding.recyclerView, null, chatAdapter?.itemCount ?: 0
+                )
+        }
 
         binding.ivBack.setOnClickListener { onBackPressed() }
 
@@ -107,7 +119,7 @@ class ChatScreenActivity : AppCompatActivity() {
         }
     }
 
-    private fun getMessages() {
+    /*private fun getMessages() {
         linearLayoutManager = LinearLayoutManager(this)
         binding.recyclerView.setHasFixedSize(true)
         binding.recyclerView.layoutManager = linearLayoutManager
@@ -121,7 +133,7 @@ class ChatScreenActivity : AppCompatActivity() {
                     binding.recyclerView, null, chatAdapter?.itemCount ?: 0
                 )
         }
-    }
+    }*/
 
     private fun sendMessage(content: String) {
         msgModel.message_id = System.currentTimeMillis()

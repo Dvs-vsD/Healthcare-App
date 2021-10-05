@@ -21,8 +21,6 @@ class AptDetailsAdapter(
     private val viewModel: MyAptViewModel
 ) : RecyclerView.Adapter<AptDetailsAdapter.MyViewHolder>() {
 
-//    private val viewModel = context.let { ViewModelProvider(it).get(MyAptViewModel::class.java) }
-
     inner class MyViewHolder(private val binding: RowOfAppointmentDetailBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
@@ -38,7 +36,6 @@ class AptDetailsAdapter(
                 viewModel.getDoctorDetails(item.patient_id)
 
             binding.tvDocName.text = "${userDetails.first_name} ${userDetails.last_name}"
-//            binding.tvSpecAdr.text = "${userDetails.specialization}, ${docDetails.city}"
             binding.tvTitleTime.text = "For ${item.title} at ${item.schedual_time}"
 
             binding.clRowAppointment.setOnClickListener {

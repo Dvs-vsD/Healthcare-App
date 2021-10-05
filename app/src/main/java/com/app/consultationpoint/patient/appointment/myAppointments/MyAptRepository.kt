@@ -36,12 +36,12 @@ class MyAptRepository @Inject constructor(private val firebaseSource: FirebaseSo
             mRealm.where(AppointmentModel::class.java)
                 .equalTo("doctor_id", Utils.getUserId().toLong()).sort("schedual_date").findAll()
 
-        appointmentList.value = monthlyAppointments(getYearMonth(results))
+        appointmentList.value = monthlyAppointments(getYearMonth(results), false, 0)
 
         results.addChangeListener { change ->
             appointmentList.value?.clear()
             Timber.d("Apt in Realm changed")
-            appointmentList.value = monthlyAppointments(getYearMonth(change))
+            appointmentList.value = monthlyAppointments(getYearMonth(change), false, 0)
         }
     }
 
@@ -59,7 +59,11 @@ class MyAptRepository @Inject constructor(private val firebaseSource: FirebaseSo
         return sortedList
     }
 
-    private fun monthlyAppointments(sortedList: ArrayList<String>): ArrayList<MonthlyAppointments> {
+    private fun monthlyAppointments(
+        sortedList: ArrayList<String>,
+        specificUser: Boolean,
+        spUserId: Long
+    ): ArrayList<MonthlyAppointments> {
         val list: ArrayList<MonthlyAppointments> = ArrayList()
 
         for (month in sortedList) {
@@ -67,16 +71,33 @@ class MyAptRepository @Inject constructor(private val firebaseSource: FirebaseSo
             monthlyModel.year = month.substring(0, month.length - 3)
             monthlyModel.month = month.substring(5, month.length)
 
-            val mRealmResults = if (Utils.getUserType() == 0)
-                mRealm.where(AppointmentModel::class.java)
-                    .equalTo("patient_id", Utils.getUserId().toLong())
-                    .beginsWith("schedual_date", month)
-                    .sort("schedual_date").findAll()
-            else
-                mRealm.where(AppointmentModel::class.java)
-                    .equalTo("doctor_id", Utils.getUserId().toLong())
-                    .beginsWith("schedual_date", month)
-                    .sort("schedual_date").findAll()
+            val mRealmResults = if (Utils.getUserType() == 0) {
+                if (specificUser)
+                    mRealm.where(AppointmentModel::class.java)
+                        .equalTo("patient_id", Utils.getUserId().toLong())
+                        .and()
+                        .equalTo("doctor_id", spUserId)
+                        .beginsWith("schedual_date", month)
+                        .sort("schedual_date").findAll()
+                else
+                    mRealm.where(AppointmentModel::class.java)
+                        .equalTo("patient_id", Utils.getUserId().toLong())
+                        .beginsWith("schedual_date", month)
+                        .sort("schedual_date").findAll()
+            } else {
+                if (specificUser)
+                    mRealm.where(AppointmentModel::class.java)
+                        .equalTo("doctor_id", Utils.getUserId().toLong())
+                        .and()
+                        .equalTo("patient_id", spUserId)
+                        .beginsWith("schedual_date", month)
+                        .sort("schedual_date").findAll()
+                else
+                    mRealm.where(AppointmentModel::class.java)
+                        .equalTo("doctor_id", Utils.getUserId().toLong())
+                        .beginsWith("schedual_date", month)
+                        .sort("schedual_date").findAll()
+            }
 
             val aptList: ArrayList<AppointmentModel> =
                 mRealm.copyFromRealm(mRealmResults) as ArrayList<AppointmentModel>
@@ -113,5 +134,28 @@ class MyAptRepository @Inject constructor(private val firebaseSource: FirebaseSo
 
     fun getStatus(): LiveData<String> {
         return firebaseSource.getStatus()
+    }
+
+    fun fYourAptWithSpecificUser(spUserId: Long) {
+        val results = if (Utils.getUserType() == 0)
+            mRealm.where(AppointmentModel::class.java)
+                .equalTo("patient_id", Utils.getUserId().toLong())
+                .and()
+                .equalTo("doctor_id", spUserId)
+                .sort("schedual_date").findAll()
+        else
+            mRealm.where(AppointmentModel::class.java)
+                .equalTo("doctor_id", Utils.getUserId().toLong())
+                .and()
+                .equalTo("patient_id", spUserId)
+                .sort("schedual_date").findAll()
+
+        appointmentList.value = monthlyAppointments(getYearMonth(results), true, spUserId)
+
+        results.addChangeListener { change ->
+            appointmentList.value?.clear()
+            Timber.d("Apt in Realm changed")
+            appointmentList.value = monthlyAppointments(getYearMonth(change), true, spUserId)
+        }
     }
 }

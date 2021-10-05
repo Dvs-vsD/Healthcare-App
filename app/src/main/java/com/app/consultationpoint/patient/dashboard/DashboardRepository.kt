@@ -96,7 +96,6 @@ class DashboardRepository @Inject constructor(private val firebaseSource: Fireba
                     docList.add(getDoctorDetails(doctorId))
                 }
                 docDetailsList.value = docList
-
                 todayAptList.value = newList
             }
             Timber.d("Open Instance at %s", System.currentTimeMillis().toString())

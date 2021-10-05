@@ -20,7 +20,7 @@ class SplashScreenActivity : AppCompatActivity() {
 
         if (ConsultationApp.shPref.getBoolean(Const.PREF_IS_LOGIN, false)) {
             val intent = Intent(this, BottomNavigationActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+//            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
             startActivity(intent)
         } else {
             val intent = Intent(this, OnBoardingActivity::class.java)
