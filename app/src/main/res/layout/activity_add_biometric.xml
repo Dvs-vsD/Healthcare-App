@@ -41,11 +41,12 @@
 
         <TextView
             android:id="@+id/tvWelcomeText"
-            style="@style/st_tv_large.bold"
-            android:layout_width="wrap_content"
+            style="@style/st_tv_normal.bold"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_16sdp"
-            android:text="@string/tv_welcome_back"
+            android:gravity="center"
+            android:text="@string/tv_you_have_not_added_biometric_yet"
             app:layout_constraintEnd_toEndOf="@id/guidelineRight"
             app:layout_constraintStart_toStartOf="@id/guidelineLeft"
             app:layout_constraintTop_toBottomOf="@+id/ic_consult" />
@@ -53,9 +54,10 @@
         <TextView
             android:id="@+id/tvSuggestionText"
             style="@style/st_tv_small.light_gray"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/tv_sign_in_to_continue"
+            android:gravity="center"
+            android:text="@string/tv_enter_your_sign_in_credential_and_biometric"
             app:layout_constraintEnd_toEndOf="@id/guidelineRight"
             app:layout_constraintStart_toStartOf="@id/guidelineLeft"
             app:layout_constraintTop_toBottomOf="@+id/tvWelcomeText" />
@@ -108,35 +110,37 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
-            android:id="@+id/btnLogin"
+            android:id="@+id/btnLoginWithBiometric"
             style="@style/st_btn_style"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_8sdp"
+            android:layout_marginTop="@dimen/_24sdp"
             android:background="@drawable/background_with_radius_12"
             android:padding="@dimen/_8sdp"
-            android:text="@string/btn_login"
+            android:text="@string/btn_login_with_biometric"
             android:textColor="@color/white"
-            app:layout_constraintBottom_toTopOf="@id/tvAlreadyHaveAcc"
+            app:icon="@drawable/ic_baseline_fingerprint_24"
+            app:layout_constraintBottom_toTopOf="@id/tvOr"
             app:layout_constraintEnd_toEndOf="@id/guidelineRight"
             app:layout_constraintStart_toStartOf="@id/guidelineLeft"
             app:layout_constraintTop_toBottomOf="@id/til_password"
             app:layout_constraintVertical_chainStyle="packed" />
 
-        <TextView
+        <!--<TextView
             android:id="@+id/tvAlreadyHaveAcc"
             style="@style/st_tv_small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_16sdp"
             android:text="@string/tv_don_t_have_an_account"
+            app:icon="@drawable/ic_baseline_fingerprint_24"
             app:layout_constraintBottom_toTopOf="@id/tvOr"
             app:layout_constraintEnd_toStartOf="@id/tvSignUp"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="@id/guidelineLeft"
-            app:layout_constraintTop_toBottomOf="@+id/btnLogin" />
+            app:layout_constraintTop_toBottomOf="@+id/btnLoginWithBiometric" />-->
 
-        <TextView
+        <!--<TextView
             android:id="@+id/tvSignUp"
             style="@style/st_tv_small.bold"
             android:layout_width="wrap_content"
@@ -148,7 +152,7 @@
             app:layout_constraintBaseline_toBaselineOf="@id/tvAlreadyHaveAcc"
             app:layout_constraintEnd_toEndOf="@id/guidelineRight"
             app:layout_constraintStart_toEndOf="@id/tvAlreadyHaveAcc"
-            app:layout_constraintTop_toBottomOf="@+id/btnLogin" />
+            app:layout_constraintTop_toBottomOf="@+id/btnLoginWithBiometric" />-->
 
         <TextView
             android:id="@+id/tvOr"
@@ -157,41 +161,24 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_8sdp"
             android:text="@string/tv_or"
+            app:layout_constraintBottom_toTopOf="@id/btnLoginWithPassword"
             app:layout_constraintEnd_toEndOf="@id/guidelineRight"
             app:layout_constraintStart_toStartOf="@id/guidelineLeft"
-            app:layout_constraintTop_toBottomOf="@id/tvSignUp" />
+            app:layout_constraintTop_toBottomOf="@id/btnLoginWithBiometric" />
 
-        <Button
-            android:id="@+id/btnLoginWithBiometric"
-            style="@style/st_btn_style"
+        <TextView
+            android:id="@+id/btnLoginWithPassword"
+            style="@style/st_tv_small.bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_13sdp"
-            android:visibility="visible"
-            android:background="@drawable/background_with_radius_12"
-            android:text="@string/btn_login_with_biometric"
-            app:icon="@drawable/ic_baseline_fingerprint_24"
+            android:textColor="@color/blue"
+            android:padding="@dimen/_13sdp"
+            android:text="@string/tv_login_with_password"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/guidelineRight"
             app:layout_constraintStart_toStartOf="@id/guidelineLeft"
             app:layout_constraintTop_toBottomOf="@id/tvOr" />
-
-        <TextView
-            android:id="@+id/tvEnrollBiometric"
-            style="@style/st_tv_small.bold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_8sdp"
-            android:padding="@dimen/_16sdp"
-            app:drawableTint="@color/blue"
-            android:gravity="center"
-            android:drawablePadding="@dimen/_8sdp"
-            android:text="@string/tv_enroll_biometric"
-            android:textColor="@color/blue"
-            app:layout_constraintEnd_toEndOf="@id/guidelineRight"
-            app:layout_constraintStart_toStartOf="@id/guidelineLeft"
-            app:layout_constraintTop_toBottomOf="@+id/tvOr"
-            app:drawableRightCompat="@drawable/ic_baseline_fingerprint_24" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

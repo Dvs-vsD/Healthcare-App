@@ -53,6 +53,7 @@ class ChatScreenActivity : AppCompatActivity() {
 
         viewModel.getMessages().observe(this, {
             if (chatAdapter != null) {
+                Timber.d("Msg List Adapter Updated")
                 chatAdapter?.setData(it)
                 binding.recyclerView.scrollToPosition(it.size - 1)
             }

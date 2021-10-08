@@ -589,6 +589,7 @@ class FirebaseSource @Inject constructor() {
                         Timber.d("Message Fetching instance")
 
                         mRealm.executeTransaction {
+                            Timber.d("Msg List Updated in Realm")
                             mRealm.insertOrUpdate(msgList)
                         }
                     }
@@ -665,7 +666,7 @@ class FirebaseSource @Inject constructor() {
     fun searchFromFB(text: String) {
         database.collection("Users").whereEqualTo("user_type_id", 0)
             .whereIn(
-                "first_name",
+                "username",
                 listOf(text.lowercase(), text.replaceFirstChar(Char::uppercase), text.uppercase())
             )
             /*.orderBy("email")

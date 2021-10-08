@@ -2,7 +2,9 @@ package com.app.consultationpoint.patient.bottomNavigation
 
 import android.annotation.SuppressLint
 import android.app.AlarmManager
+import android.app.KeyguardManager
 import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
@@ -13,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import com.app.consultationpoint.BaseFragment
+import com.app.consultationpoint.ConsultationApp
 import com.app.consultationpoint.R
 import com.app.consultationpoint.databinding.ActivityBottomNavigationBinding
 import com.app.consultationpoint.notification.RemainderBroadcast
@@ -22,11 +25,13 @@ import com.app.consultationpoint.patient.dashboard.DashboardFragment
 import com.app.consultationpoint.patient.dashboard.DashboardViewModel
 import com.app.consultationpoint.patient.doctor.DoctorListFragment
 import com.app.consultationpoint.patient.userProfile.UserProfileActivity
+import com.app.consultationpoint.utils.Const
 import com.app.consultationpoint.utils.Utils
 import com.app.consultationpoint.utils.Utils.formatTo
 import com.app.consultationpoint.utils.Utils.hide
 import com.app.consultationpoint.utils.Utils.loadImageFromCloud
 import com.app.consultationpoint.utils.Utils.show
+import com.app.consultationpoint.utils.Utils.showToast
 import com.google.android.material.navigation.NavigationView
 import com.ncapdevi.fragnav.FragNavController
 import com.ncapdevi.fragnav.FragNavLogger
@@ -38,6 +43,7 @@ import io.realm.Realm
 import io.realm.RealmConfiguration
 import kotlinx.android.synthetic.main.header_layout.view.*
 import timber.log.Timber
+import java.io.File
 import java.util.*
 
 @AndroidEntryPoint
@@ -65,15 +71,14 @@ class BottomNavigationActivity(override val numberOfRootFragments: Int = 4) : Ap
         })
 
         if (intent.getBooleanExtra("newUser", false)) {
-            val config = RealmConfiguration.Builder()
-                .name(Utils.getUserId() + "db.realm")
-                .allowQueriesOnUiThread(true)
-                .allowWritesOnUiThread(true)
-                .deleteRealmIfMigrationNeeded()
-                .build()
+            /*val realmFileName = Utils.getUserId() + "db.realm"
+            val file = File(this.filesDir, realmFileName)
+            if (file.exists()) {
+                Timber.d("db deleted")
+                file.delete()
+            }
 
-            Realm.setDefaultConfiguration(config)
-            Timber.d("db created and default deleted")
+            ConsultationApp.createRealmDB()*/
         }
 
         toggle = ActionBarDrawerToggle(

@@ -16,7 +16,7 @@ import com.app.consultationpoint.utils.Utils.formatTo
 import com.app.consultationpoint.utils.Utils.toDate
 
 class AptDetailsAdapter(
-    private val aptList: ArrayList<AppointmentModel>?,
+    private val aptList: ArrayList<AppointmentModel>,
     private val context: Context,
     private val viewModel: MyAptViewModel
 ) : RecyclerView.Adapter<AptDetailsAdapter.MyViewHolder>() {
@@ -55,10 +55,10 @@ class AptDetailsAdapter(
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        aptList?.get(position)?.let { holder.bind(it) }
+        holder.bind(aptList[position])
     }
 
     override fun getItemCount(): Int {
-        return aptList?.size ?: 0
+        return aptList.size
     }
 }

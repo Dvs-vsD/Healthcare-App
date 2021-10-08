@@ -31,9 +31,9 @@ class ChatScreenViewModel @Inject constructor(private val repository: ChatScreen
     }
 
     fun fetchMessages(roomId: Long) {
-        viewModelScope.launch(Dispatchers.Main) {
+//        viewModelScope.launch(Dispatchers.Main) {
             repository.fetchMessages(roomId)
-        }
+//        }
     }
 
     fun getMessages(): LiveData<ArrayList<MessageModel>> {

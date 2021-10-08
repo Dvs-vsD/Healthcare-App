@@ -8,6 +8,8 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.USE_BIOMETRIC" />
+    <!--    <uses-permission android:name="android.permission.USE_FINGERPRINT" />-->
 
     <application
         android:name=".ConsultationApp"
@@ -40,12 +42,12 @@
             android:windowSoftInputMode="adjustResize" />
         <activity android:name=".patient.doctor.DoctorDetailsActivity" />
         <activity android:name=".patient.appointment.bookAppointment.ChooseTimeActivity" />
-        <activity android:name=".general.LoginActivity"/>
+        <activity android:name=".general.LoginActivity" />
+        <activity android:name=".general.AddBiometricActivity" />
         <activity android:name=".general.RegisterActivity" />
         <activity
             android:name=".patient.bottomNavigation.BottomNavigationActivity"
-            android:windowSoftInputMode="adjustPan"
-            />
+            android:windowSoftInputMode="adjustPan" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -60,7 +62,7 @@
         <receiver
             android:name=".notification.RemainderBroadcast"
             android:enabled="true"
-            android:exported="false"></receiver>
+            android:exported="false" />
     </application>
 
 </manifest>

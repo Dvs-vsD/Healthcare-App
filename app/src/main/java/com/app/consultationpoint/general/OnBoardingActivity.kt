@@ -87,7 +87,7 @@ class OnBoardingActivity : AppCompatActivity(), ViewPager.OnPageChangeListener {
 
     private fun goToLoginActivity() {
         val intent = Intent(this, LoginActivity::class.java)
-//        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+        intent.putExtra("fromOnBoarding", true)
         startActivity(intent)
         finish()
     }

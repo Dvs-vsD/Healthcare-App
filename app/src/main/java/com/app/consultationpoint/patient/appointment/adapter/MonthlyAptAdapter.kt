@@ -11,6 +11,7 @@ import com.app.consultationpoint.patient.appointment.model.MonthlyAppointments
 import com.app.consultationpoint.patient.appointment.myAppointments.MyAppointmentsFragment
 import com.app.consultationpoint.patient.appointment.myAppointments.MyAptViewModel
 import com.app.consultationpoint.utils.Utils.formatTo
+import com.app.consultationpoint.utils.Utils.showToast
 import com.app.consultationpoint.utils.Utils.toDate
 
 class MonthlyAptAdapter(
@@ -20,6 +21,7 @@ class MonthlyAptAdapter(
 ) : RecyclerView.Adapter<MonthlyAptAdapter.MyViewHolder>() {
 
     fun setList(list: ArrayList<MonthlyAppointments>) {
+        this.list.clear()
         this.list = list
         notifyDataSetChanged()
     }

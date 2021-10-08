@@ -12,6 +12,7 @@ import android.net.NetworkCapabilities
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
+import android.util.Base64
 import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
@@ -33,10 +34,16 @@ import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import io.realm.Realm
+import timber.log.Timber
 import java.io.ByteArrayOutputStream
+import java.io.File
+import java.nio.charset.StandardCharsets
+import java.security.KeyStore
+import java.security.SecureRandom
 import java.text.SimpleDateFormat
 import java.util.*
-
+import kotlin.experimental.and
 
 object Utils {
 
@@ -297,10 +304,11 @@ object Utils {
             .setPositiveButton("Yes") { dialog, _ ->
 
                 FirebaseAuth.getInstance().signOut()
+
                 ConsultationApp.shPref.edit().clear().apply()
 
                 val intent = Intent(context, LoginActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
                 context.startActivity(intent)
 
                 dialog.dismiss()
@@ -309,5 +317,46 @@ object Utils {
                 dialog.dismiss()
             }
             .show()
+    }
+
+    //Encryption key
+    fun getSecureRealmKey(): ByteArray {
+        val key: String = ConsultationApp.shPrefGlobal.getString(Const.REALM_ENCRYPTION_KEY, "") ?: ""
+        val decodedBytes: ByteArray = Base64.decode(key, Base64.DEFAULT)
+        Timber.d("Key in byte array {KEY:$key}.......$decodedBytes.........${decodedBytes.size}...........$key..........${key.length}")
+        Timber.d("Key in byte array ${decodedBytes.toHex4()}.....${decodedBytes.toHex4().length}")
+        return if (key.isEmpty()) {
+            return createRealmKey()
+        } else decodedBytes
+    }
+
+    private fun setRealmKey(key: String) {
+        ConsultationApp.shPrefGlobal.edit().putString(Const.REALM_ENCRYPTION_KEY, key).apply()
+    }
+
+    private fun createRealmKey(): ByteArray {
+        // create a securely generated random asymmetric RSA key
+        val realmKey = ByteArray(Realm.ENCRYPTION_KEY_LENGTH)
+        SecureRandom().nextBytes(realmKey)
+
+        val encodedString: String = Base64.encodeToString(realmKey, Base64.NO_WRAP)
+
+        Timber.d("New Key in string RealmKey:{$realmKey}.........$encodedString.......${encodedString.length}")
+
+        setRealmKey(encodedString)
+        return realmKey
+    }
+
+    val hexChars = "0123456789abcdef".toCharArray()
+
+    fun ByteArray.toHex4(): String {
+        val hex = CharArray(2 * this.size)
+        this.forEachIndexed { i, byte ->
+            val unsigned = 0xff and byte.toInt()
+            hex[2 * i] = hexChars[unsigned / 16]
+            hex[2 * i + 1] = hexChars[unsigned % 16]
+        }
+
+        return hex.joinToString("")
     }
 }

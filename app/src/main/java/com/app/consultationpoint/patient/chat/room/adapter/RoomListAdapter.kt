@@ -13,18 +13,19 @@ import com.app.consultationpoint.patient.chat.room.RoomViewModel
 import com.app.consultationpoint.patient.chat.room.model.RoomModel
 import com.app.consultationpoint.utils.Utils
 import com.app.consultationpoint.utils.Utils.formatTo
+import com.app.consultationpoint.utils.Utils.hide
 import com.app.consultationpoint.utils.Utils.loadImageFromCloud
 import com.app.consultationpoint.utils.Utils.show
 import java.util.*
 
 class RoomListAdapter(
-    private var list: ArrayList<RoomModel?>,
+    private var list: ArrayList<RoomModel>,
     private val context: FragmentActivity,
     private val viewModel: RoomViewModel
 ) :
     RecyclerView.Adapter<RoomListAdapter.MyViewHolder>() {
 
-    fun setList(it: ArrayList<RoomModel?>) {
+    fun setList(it: ArrayList<RoomModel>) {
         list = it
         notifyDataSetChanged()
     }
@@ -79,6 +80,7 @@ class RoomListAdapter(
                 binding.tvLastMsgTime.text = time?.formatTo("h:mm a")
             } else {
                 val time = Date(item.created_at)
+                binding.tvLastMsg.hide()
                 binding.tvLastMsgTime.text = time.formatTo("h:mm a")
             }
         }
@@ -90,12 +92,12 @@ class RoomListAdapter(
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        list[position]?.let { holder.bind(it) }
+        holder.bind(list[position])
 
         var doctorId = 0L
         val userId: Long = Utils.getUserId().toLong()
-        if (list[position]?.list_participants != null) {
-            for (participant in list[position]?.list_participants!!) {
+        if (list[position].list_participants != null) {
+            for (participant in list[position].list_participants) {
                 if (participant.added_by_id != participant.user_id) {
                     doctorId = if (participant.user_id != userId)
                         participant.user_id
@@ -107,7 +109,7 @@ class RoomListAdapter(
 
         holder.itemView.setOnClickListener {
             val intent = Intent(context, ChatScreenActivity::class.java)
-            intent.putExtra("room_id", list[position]?.room_id)
+            intent.putExtra("room_id", list[position].room_id)
             intent.putExtra("receiver_id", doctorId)
             context.startActivity(intent)
         }

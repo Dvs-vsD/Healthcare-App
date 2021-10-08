@@ -16,7 +16,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 class ChatAdapter(
-    private var chatList: ArrayList<MessageModel>?,
+    private var chatList: ArrayList<MessageModel>,
     private var viewModel: ChatScreenViewModel
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -26,6 +26,7 @@ class ChatAdapter(
     private val other = 200
 
     fun setData(it: ArrayList<MessageModel>) {
+        chatList.clear()
         chatList = it
         notifyDataSetChanged()
     }
@@ -43,18 +44,20 @@ class ChatAdapter(
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if (chatList?.get(position)?.sender_id == userId)
-            chatList?.get(position)?.let { (holder as SelfViewHolder).bind(it) }
+        if (chatList.get(position).sender_id == userId)
+            (holder as SelfViewHolder).bind(chatList[position])
+//            chatList.get(position).let { (holder as SelfViewHolder).bind(it) }
         else
-            chatList?.get(position)?.let { (holder as OtherViewHolder).bind(it) }
+            (holder as OtherViewHolder).bind(chatList[position])
+//            chatList.get(position).let { (holder as OtherViewHolder).bind(it) }
     }
 
     override fun getItemCount(): Int {
-        return chatList?.size?: 0
+        return chatList.size
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (chatList?.get(position)?.sender_id == userId)
+        return if (chatList[position].sender_id == userId)
             self
         else
             other

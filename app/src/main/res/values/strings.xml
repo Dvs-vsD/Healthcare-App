@@ -112,5 +112,11 @@
     <string name="tv_you_have_appointment_with">You have appointment with</string>
     <string name="tv_appointment_count">Appointment count…</string>
     <string name="error_text_for_gender">Please select your gender</string>
+    <string name="tv_or">or</string>
+    <string name="btn_login_with_biometric">Login with biometric</string>
+    <string name="tv_you_have_not_added_biometric_yet">You have not added biometric yet</string>
+    <string name="tv_enter_your_sign_in_credential_and_biometric">Enter your sign in credential and biometric</string>
+    <string name="tv_login_with_password">Login with email and password</string>
+    <string name="tv_enroll_biometric">Enroll Biometric</string>
 
 </resources>

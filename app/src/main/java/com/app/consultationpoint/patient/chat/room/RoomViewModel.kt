@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RoomViewModel @Inject constructor(private val repository: RoomRepository) : ViewModel() {
-    fun getRoomList(): LiveData<ArrayList<RoomModel?>> {
+    fun getRoomList(): LiveData<ArrayList<RoomModel>> {
         return repository.getRoomList()
     }
 

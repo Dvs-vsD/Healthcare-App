@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import com.app.consultationpoint.ConsultationApp
 import com.app.consultationpoint.R
 import com.app.consultationpoint.databinding.ActivityRegisterBinding
 import com.app.consultationpoint.general.model.UserModel
@@ -33,12 +34,15 @@ class RegisterActivity : AppCompatActivity() {
 
             if (it == "success") {
 //                if (userModel.user_type_id == 0) {
-                    val intent = Intent(this, BottomNavigationActivity::class.java)
-                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                    intent.putExtra("newUser", true)
-                    startActivity(intent)
+                ConsultationApp.shPrefGlobal.edit().clear().apply()
+
+                val intent = Intent(this, BottomNavigationActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                intent.putExtra("newUser", true)
+                intent.putExtra("fromRegister", true)
+                startActivity(intent)
 //                } else {
-                    Toast.makeText(this, "Sign Up successful", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Sign Up successful", Toast.LENGTH_SHORT).show()
 //                }
             } else if (it.startsWith("Error: ")) {
                 this.showToast("Error: $it")
@@ -58,7 +62,7 @@ class RegisterActivity : AppCompatActivity() {
         }
 
         binding.rgGender.setOnCheckedChangeListener { _, checkedId ->
-            when(checkedId) {
+            when (checkedId) {
                 R.id.rbMale -> userModel.gender = 0
                 R.id.rbFemale -> userModel.gender = 1
                 R.id.rbOther -> userModel.gender = 2
@@ -151,7 +155,8 @@ class RegisterActivity : AppCompatActivity() {
                 Utils.setErrorEdt(this, binding.tilPassword)
             } else {
                 if (userPassword.length < 8) {
-                    binding.tilPassword.error = "Password must be more then or equal to 8 characters"
+                    binding.tilPassword.error =
+                        "Password must be more then or equal to 8 characters"
                     Utils.setErrorEdt(this, binding.tilPassword)
                 } else {
                     Utils.setErrorFreeEdt(this, binding.tilPassword)

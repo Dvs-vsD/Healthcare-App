@@ -94,7 +94,7 @@ class ChatListFragment : BaseFragment() {
         binding.recyclerView.layoutManager = linearLayoutManager
         binding.recyclerView.setHasFixedSize(true)
 
-        val roomList: ArrayList<RoomModel?> = viewModel.getRoomList().value ?: ArrayList()
+        val roomList: ArrayList<RoomModel> = viewModel.getRoomList().value ?: ArrayList()
 
         adapter = RoomListAdapter(roomList, requireActivity(), viewModel)
 
