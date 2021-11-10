@@ -354,7 +354,26 @@ class FirebaseSource @Inject constructor() {
             }
     }
 
-    fun updateProfile(model: UserModel, adrModel: AddressModel) {
+    fun updateProfile(model: UserModel, adrModel: AddressModel, path: Uri?) {
+        if (path != null) {
+            val storageRef = FirebaseStorage.getInstance().reference
+                    .child("profile/" + Utils.getUserId() + "_${System.currentTimeMillis()}" + ".jpg")
+            storageRef.putFile(path)
+                .addOnSuccessListener {
+                    storageRef.downloadUrl.addOnCompleteListener {
+                        model.profile = it.result.toString()
+                        updateUserDetails(model, adrModel)
+                    }
+                }
+                .addOnFailureListener {
+                    Timber.d("Error in profile pic update: ${it.message}")
+                    updateUserDetails(model, adrModel)
+                }
+        } else
+            updateUserDetails(model, adrModel)
+    }
+
+    private fun updateUserDetails(model: UserModel, adrModel: AddressModel) {
         database.collection("Users").document(Utils.getUserId()).set(model).addOnSuccessListener {
 
             database.collection("Addresses").document(Utils.getUserId()).set(adrModel)
@@ -623,7 +642,7 @@ class FirebaseSource @Inject constructor() {
         }
     }
 
-    fun uploadProfile(path: Uri) {
+    /*fun uploadProfile(path: Uri) {
         val storageRef =
             FirebaseStorage.getInstance().reference
                 .child("profile/" + Utils.getUserId() + "_${System.currentTimeMillis()}" + ".jpg")
@@ -637,7 +656,7 @@ class FirebaseSource @Inject constructor() {
                 status.value = "profile upload failed"
                 status.value = ""
             }
-    }
+    }*/
 
     fun getSpecializationName(id: Int): String {
         Realm.getDefaultInstance().use { mRealm ->

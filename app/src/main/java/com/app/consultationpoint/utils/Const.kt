@@ -23,7 +23,7 @@ object Const {
     const val GENDER: String = "gender"
 
     //Global SharedPref Fields
-    const val SHARED_PREF_NAME_BIOMETRIC: String = "Consultation Point Biometric"
+    const val SHARED_PREF_NAME_GLOBAL: String = "Consultation Point Global"
     const val IS_ON_BOARDING_COMPLETE: String = "is_on_boarding_complete"
     const val IS_BIOMETRIC_ADDED: String = "is_biometric_added"
     const val BIOMETRIC_EMAIL: String = "biometric_email"

@@ -2,12 +2,11 @@ package com.app.consultationpoint.patient.userProfile
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -17,20 +16,21 @@ import com.app.consultationpoint.R
 import com.app.consultationpoint.databinding.ActivityUpdateProfileBinding
 import com.app.consultationpoint.general.model.UserModel
 import com.app.consultationpoint.patient.userProfile.model.AddressModel
-import com.app.consultationpoint.utils.Const.REQUEST_CODE
 import com.app.consultationpoint.utils.Utils
 import com.app.consultationpoint.utils.Utils.formatTo
 import com.app.consultationpoint.utils.Utils.hide
 import com.app.consultationpoint.utils.Utils.loadImageFromCloud
 import com.app.consultationpoint.utils.Utils.loadImageFromCloudWithProgress
 import com.app.consultationpoint.utils.Utils.show
+import com.app.consultationpoint.utils.Utils.showToast
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
+import com.theartofdev.edmodo.cropper.CropImage
+import com.theartofdev.edmodo.cropper.CropImageView
 import dagger.hilt.android.AndroidEntryPoint
-import okhttp3.internal.Util
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -40,6 +40,7 @@ class UptPntProfileActivity : AppCompatActivity() {
     private lateinit var binding: ActivityUpdateProfileBinding
     private val viewModel by viewModels<UserViewModel>()
     private var profileURL: String = ""
+    private var profileUri: Uri? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -187,7 +188,11 @@ class UptPntProfileActivity : AppCompatActivity() {
                 pincode = binding.etPinCode.text?.trim().toString().toInt()
             }
 
-            if (firstName.isNotEmpty() && lastName.isNotEmpty()) {
+            if (userName.isNotEmpty() && firstName.isNotEmpty() && lastName.isNotEmpty()) {
+                Utils.setErrorFreeEdt(this, binding.tilUserName)
+                Utils.setErrorFreeEdt(this, binding.tilFirstName)
+                Utils.setErrorFreeEdt(this, binding.tilLastName)
+
                 val userId = Utils.getUserId().toLong()
                 val model = UserModel()
                 model.id = userId
@@ -219,15 +224,33 @@ class UptPntProfileActivity : AppCompatActivity() {
                 adrModel.created_at = userId
                 adrModel.updated_at = System.currentTimeMillis()
 
-                viewModel.updateProfile(model, adrModel)
+                if (profileUri != null)
+                    viewModel.updateProfile(model, adrModel, profileUri!!)
+                else
+                    viewModel.updateProfile(model, adrModel, null)
+
                 Utils.showProgressDialog(this)
             } else {
+                binding.scrollView.smoothScrollTo(0, 0)
+                if (userName.isEmpty()) {
+                    Utils.setErrorEdt(this, binding.tilUserName)
+                    binding.etUserName.requestFocus()
+                } else {
+                    Utils.setErrorFreeEdt(this, binding.tilUserName)
+                }
+
                 if (firstName.isEmpty()) {
-                    binding.etFirstName.error = "Please enter first name!!!"
+                    Utils.setErrorEdt(this, binding.tilFirstName)
                     binding.etFirstName.requestFocus()
                 } else {
-                    binding.etLastName.error = "Please enter end name!!!"
+                    Utils.setErrorFreeEdt(this, binding.tilFirstName)
+                }
+
+                if (lastName.isEmpty()) {
+                    Utils.setErrorEdt(this, binding.tilLastName)
                     binding.etLastName.requestFocus()
+                } else {
+                    Utils.setErrorFreeEdt(this, binding.tilLastName)
                 }
             }
         }
@@ -273,31 +296,22 @@ class UptPntProfileActivity : AppCompatActivity() {
     }
 
     private fun chooseImage() {
-        val picImage = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-//        picImage.type = "image/*"
-//        picImage.action = Intent.ACTION_PICK
-        startActivityForResult(
-            Intent.createChooser(picImage, "Select Profile Pic..."),
-            REQUEST_CODE
-        )
+        CropImage.activity().setGuidelines(CropImageView.Guidelines.ON).setAspectRatio(40, 40)
+            .start(this)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_CODE) {
-            if (resultCode == Activity.RESULT_OK) {
-                val uri = data?.data
-
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                val result: CropImage.ActivityResult = CropImage.getActivityResult(data)
+                val uri = result.uri
                 if (uri != null) {
                     val bitmap = BitmapFactory.decodeStream(contentResolver.openInputStream(uri))
-                    val profilePic = Utils.getImageUri(this, bitmap)
-                    Utils.showProgressDialog(this)
-                    if (profilePic != null) {
-                        viewModel.uploadProfile(profilePic)
-                    }
-                } else
-                    Toast.makeText(this, "Image Not selected: Please Reselect", Toast.LENGTH_SHORT)
-                        .show()
+                    profileUri = Utils.getImageUri(this, bitmap) //Compress image
+                    binding.ivProfile.setImageURI(profileUri)
+                } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE)
+                    this.showToast(result.error.toString())
             }
         }
     }

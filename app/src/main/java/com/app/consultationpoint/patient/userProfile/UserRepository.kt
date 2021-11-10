@@ -3,7 +3,6 @@ package com.app.consultationpoint.patient.userProfile
 import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.app.consultationpoint.ConsultationApp
 import com.app.consultationpoint.firebase.FirebaseSource
 import com.app.consultationpoint.general.model.UserModel
 import com.app.consultationpoint.network.RetrofitClient
@@ -27,17 +26,17 @@ class UserRepository @Inject constructor(private var firebaseSource: FirebaseSou
         firebaseSource.logOut()
     }
 
-    fun updateProfile(model: UserModel, adrModel: AddressModel) {
-        firebaseSource.updateProfile(model, adrModel)
+    fun updateProfile(model: UserModel, adrModel: AddressModel, path: Uri?) {
+        firebaseSource.updateProfile(model, adrModel, path)
     }
 
     fun getProfileUptStatus(): LiveData<String> {
         return firebaseSource.getStatus()
     }
 
-    fun uploadProfile(path: Uri) {
+    /*fun uploadProfile(path: Uri) {
         firebaseSource.uploadProfile(path)
-    }
+    }*/
 
     fun fetchPostalData(it: String) {
         Timber.d("api call under function")

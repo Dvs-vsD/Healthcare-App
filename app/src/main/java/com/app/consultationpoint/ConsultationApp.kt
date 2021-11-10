@@ -10,7 +10,6 @@ import dagger.hilt.android.HiltAndroidApp
 import io.realm.Realm
 import io.realm.RealmConfiguration
 import timber.log.Timber
-import java.util.*
 
 @HiltAndroidApp
 class ConsultationApp : Application() {
@@ -18,22 +17,21 @@ class ConsultationApp : Application() {
     companion object {
         lateinit var shPref: SharedPreferences
         lateinit var shPrefGlobal: SharedPreferences
-        lateinit var config: RealmConfiguration
 
         fun createRealmDB() {
-            val realmKey = Utils.getSecureRealmKey()
+//            val realmKey = Utils.getSecureRealmKey()
 
-            config = RealmConfiguration.Builder()
+            val config = RealmConfiguration.Builder()
                 .name(Utils.getUserId() + "db.realm")
                 .allowQueriesOnUiThread(true)
                 .allowWritesOnUiThread(true)
                 .deleteRealmIfMigrationNeeded()
-                .encryptionKey(realmKey)
+//                .encryptionKey(realmKey)
                 .build()
 
             Realm.setDefaultConfiguration(config)
 
-            Arrays.fill(realmKey, 0.toByte())
+//            Arrays.fill(realmKey, 0.toByte())
 
             Timber.d("Db created Open Instance at %s", System.currentTimeMillis().toString())
         }
@@ -62,7 +60,7 @@ class ConsultationApp : Application() {
         )
 
         shPrefGlobal = EncryptedSharedPreferences.create(
-            Const.SHARED_PREF_NAME_BIOMETRIC,
+            Const.SHARED_PREF_NAME_GLOBAL,
             masterKeyAlias,
             this,
             EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,

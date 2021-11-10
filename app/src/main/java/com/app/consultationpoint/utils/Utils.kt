@@ -322,7 +322,7 @@ object Utils {
     //Encryption key
     fun getSecureRealmKey(): ByteArray {
         val key: String = ConsultationApp.shPrefGlobal.getString(Const.REALM_ENCRYPTION_KEY, "") ?: ""
-        val decodedBytes: ByteArray = Base64.decode(key, Base64.DEFAULT)
+        val decodedBytes: ByteArray = Base64.decode(key, Base64.NO_WRAP)
         Timber.d("Key in byte array {KEY:$key}.......$decodedBytes.........${decodedBytes.size}...........$key..........${key.length}")
         Timber.d("Key in byte array ${decodedBytes.toHex4()}.....${decodedBytes.toHex4().length}")
         return if (key.isEmpty()) {
