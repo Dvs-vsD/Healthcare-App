@@ -10,6 +10,7 @@ import com.app.consultationpoint.R
 import com.app.consultationpoint.databinding.ActivityRegisterBinding
 import com.app.consultationpoint.general.model.UserModel
 import com.app.consultationpoint.patient.bottomNavigation.BottomNavigationActivity
+import com.app.consultationpoint.utils.Const
 import com.app.consultationpoint.utils.Utils
 import com.app.consultationpoint.utils.Utils.hide
 import com.app.consultationpoint.utils.Utils.show
@@ -35,6 +36,9 @@ class RegisterActivity : AppCompatActivity() {
             if (it == "success") {
 //                if (userModel.user_type_id == 0) {
                 ConsultationApp.shPrefGlobal.edit().clear().apply()
+                ConsultationApp.shPrefGlobal.edit().putBoolean(Const.IS_ON_BOARDING_COMPLETE, true).apply()
+
+                ConsultationApp.createRealmDB()
 
                 val intent = Intent(this, BottomNavigationActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK
