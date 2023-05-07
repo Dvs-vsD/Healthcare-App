@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -21,7 +22,6 @@ import com.michalsvec.singlerowcalendar.calendar.SingleRowCalendarAdapter
 import com.michalsvec.singlerowcalendar.selection.CalendarSelectionManager
 import com.michalsvec.singlerowcalendar.utils.DateUtils
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.calender_item.view.*
 import java.util.*
 
 private const val ARG_PARAM1 = "param1"
@@ -96,8 +96,11 @@ class CalenderFragment : Fragment() {
                 position: Int,
                 isSelected: Boolean
             ) {
-                holder.itemView.tvDate.text = DateUtils.getDayNumber(date)
-                holder.itemView.tvDay.text = DateUtils.getDay3LettersName(date)
+                val tvDate = holder.itemView.findViewById<TextView>(R.id.tvDate)
+                val tvDay = holder.itemView.findViewById<TextView>(R.id.tvDay)
+
+                tvDate.text = DateUtils.getDayNumber(date)
+                tvDay.text = DateUtils.getDay3LettersName(date)
             }
         }
 

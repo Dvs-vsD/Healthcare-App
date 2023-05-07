@@ -22,8 +22,6 @@ import com.app.consultationpoint.utils.Utils.formatTo
 import com.app.consultationpoint.utils.Utils.hide
 import com.app.consultationpoint.utils.Utils.show
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.activity_bottom_navigation.*
-import kotlinx.android.synthetic.main.header_layout.view.*
 import timber.log.Timber
 import java.util.*
 import kotlin.collections.ArrayList

@@ -1,49 +1,38 @@
 package com.app.consultationpoint.patient.bottomNavigation
 
 import android.annotation.SuppressLint
-import android.app.AlarmManager
-import android.app.KeyguardManager
-import android.app.PendingIntent
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import com.app.consultationpoint.BaseFragment
-import com.app.consultationpoint.ConsultationApp
 import com.app.consultationpoint.R
 import com.app.consultationpoint.databinding.ActivityBottomNavigationBinding
-import com.app.consultationpoint.notification.RemainderBroadcast
 import com.app.consultationpoint.patient.appointment.myAppointments.MyAppointmentsFragment
 import com.app.consultationpoint.patient.chat.room.ChatListFragment
 import com.app.consultationpoint.patient.dashboard.DashboardFragment
 import com.app.consultationpoint.patient.dashboard.DashboardViewModel
 import com.app.consultationpoint.patient.doctor.DoctorListFragment
 import com.app.consultationpoint.patient.userProfile.UserProfileActivity
-import com.app.consultationpoint.utils.Const
 import com.app.consultationpoint.utils.Utils
-import com.app.consultationpoint.utils.Utils.formatTo
 import com.app.consultationpoint.utils.Utils.hide
 import com.app.consultationpoint.utils.Utils.loadImageFromCloud
 import com.app.consultationpoint.utils.Utils.show
-import com.app.consultationpoint.utils.Utils.showToast
 import com.google.android.material.navigation.NavigationView
+import com.mikhaellopez.circularimageview.CircularImageView
 import com.ncapdevi.fragnav.FragNavController
 import com.ncapdevi.fragnav.FragNavLogger
 import com.ncapdevi.fragnav.FragNavSwitchController
 import com.ncapdevi.fragnav.FragNavTransactionOptions
 import com.ncapdevi.fragnav.tabhistory.UniqueTabHistoryStrategy
 import dagger.hilt.android.AndroidEntryPoint
-import io.realm.Realm
-import io.realm.RealmConfiguration
-import kotlinx.android.synthetic.main.header_layout.view.*
-import timber.log.Timber
-import java.io.File
 import java.util.*
 
 @AndroidEntryPoint
@@ -128,7 +117,7 @@ class BottomNavigationActivity(override val numberOfRootFragments: Int = 4) : Ap
 
         binding.navigationView.setNavigationItemSelectedListener(this)
 
-        binding.navigationView.getHeaderView(0).tvUserName.text = "Hello, ${Utils.getFirstName()}"
+        binding.navigationView.getHeaderView(0).findViewById<TextView>(R.id.tvUserName).text = "Hello, ${Utils.getFirstName()}"
 
         loadProfile()
 
@@ -145,7 +134,7 @@ class BottomNavigationActivity(override val numberOfRootFragments: Int = 4) : Ap
 
     private fun loadProfile() {
         if (Utils.getUserProfile().isNotEmpty()) {
-            binding.navigationView.getHeaderView(0).ivProfile.loadImageFromCloud(Utils.getUserProfile())
+            binding.navigationView.getHeaderView(0).findViewById<CircularImageView>(R.id.ivProfile).loadImageFromCloud(Utils.getUserProfile())
             binding.ivProfile.loadImageFromCloud(Utils.getUserProfile())
         }
     }
@@ -153,7 +142,7 @@ class BottomNavigationActivity(override val numberOfRootFragments: Int = 4) : Ap
     private fun createAptNotifications(calList: ArrayList<Calendar>) {
         for ((index, value) in calList.withIndex()) {
             if (index < 5) {
-                Timber.d(value.time.formatTo("dd-MM-yyyy hh:mm a"))
+                /*Timber.d(value.time.formatTo("dd-MM-yyyy hh:mm a"))
                 val intent = Intent(this, RemainderBroadcast::class.java)
                 intent.putExtra("channel_id", index)
                 intent.putExtra("time", value.time.formatTo("hh:mm a"))
@@ -162,7 +151,7 @@ class BottomNavigationActivity(override val numberOfRootFragments: Int = 4) : Ap
                         this,
                         index,
                         intent,
-                        PendingIntent.FLAG_UPDATE_CURRENT
+                        PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
                     )
                 val alarmManager: AlarmManager =
                     this.getSystemService(ALARM_SERVICE) as AlarmManager
@@ -171,7 +160,7 @@ class BottomNavigationActivity(override val numberOfRootFragments: Int = 4) : Ap
                     AlarmManager.RTC_WAKEUP,
                     value.timeInMillis - 1800000,
                     pendingIntent
-                )
+                )*/
             } else
                 break
         }

@@ -22,7 +22,6 @@ import com.app.consultationpoint.utils.Utils.loadImageFromCloud
 import com.app.consultationpoint.utils.Utils.show
 import com.app.consultationpoint.utils.Utils.showToast
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.activity_choose_time.*
 import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*

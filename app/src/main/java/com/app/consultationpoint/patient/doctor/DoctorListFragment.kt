@@ -23,7 +23,6 @@ import com.app.consultationpoint.utils.Utils.show
 import com.app.consultationpoint.utils.Utils.showToast
 import dagger.hilt.android.AndroidEntryPoint
 import io.realm.RealmList
-import kotlinx.android.synthetic.main.fragment_my_appointments.*
 import timber.log.Timber
 
 private const val ARG_PARAM1 = "param1"
@@ -204,8 +203,8 @@ class DoctorListFragment : BaseFragment(), DoctorAdapter.OnButtonChatCLick {
     }
 
     override fun onPause() {
-        if (pullToRefresh.isRefreshing)
-            pullToRefresh.isRefreshing = false
+        if (binding.pullToRefresh.isRefreshing)
+            binding.pullToRefresh.isRefreshing = false
         super.onPause()
     }
 }

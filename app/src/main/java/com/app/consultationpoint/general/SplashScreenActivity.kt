@@ -8,6 +8,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.app.consultationpoint.ConsultationApp
+import com.app.consultationpoint.R
 import com.app.consultationpoint.patient.bottomNavigation.BottomNavigationActivity
 import com.app.consultationpoint.utils.Const
 
@@ -15,8 +16,8 @@ import com.app.consultationpoint.utils.Const
 class SplashScreenActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        installSplashScreen()
-//        setContentView(R.layout.activity_splash_screen)
+//        installSplashScreen()
+        setContentView(R.layout.activity_splash_screen)
 
         if (ConsultationApp.shPref.getBoolean(Const.PREF_IS_LOGIN, false)) {
             authenticateUser()

@@ -15,7 +15,6 @@ import com.app.consultationpoint.general.model.UserModel
 import com.app.consultationpoint.utils.Utils.hide
 import com.app.consultationpoint.utils.Utils.show
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_doctor_signup.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 // TODO: Rename parameter arguments, choose names that match
@@ -116,11 +115,11 @@ class DoctorSignupFragment : Fragment() {
     }
 
     private fun checkDetails() {
-        userModel.first_name = etFirstName.text.trim().toString()
-        userModel.last_name = etLastName.text.trim().toString()
-        userModel.email = etEmail.text.trim().toString()
-        userModel.password = etPassword.text.trim().toString()
-        userModel.mobile = etPhnNo.text.trim().toString()
+        userModel.first_name = binding.etFirstName.text.trim().toString()
+        userModel.last_name = binding.etLastName.text.trim().toString()
+        userModel.email = binding.etEmail.text.trim().toString()
+        userModel.password = binding.etPassword.text.trim().toString()
+        userModel.mobile = binding.etPhnNo.text.trim().toString()
 //
 //        if (cbMBBS.isChecked) {
 //            userModel.degrees.add("MBBS")
