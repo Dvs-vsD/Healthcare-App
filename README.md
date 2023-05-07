@@ -17,22 +17,20 @@ Calendar, Month wise appointment List
 *Coding style and cleanliness are as important as the app apperence*
 
 1. MVVM Architacture
-2. Hilt Dependency injection
-3. 
+2. Dependency injection using Hilt
+3. Real time sync database using firebase Firestore
+4. Coroutines to work on background thread
+5. Constraint Layout for UI design
+6. Common utils for repetitive functions
+7. Realm Local DB for offline capability
+8. Data Binding/ View Binding
+9. Material componants
 
 ---
 
-## Create a file
+## Screen shots:
 
-Next, you’ll add a new file to this repository.
-
-1. Click the **New file** button at the top of the **Source** page.
-2. Give the file a filename of **contributors.txt**.
-3. Enter your name in the empty file space.
-4. Click **Commit** and then **Commit** again in the dialog.
-5. Go back to the **Source** page.
-
-Before you move on, go ahead and explore the repository. You've already seen the **Source** page, but check out the **Commits**, **Branches**, and **Settings** pages.
+<img title="Splash Screen" src="" width="32%">
 
 ---
 
